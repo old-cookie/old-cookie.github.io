@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SVGFlow - Interactive SVG Diagramming Web Tool</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>SVGFlow</h1>
+    </header>
+    <main>
+      <div id="toolbar">
+        <button id="rectangle">Rectangle</button>
+        <button id="circle">Circle</button>
+        <button id="line">Line</button>
+        <button id="text">Text</button>
+        <button id="import">Import</button>
+        <button id="export">Export</button>
+      </div>
+      <div id="canvas">
+        <svg id="svg-canvas"></svg>
+      </div>
+      <div id="customization-panel" class="hidden">
+        <h2>Customization</h2>
+        <label for="element-color">Color:</label>
+        <input type="color" id="element-color" />
+        <label for="element-size">Size:</label>
+        <input type="range" id="element-size" min="10" max="200" step="1" />
+        <label for="element-label">Label:</label>
+        <input type="text" id="element-label" />
+        <button id="apply-customization">Apply</button>
+      </div>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
