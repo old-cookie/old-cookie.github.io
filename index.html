@@ -2,37 +2,118 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SVGFlow - Interactive SVG Diagramming Web Tool</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>blob edit</title>
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <header>
-      <h1>SVGFlow</h1>
-    </header>
-    <main>
-      <div id="toolbar">
-        <button id="rectangle">Rectangle</button>
-        <button id="circle">Circle</button>
-        <button id="line">Line</button>
-        <button id="text">Text</button>
-        <button id="import">Import</button>
-        <button id="export">Export</button>
+    <div class="wrap">
+      <span id="result">&nbsp;</span>
+      <div id="blob"></div>
+      <div class="controls">
+        <div class="height">
+          <input
+            class="radius"
+            id="height"
+            max="200"
+            min="0"
+            step="1"
+            type="range"
+            value="200"
+          />
+        </div>
+        <div class="width">
+          <input
+            class="radius"
+            id="width"
+            max="200"
+            min="0"
+            step="1"
+            type="range"
+            value="200"
+          />
+        </div>
+        <div class="topleft">
+          <input
+            class="radius"
+            id="topLeft"
+            max="2000"
+            min="0"
+            step="1"
+            type="range"
+            value="500"
+          />
+          <input
+            class="radius"
+            id="topLeft2"
+            max="2000"
+            min="0"
+            step="1"
+            type="range"
+            value="500"
+          />
+        </div>
+        <div class="topright">
+          <input
+            class="radius"
+            id="topRight"
+            max="2000"
+            min="0"
+            step="1"
+            type="range"
+            value="500"
+          />
+          <input
+            class="radius"
+            id="topRight2"
+            max="2000"
+            min="0"
+            step="1"
+            type="range"
+            value="500"
+          />
+        </div>
+        <div class="bottomright">
+          <input
+            class="radius"
+            id="bottomRight"
+            max="2000"
+            min="0"
+            step="1"
+            type="range"
+            value="500"
+          />
+          <input
+            class="radius"
+            id="bottomRight2"
+            max="2000"
+            min="0"
+            step="1"
+            type="range"
+            value="500"
+          />
+        </div>
+        <div class="bottomleft">
+          <input
+            class="radius"
+            id="bottomLeft"
+            max="2000"
+            min="0"
+            step="1"
+            type="range"
+            value="500"
+          />
+          <input
+            class="radius"
+            id="bottomLeft2"
+            max="2000"
+            min="0"
+            step="1"
+            type="range"
+            value="500"
+          />
+        </div>
       </div>
-      <div id="canvas">
-        <svg id="svg-canvas"></svg>
-      </div>
-      <div id="customization-panel" class="hidden">
-        <h2>Customization</h2>
-        <label for="element-color">Color:</label>
-        <input type="color" id="element-color" />
-        <label for="element-size">Size:</label>
-        <input type="range" id="element-size" min="10" max="200" step="1" />
-        <label for="element-label">Label:</label>
-        <input type="text" id="element-label" />
-        <button id="apply-customization">Apply</button>
-      </div>
-    </main>
-    <script src="script.js"></script>
+    </div>
+    <script src="./script.js"></script>
   </body>
 </html>
