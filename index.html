@@ -1,9 +1,189 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
     <title>blob edit</title>
-    <link rel="stylesheet" href="./style.css" />
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+      }
+      body .wrap {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: #000000;
+      }
+      body .wrap span#result {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        position: absolute;
+        top: 50px;
+        color: #ffffff;
+        font-size: 14px;
+        font-family: "Source Code Pro";
+      }
+      body .wrap .controls {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        left: calc(50% - 200px);
+        top: calc(50% - 200px);
+      }
+      body .wrap .controls div {
+        width: 150px;
+        position: absolute;
+      }
+      body .wrap .controls div.height {
+        width: calc(100% + 20px);
+        left: -250px;
+        bottom: 190px;
+        transform: rotate(-90deg);
+      }
+      body .wrap .controls div.height:before {
+        content: "Height";
+      }
+      body .wrap .controls div.width {
+        width: calc(100% + 20px);
+        bottom: -50px;
+        left: -10px;
+      }
+      body .wrap .controls div.width:before {
+        content: "Width";
+        top: 30px;
+      }
+      body .wrap .controls div input[type="range"] {
+        appearance: none;
+        width: 100%;
+        background: transparent;
+        margin-bottom: 10px;
+      }
+      body .wrap .controls div input[type="range"]::slider-thumb {
+        appearance: none;
+      }
+      body .wrap .controls div input[type="range"]:focus {
+        outline: none;
+      }
+      body .wrap .controls div input[type="range"]::-ms-track {
+        width: 100%;
+        cursor: pointer;
+        background: transparent;
+        border-color: transparent;
+        color: transparent;
+      }
+      body .wrap .controls div input[type="range"]::slider-thumb {
+        appearance: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50px;
+        cursor: pointer;
+        margin-top: -8px;
+        background: #ccc;
+      }
+      body .wrap .controls div input[type="range"]:focus::slider-thumb:hover {
+        background: #7c9ab4;
+      }
+      body .wrap .controls div input[type="range"]::-moz-range-thumb {
+        box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+        border: 1px solid #000000;
+        height: 36px;
+        width: 16px;
+        border-radius: 3px;
+        background: #ffffff;
+        cursor: pointer;
+      }
+      body .wrap .controls div input[type="range"]::slider-runnable-track {
+        width: 100%;
+        height: 1px;
+        cursor: pointer;
+        background: #555;
+        border-radius: 1.3px;
+      }
+      body
+        .wrap
+        .controls
+        div
+        input[type="range"]:focus::slider-runnable-track {
+        background: #367ebd;
+      }
+      body .wrap .controls div input[type="range"]::-moz-range-track {
+        width: 100%;
+        height: 8.4px;
+        cursor: pointer;
+        box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+        background: #3071a9;
+        border-radius: 1.3px;
+        border: 0.2px solid #010101;
+      }
+      body .wrap .controls div input {
+        width: 100%;
+      }
+      body .wrap .controls div:before {
+        color: #666;
+        font-family: "Source Code Pro";
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        top: -25px;
+      }
+      body .wrap .controls div.topleft:before {
+        content: "Top Left";
+      }
+      body .wrap .controls div.topright {
+        right: 0;
+        top: 0;
+      }
+      body .wrap .controls div.topright:before {
+        content: "Top Right";
+      }
+      body .wrap .controls div.bottomright {
+        right: 0;
+        bottom: 0;
+      }
+      body .wrap .controls div.bottomright:before {
+        content: "Bottom Right";
+      }
+      body .wrap .controls div.bottomleft {
+        left: 0;
+        bottom: 0;
+      }
+      body .wrap .controls div.bottomleft:before {
+        content: "Bottom Left";
+      }
+      body .wrap #blob {
+        --topLeft: 500;
+        --topLeft2: 500;
+        --topRight: 500;
+        --topRight2: 500;
+        --bottomLeft: 500;
+        --bottomLeft2: 500;
+        --bottomRight: 500;
+        --bottomRight2: 500;
+        --blobHeight: 200;
+        --blobWidth: 200;
+        z-index: 999;
+        position: absolute;
+        width: calc(1px * var(--blobWidth));
+        height: calc(1px * var(--blobHeight));
+        left: calc(50% - ((var(--blobWidth) * 1px) / 2));
+        top: calc(50% - ((var(--blobHeight) * 1px) / 2));
+        transition: all 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        background: #15f9cd;
+        border-radius: calc(1px * var(--topLeft)) calc(1px * var(--topRight))
+          calc(1px * var(--bottomRight)) calc(1px * var(--bottomLeft)) /
+          calc(1px * var(--topLeft2)) calc(1px * var(--topRight2))
+          calc(1px * var(--bottomRight2)) calc(1px * var(--bottomLeft2));
+      }
+    </style>
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1"
+    />
   </head>
   <body>
     <div class="wrap">
@@ -13,7 +193,7 @@
         <div class="height">
           <input
             class="radius"
-            id="height"
+            id="blobHeight"
             max="200"
             min="0"
             step="1"
@@ -24,7 +204,7 @@
         <div class="width">
           <input
             class="radius"
-            id="width"
+            id="blobWidth"
             max="200"
             min="0"
             step="1"
@@ -113,7 +293,42 @@
           />
         </div>
       </div>
+      <button id="saveAsSvg">Save as SVG</button>
     </div>
-    <script src="./script.js"></script>
+    <script>
+      const blobElement = document.querySelector("#blob");
+      const properties = [
+        "topLeft",
+        "topLeft2",
+        "topRight",
+        "topRight2",
+        "bottomRight",
+        "bottomRight2",
+        "bottomLeft",
+        "bottomLeft2",
+        "blobHeight",
+        "blobWidth",
+      ];
+      properties.forEach((property) => {
+        const element = document.querySelector(`#${property}`);
+        element.addEventListener("input", (e) => {
+          blobElement.style.setProperty(`--${property}`, element.value);
+        });
+      });
+
+      document.querySelectorAll(".radius").forEach((element) => {
+        element.addEventListener("change", function () {
+          var radius = window
+            .getComputedStyle(blobElement)
+            .getPropertyValue("border-radius");
+          document.querySelector("#result").innerHTML =
+            "Border Radius: <span style='color:" +
+            radius +
+            ";'>" +
+            radius +
+            "</span>";
+        });
+      });
+    </script>
   </body>
 </html>
