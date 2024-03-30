@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>svg helper</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+      body {
+        background: #141316;
+        font-size: 1rem;
+        color: white;
+      }
+      .navbar {
+        background-color: #232228;
+        color: #fff;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+        align-items: center;
+      }
+      .navbar__list {
+        display: flex;
+        list-style: none;
+        gap: 25px;
+      }
+      .navbar__item a {
+        color: #fff;
+        text-decoration: none;
+        transition: 0.2s;
+      }
+      .navbar__item a:hover {
+        color: #7c7ade;
+      }
+      .navbar__toggle-btn {
+        display: none;
+        background-color: #232228;
+        color: #fff;
+        border: none;
+        font-size: 40px;
+        cursor: pointer;
+      }
+      .navbar__top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      @media screen and (max-width: 768px) {
+        .navbar__top {
+          width: 100%;
+        }
+        .navbar__list.hidden {
+          display: none;
+        }
+        .navbar__toggle-btn {
+          display: block;
+        }
+        .navbar {
+          position: relative;
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 0.5rem 1rem;
+        }
+        .navbar__list {
+          position: absolute;
+          top: 60px;
+          left: 0;
+          background-color: #232228;
+          flex-direction: column;
+          width: 100%;
+          gap: 10px;
+          padding-bottom: 10px;
+        }
+        .navbar__item {
+          display: block;
+          text-align: center;
+          width: 100%;
+        }
+        .navbar__item a {
+          display: block;
+          width: 100%;
+          padding: 10px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar__top">
+        <h1 class="navbar__title">svg helper</h1>
+        <button class="navbar__toggle-btn" onclick="toggleNavbar()">-</button>
+      </div>
+      <ul class="navbar__list">
+        <li class="navbar__item"><a href="#">Home</a></li>
+        <li class="navbar__item"><a href="#">blob</a></li>
+        <li class="navbar__item"><a href="#">waves</a></li>
+      </ul>
+    </nav>
+    <script>
+      function toggleNavbar() {
+        const navbarList = document.querySelector(".navbar__list");
+        const toggleBtn = document.querySelector(".navbar__toggle-btn");
+        navbarList.classList.toggle("hidden");
+        if (navbarList.classList.contains("hidden")) {
+          toggleBtn.innerHTML = "☰";
+        } else {
+          toggleBtn.innerHTML = "-";
+        }
+      }
+    </script>
+  </body>
+</html>
