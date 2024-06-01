@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>知魚之樂</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(214, 117, 117);
+        }
+
+        #quiz {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #66ebf0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(198, 222, 60, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333333;
+        }
+
+        p {
+            font-size: 30px;
+        }
+
+        #question {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        #options {
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        button {
+            display: block;
+            margin: 0 auto;
+            padding: 10px 20px;
+            background-color: rgb(227, 238, 245);
+            color: #131313;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 30px;
+        }
+
+        button:hover {
+            background-color: #8f8d8d;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="quiz">
+        <h1>知魚之樂</h1>
+        <div id="question"></div>
+        <div id="options"></div>
+        <br>
+    </div>
+    <script>
+        fetch('quizData.json')
+            .then(response => response.json())
+            .then(data => {
+                const quizData = data;
+                const questionElement = document.getElementById("question");
+                const optionsElement = document.getElementById("options");
+                let currentQuestion = 0;
+                let score = 0;
+                function showQuestion() {
+                    const question = quizData[currentQuestion];
+                    questionElement.innerHTML = `<h2>${question.question}</h2><img src="${question.image}" alt="Question image">`;
+                    optionsElement.innerHTML = "";
+                    question.options.forEach(option => {
+                        const button = document.createElement("button");
+                        button.innerHTML = `${option.text}<img src="${option.image}" alt="Option image">`;
+                        optionsElement.appendChild(button);
+                        button.addEventListener("click", selectAnswer);
+                    });
+                }
+                function selectAnswer(e) {
+                    const selectedButton = e.target;
+                    const answer = quizData[currentQuestion].answer;
+
+                    if (selectedButton.innerText === answer) {
+                        score++;
+                    }
+
+                    currentQuestion++;
+
+                    if (currentQuestion < quizData.length) {
+                        showQuestion();
+                    } else {
+                        showResult();
+                    }
+                }
+                function showResult() {
+                    quiz.innerHTML = `
+              <h1>Quiz Completed!</h1>
+              <p>Your score: ${score}/${quizData.length}</p>
+            `;
+                }
+                showQuestion();
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+
+</html>
