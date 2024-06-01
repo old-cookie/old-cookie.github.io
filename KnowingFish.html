@@ -7,21 +7,27 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: rgb(214, 117, 117);
+            background-color: #244855;
+            font-size: 24px;
         }
 
         #quiz {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             max-width: 500px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #66ebf0;
+            background-color: #874F41;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(198, 222, 60, 0.2);
+            box-shadow: 0 0 10px #FBE9D0;
         }
 
         h1 {
             text-align: center;
-            color: #333333;
+            color: #FBE9D0;
+            font-size: 36px;
         }
 
         p {
@@ -30,7 +36,7 @@
 
         #question {
             margin-bottom: 20px;
-            font-size: 20px;
+            font-size: 30px;
         }
 
         #options {
@@ -42,8 +48,8 @@
         button {
             display: block;
             margin: 0 auto;
-            padding: 10px 20px;
-            background-color: rgb(227, 238, 245);
+            padding: 20px 40px;
+            background-color: #90AEAD;
             color: #131313;
             border: none;
             border-radius: 5px;
@@ -102,8 +108,8 @@
                 }
                 function showResult() {
                     quiz.innerHTML = `
-              <h1>Quiz Completed!</h1>
-              <p>Your score: ${score}/${quizData.length}</p>
+              <h1>多謝參與遊戲!</h1>
+              <p>分數: ${score}/${quizData.length}</p>
             `;
                 }
                 showQuestion();
