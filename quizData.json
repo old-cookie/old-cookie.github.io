@@ -3,10 +3,22 @@
         "question": "test 1",
         "image": "test.png",
         "options": [
-            { "text": "option1", "image": "test1.png" },
-            { "text": "option2", "image": "test2.png" },
-            { "text": "option3", "image": "test3.png" },
-            { "text": "option4", "image": "test4.png" }
+            {
+                "text": "option1",
+                "image": "test1.png"
+            },
+            {
+                "text": "option2",
+                "image": "test2.png"
+            },
+            {
+                "text": "option3",
+                "image": "test3.png"
+            },
+            {
+                "text": "option4",
+                "image": "test4.png"
+            }
         ],
         "answer": "option1"
     },
@@ -14,21 +26,45 @@
         "question": "test 2",
         "image": "test.png",
         "options": [
-            { "text": "option1", "image": "test1.png" },
-            { "text": "option2", "image": "test2.png" },
-            { "text": "option3", "image": "test3.png" },
-            { "text": "option4", "image": "test4.png" }
+            {
+                "text": "option1",
+                "image": "test1.png"
+            },
+            {
+                "text": "option2",
+                "image": "test2.png"
+            },
+            {
+                "text": "option3",
+                "image": "test3.png"
+            },
+            {
+                "text": "option4",
+                "image": "test4.png"
+            }
         ],
         "answer": "option1"
     },
-        {
+    {
         "question": "test 3",
         "image": "test.png",
         "options": [
-            { "text": "option1", "image": "test1.png" },
-            { "text": "option2", "image": "test2.png" },
-            { "text": "option3", "image": "test3.png" },
-            { "text": "option4", "image": "test4.png" }
+            {
+                "text": "option1",
+                "image": "test1.png"
+            },
+            {
+                "text": "option2",
+                "image": "test2.png"
+            },
+            {
+                "text": "option3",
+                "image": "test3.png"
+            },
+            {
+                "text": "option4",
+                "image": "test4.png"
+            }
         ],
         "answer": "option1"
     }
