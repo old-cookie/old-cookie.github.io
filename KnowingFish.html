@@ -16,7 +16,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 500px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 20px;
             background-color: #874F41;
@@ -60,6 +60,24 @@
         button:hover {
             background-color: #8f8d8d;
         }
+
+        .hint {
+            color: #FBE9D0;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 20px;
+        }
+
+        .feedback {
+            color: #FBE9D0;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 25px;
+        }
+
+        img {
+            background-color: transparent;
+        }
     </style>
 </head>
 
@@ -68,6 +86,8 @@
         <h1>知魚之樂</h1>
         <div id="question"></div>
         <div id="options"></div>
+        <div class="hint" id="hint"></div>
+        <div class="feedback" id="feedback"></div>
         <br>
     </div>
     <script>
@@ -77,41 +97,78 @@
                 const quizData = data;
                 const questionElement = document.getElementById("question");
                 const optionsElement = document.getElementById("options");
+                const hintElement = document.getElementById("hint");
+                const feedbackElement = document.getElementById("feedback");
                 let currentQuestion = 0;
                 let score = 0;
+                let hintTimeout;
+
+                const randomQuestions = [];
+                while (randomQuestions.length < 5) {
+                    const randomIndex = Math.floor(Math.random() * quizData.length);
+                    if (!randomQuestions.includes(randomIndex)) {
+                        randomQuestions.push(randomIndex);
+                    }
+                }
+
                 function showQuestion() {
-                    const question = quizData[currentQuestion];
-                    questionElement.innerHTML = `<h2>${question.question}</h2><img src="${question.image}" alt="Question image">`;
+                    const question = quizData[randomQuestions[currentQuestion]];
+                    questionElement.innerHTML = `<h2>${question.question}</h2>`;
                     optionsElement.innerHTML = "";
-                    question.options.forEach(option => {
+                    hintElement.innerHTML = "";
+                    feedbackElement.innerHTML = "";
+                    question.options.forEach((option, index) => {
                         const button = document.createElement("button");
-                        button.innerHTML = `${option.text}<img src="${option.image}" alt="Option image">`;
+                        button.innerHTML = `<img src="${option.image}" alt="Option image">`;
+                        button.dataset.answer = option.text;
                         optionsElement.appendChild(button);
                         button.addEventListener("click", selectAnswer);
                     });
-                }
-                function selectAnswer(e) {
-                    const selectedButton = e.target;
-                    const answer = quizData[currentQuestion].answer;
 
-                    if (selectedButton.innerText === answer) {
+                    hintTimeout = setTimeout(() => {
+                        hintElement.innerHTML = `小提示: ${question.hint}`;
+                    }, 5000);
+                }
+
+                function selectAnswer(e) {
+                    clearTimeout(hintTimeout);
+                    const selectedButton = e.currentTarget;
+                    const selectedAnswer = selectedButton.dataset.answer;
+                    const question = quizData[randomQuestions[currentQuestion]];
+                    const correctAnswer = question.answer;
+
+                    if (selectedAnswer === correctAnswer) {
                         score++;
+                        feedbackElement.innerHTML = "答對了!";
+                    } else {
+                        feedbackElement.innerHTML = "答錯了";
                     }
 
                     currentQuestion++;
 
-                    if (currentQuestion < quizData.length) {
-                        showQuestion();
+                    setTimeout(() => {
+                        if (currentQuestion < 5) {
+                            showQuestion();
+                        } else {
+                            showResult();
+                        }
+                    }, 2000);
+                }
+
+                function showResult() {
+                    if (score >= 4) {
+                        document.getElementById('quiz').innerHTML = `
+                        <h1>多謝參與遊戲! 可獲得獎品一份</h1>
+                        <p>分數: ${score}/5</p>
+                        `;
                     } else {
-                        showResult();
+                        document.getElementById('quiz').innerHTML = `
+                        <h1>多謝參與遊戲!</h1>
+                        <p>分數: ${score}/5</p>
+                        `;
                     }
                 }
-                function showResult() {
-                    quiz.innerHTML = `
-              <h1>多謝參與遊戲!</h1>
-              <p>分數: ${score}/${quizData.length}</p>
-            `;
-                }
+
                 showQuestion();
             })
             .catch(error => console.error('Error:', error));
