@@ -398,5 +398,45 @@
         ],
         "answer": "option1",
         "hint": "紅橙色"
+    },
+    {
+        "question": "以下哪一種一般情況不可食用?",
+        "options": [
+            {
+                "image": "fish14.png"
+            },
+            {
+                "text": "option1",
+                "image": "fish17.png"
+            },
+            {
+                "image": "fish13.png"
+            },
+            {
+                "image": "fish8.png"
+            }
+        ],
+        "answer": "option1",
+        "hint": "圓形個肚有刺"
+    },
+    {
+        "question": "以下哪一種沒有毒?",
+        "options": [
+            {
+                "image": "fish17.png"
+            },
+            {
+                "text": "option1",
+                "image": "fish2.png"
+            },
+            {
+                "image": "fish15.png"
+            },
+            {
+                "image": "fish9.png"
+            }
+        ],
+        "answer": "option1",
+        "hint": "魚鰭是黃色"
     }
 ]
