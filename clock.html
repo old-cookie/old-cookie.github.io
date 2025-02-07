@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Line-of-Numbers Clock</title>
+    <style>
+        #clockCanvas {
+            display: block;
+            margin: 50px auto;
+            border: 1px solid #333;
+            background: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="clockCanvas" width="400" height="400"></canvas>
+    <script>
+        function drawClock() {
+            const canvas = document.getElementById("clockCanvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            ctx.beginPath();
+            ctx.arc(0, 0, 150, 0, 2 * Math.PI);
+            ctx.stroke();
+            const hourAngle = ((hours % 12) + minutes / 60 + seconds / 3600) * 30;
+            const minuteAngle = (minutes + seconds / 60) * 6;
+            const secondAngle = seconds * 6;
+            const hourString = String(hours).padStart(2, "0");
+            const minuteString = String(minutes).padStart(2, "0");
+            const secondString = String(seconds).padStart(2, "0");
+            ctx.save();
+            ctx.rotate(hourAngle * Math.PI / 180);
+            ctx.font = "bold 20px sans-serif";
+            ctx.fillStyle = "black";
+            const hourRepeats = 4;
+            const hourSpacing = 30;
+            for (let i = 0; i < hourRepeats; i++) {
+                const textWidth = ctx.measureText(hourString).width;
+                const y = -(20 + i * hourSpacing);
+                ctx.fillText(hourString, -textWidth / 2, y);
+            }
+            ctx.restore();
+            ctx.save();
+            ctx.rotate(minuteAngle * Math.PI / 180);
+            ctx.font = "16px sans-serif";
+            ctx.fillStyle = "blue";
+            const minuteRepeats = 5;
+            const minuteSpacing = 20;
+            for (let i = 0; i < minuteRepeats; i++) {
+                const textWidth = ctx.measureText(minuteString).width;
+                const y = -(40 + i * minuteSpacing);
+                ctx.fillText(minuteString, -textWidth / 2, y);
+            }
+            ctx.restore();
+            ctx.save();
+            ctx.rotate(secondAngle * Math.PI / 180);
+            ctx.font = "14px sans-serif";
+            ctx.fillStyle = "red";
+            const secondRepeats = 6;
+            const secondSpacing = 15;
+            for (let i = 0; i < secondRepeats; i++) {
+                const textWidth = ctx.measureText(secondString).width;
+                const y = -(50 + i * secondSpacing);
+                ctx.fillText(secondString, -textWidth / 2, y);
+            }
+            ctx.restore();
+            ctx.restore();
+        }
+        setInterval(drawClock, 1000);
+        drawClock();
+    </script>
+</body>
+
+</html>
