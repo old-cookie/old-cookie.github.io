@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-HK">
 
 <head>
   <!-- <base href="/"> -->
 
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Flutter application that simulates an AI-driven smart doctor chat experience">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Dr.AI">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
   <meta http-equiv="Content-Security-Policy"
     content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: http://oldcookie.asuscomm.com:11434">
   <link rel="apple-touch-icon" href="icons/logo512.png">
@@ -93,6 +93,41 @@
     }
   </style>
   <script>
+    // 檢測混合內容是否被阻擋
+    function checkMixedContentBlocking() {
+      if (window.location.protocol === 'https:') {
+        fetch('http://oldcookie.asuscomm.com:11434/api/ping', { mode: 'no-cors' })
+          .catch(function() {
+            // 如果出現錯誤，可能是混合內容被阻擋
+            console.log('可能存在混合內容阻擋問題');
+            
+            // 等待頁面加載完成後顯示提示
+            window.addEventListener('load', function() {
+              setTimeout(function() {
+                var loaderElement = document.querySelector('.loader');
+                if (loaderElement) {
+                  // 創建提示元素
+                  var alertDiv = document.createElement('div');
+                  alertDiv.style.textAlign = 'center';
+                  alertDiv.style.marginTop = '20px';
+                  alertDiv.style.padding = '10px';
+                  alertDiv.style.backgroundColor = 'rgba(255,0,0,0.1)';
+                  alertDiv.style.borderRadius = '5px';
+                  alertDiv.innerHTML = '網站可能需要設定允許混合內容。<a href="mixed_content_help.html" target="_blank" style="color:blue;">點此查看設定說明</a>';
+                  
+                  // 插入到loading元素之後
+                  loaderElement.parentNode.insertBefore(alertDiv, loaderElement.nextSibling);
+                }
+              }, 3000); // 延遲3秒顯示，以免干擾正常加載流程
+            });
+          });
+      }
+    }
+    
+    // 執行檢測
+    checkMixedContentBlocking();
+    
+    // 原有代碼
     let deferredPrompt;
     window.addEventListener("beforeinstallprompt", (e) => { deferredPrompt = e; });
     function promptInstall() { deferredPrompt.prompt(); }

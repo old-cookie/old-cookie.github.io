@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>如何允許混合內容 - Dr.AI</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    h2 {
+      color: #444;
+      margin-top: 30px;
+    }
+    .browser {
+      margin-bottom: 40px;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    ol {
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 10px;
+    }
+    img {
+      max-width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin: 15px 0;
+    }
+    .note {
+      background-color: #fffde7;
+      padding: 15px;
+      border-left: 4px solid #ffd600;
+      margin: 20px 0;
+    }
+    @media (prefers-color-scheme: dark) {
+      body { 
+        background-color: #121212; 
+        color: #eee; 
+      }
+      h1 { color: #fff; }
+      h2 { color: #ddd; }
+      .browser {
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        background-color: #1e1e1e;
+      }
+      .note {
+        background-color: #332d00;
+        border-left: 4px solid #ffd600;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>如何允許混合內容</h1>
+  
+  <div class="note">
+    <p><strong>注意：</strong> 允許混合內容可能會降低您的瀏覽安全性。請僅在您信任此應用程式的情況下進行此設定。</p>
+  </div>
+
+  <div class="browser">
+    <h2>Chrome</h2>
+    <ol>
+      <li>點擊網址列右側的鎖頭（或「不安全」）圖示</li>
+      <li>選擇「網站設定」</li>
+      <li>找到「不安全內容」或「混合內容」選項</li>
+      <li>將設定從「封鎖（預設）」改為「允許」</li>
+      <li>重新整理頁面</li>
+    </ol>
+  </div>
+
+  <div class="browser">
+    <h2>Firefox</h2>
+    <ol>
+      <li>在瀏覽器網址列輸入: <code>about:config</code></li>
+      <li>接受風險警告</li>
+      <li>搜尋 <code>security.mixed_content.block_active_content</code></li>
+      <li>將值改為 <code>false</code> (雙擊即可切換)</li>
+      <li>重新整理頁面</li>
+    </ol>
+  </div>
+
+  <div class="browser">
+    <h2>Edge</h2>
+    <ol>
+      <li>點擊網址列右側的鎖頭（或「不安全」）圖示</li>
+      <li>點擊「網站權限」</li>
+      <li>找到「不安全內容」並設為「允許」</li>
+      <li>重新整理頁面</li>
+    </ol>
+  </div>
+
+  <div class="browser">
+    <h2>Safari</h2>
+    <ol>
+      <li>點擊 Safari 選單 > 偏好設定</li>
+      <li>選擇「安全性」標籤</li>
+      <li>取消勾選「阻止跨站追蹤」選項（注意：這可能影響其他網站的隱私保護）</li>
+      <li>重新整理頁面</li>
+    </ol>
+  </div>
+
+  <div class="note">
+    <p>如果以上方法無法解決問題，請考慮：</p>
+    <ol>
+      <li>使用其他瀏覽器嘗試</li>
+      <li>聯繫系統管理員設置安全的 HTTPS 連接</li>
+    </ol>
+  </div>
+
+  <p><a href="index.html">返回應用</a></p>
+
+  <script>
+    // 檢測當前瀏覽器類型，自動滾動到相關部分
+    document.addEventListener('DOMContentLoaded', function() {
+      const isChrome = navigator.userAgent.indexOf("Chrome") > -1 && navigator.userAgent.indexOf("Edge") === -1;
+      const isFirefox = navigator.userAgent.indexOf("Firefox") > -1;
+      const isEdge = navigator.userAgent.indexOf("Edge") > -1 || navigator.userAgent.indexOf("Edg") > -1;
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      
+      if (isChrome) {
+        document.querySelector('h2:contains("Chrome")').scrollIntoView({behavior: 'smooth'});
+      } else if (isFirefox) {
+        document.querySelector('h2:contains("Firefox")').scrollIntoView({behavior: 'smooth'});
+      } else if (isEdge) {
+        document.querySelector('h2:contains("Edge")').scrollIntoView({behavior: 'smooth'});
+      } else if (isSafari) {
+        document.querySelector('h2:contains("Safari")').scrollIntoView({behavior: 'smooth'});
+      }
+    });
+  </script>
+</body>
+</html>
