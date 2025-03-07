@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--
+/**
+ * WaterMark 照片編輯器與水印應用
+ * 版本: 1.0.0
+ * 描述: 提供簡易的網頁照片編輯與添加水印功能
+ * 作者: OldCookie
+ * 建立日期: 2023年
+ * 
+ * 技術棧:
+ * - HTML5 (頁面結構)
+ * - CSS3 (頁面樣式，來自 WaterMark.css)
+ * - JavaScript (交互功能，來自 WaterMark.js)
+ * - Cropper.js v1.6.2 (外部裁剪庫)
+ * 
+ * 使用說明:
+ * 1. 上傳最多4張照片
+ * 2. 對每張照片進行裁剪設置
+ * 3. 使用"處理圖片"按鈕添加水印
+ * 4. 預覽並下載處理後的圖片
+ */
+-->
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="水印">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-title" content="水印">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>照片編輯器與水印</title>
+    <!-- Cropper.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" rel="stylesheet" />
+    <!-- 自定義 CSS -->
+    <link href="WaterMark.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    <h1>照片編輯器與水印</h1>
+
+    <div class="upload-area" id="uploadArea">
+        <p>將您的照片拖曳到此處或點擊上傳<br>(最多4張照片)</p>
+        <input type="file" id="fileInput" accept="image/*" multiple>
+    </div>
+
+    <div id="imagesContainer"></div>
+
+    <button class="process-button" id="processBtn" style="display: none;">處理圖片</button>
+
+    <div class="preview-section" id="previewSection">
+        <h2>預覽</h2>
+        <div class="preview-container" id="previewContainer"></div>
+        <button class="download-button" id="downloadAllBtn">全部下載</button>
+    </div>
+
+    <!-- Cropper.js JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+    <!-- 自定義 JS -->
+    <script src="WaterMark.js"></script>
+</body>
+
+</html>

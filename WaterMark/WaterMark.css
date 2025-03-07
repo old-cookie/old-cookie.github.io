@@ -1,0 +1,210 @@
+/**
+ * WaterMark 照片編輯器樣式表
+ * 版本: 1.0.0
+ * 描述: 為照片編輯和水印應用提供樣式定義
+ * 作者: OldCookie
+ * 建立日期: 2023年
+ * 
+ * 此樣式表定義了網頁上所有元素的外觀，包括:
+ * - 深色主題界面
+ * - 上傳區域交互效果
+ * - 裁剪工具控件樣式
+ * - 預覽和下載區域樣式
+ * - 響應式設計調整
+ */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #121212;
+    /* 深色背景 */
+    color: #e0e0e0;
+    /* 淺色文字 */
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.upload-area {
+    border: 2px dashed #424242;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    color: #b0b0b0;
+    margin-bottom: 20px;
+    transition: border-color 0.3s, color 0.3s, background-color 0.3s;
+    position: relative;
+    background-color: #1e1e1e;
+}
+
+.upload-area.hidden {
+    display: none;
+}
+
+.upload-area.dragover {
+    border-color: #ffffff;
+    color: #ffffff;
+    background-color: #2c2c2c;
+}
+
+#fileInput {
+    display: none;
+}
+
+.image-container {
+    margin-bottom: 30px;
+    position: relative;
+    border: 1px solid #424242;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #1e1e1e;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.cancel-button {
+    background-color: #bb0000;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px 0;
+    font-size: 16px;
+    opacity: 0.9;
+    transition: opacity 0.3s, background-color 0.3s;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.cancel-button.sure {
+    background-color: #8f0000;
+}
+
+.cancel-button:hover {
+    opacity: 1;
+    background-color: #8f0000;
+}
+
+.cropper-wrapper {
+    max-width: 100%;
+    max-height: 400px;
+    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.cropper-wrapper img {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.aspect-btn {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    flex: 1 1 30%;
+    max-width: 100px;
+    text-align: center;
+}
+
+.aspect-btn.active {
+    background-color: #0056b3;
+}
+
+.aspect-btn:hover {
+    background-color: #0056b3;
+}
+
+.preview-section {
+    display: none;
+    margin-top: 40px;
+}
+
+.preview-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.preview-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.preview-container img {
+    width: 100%;
+    height: auto;
+    border: 1px solid #424242;
+    border-radius: 5px;
+}
+
+.download-button,
+.process-button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px auto;
+    display: block;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    max-width: 200px;
+    width: 100%;
+}
+
+.download-button:hover,
+.process-button:hover {
+    background-color: #218838;
+}
+
+.download-button:disabled,
+.process-button:disabled {
+    background-color: #555555;
+    cursor: not-allowed;
+}
+
+/* 響應式調整 */
+@media (max-width: 600px) {
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .aspect-btn {
+        flex: 1 1 100%;
+        max-width: none;
+    }
+
+    .cropper-wrapper {
+        max-height: 300px;
+    }
+
+    .cancel-button {
+        font-size: 14px;
+        padding: 8px 0;
+    }
+}
