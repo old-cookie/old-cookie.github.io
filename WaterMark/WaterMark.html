@@ -2,10 +2,10 @@
 <!--
 /**
  * WaterMark 照片編輯器與水印應用
- * 版本: 1.0.0
+ * 版本: 3.0.0
  * 描述: 提供簡易的網頁照片編輯與添加水印功能
  * 作者: OldCookie
- * 建立日期: 2023年
+ * 建立日期: 2025年
  * 
  * 技術棧:
  * - HTML5 (頁面結構)
@@ -43,12 +43,33 @@
 
     <div class="upload-area" id="uploadArea">
         <p>將您的照片拖曳到此處或點擊上傳<br>(最多4張照片)</p>
-        <input type="file" id="fileInput" accept="image/*" multiple>
+        <input type="file" id="fileInput" accept="image/*" multiple aria-label="選擇照片上傳">
     </div>
 
     <div id="imagesContainer"></div>
 
-    <button class="process-button" id="processBtn" style="display: none;">處理圖片</button>
+    <!-- AI 圖像放大選項 -->
+    <div class="ai-upscale-options" id="aiUpscaleOptions">
+        <h3>AI 圖像增強</h3>
+        <div class="upscale-toggle-container">
+            <label class="toggle" for="enableUpscale">
+                <input type="checkbox" id="enableUpscale" aria-label="啟用 AI 圖像放大">
+                <span class="toggle-slider"></span>
+            </label>
+            <label for="enableUpscale" class="toggle-label">啟用 AI 圖像放大</label>
+        </div>
+        <div class="upscale-factor-container">
+            <label for="upscaleFactor">放大倍率:</label>
+            <select id="upscaleFactor" disabled>
+                <option value="1.5">1.5x - 低</option>
+                <option value="2" selected>2x - 中</option>
+                <option value="4">4x - 高（處理較慢）</option>
+            </select>
+        </div>
+        <p class="upscale-info">AI 放大功能可以增強圖片細節，但處理時間會更長</p>
+    </div>
+
+    <button class="process-button" id="processBtn">處理圖片</button>
 
     <div class="preview-section" id="previewSection">
         <h2>預覽</h2>
