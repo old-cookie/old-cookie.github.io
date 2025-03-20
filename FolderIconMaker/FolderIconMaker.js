@@ -1,7 +1,7 @@
 // @charset "utf-8";
 /**
  * 資料夾圖示製作工具
- * 版本: 1.0.0
+ * 版本: 2.0.0
  * 描述: 將照片與Windows 11風格資料夾圖示合併，創建自定義資料夾圖示
  * 作者: OldCookie
  * 建立日期: 2025年
@@ -42,6 +42,9 @@ let photoY = 0;            // 照片Y座標位置
 let isDragging = false;    // 拖曳狀態標記
 let dragStartX = 0;        // 拖曳起始X座標
 let dragStartY = 0;        // 拖曳起始Y座標
+
+// 更新為完整的 Windows 圖示尺寸支援
+const iconSizes = [256, 128, 64, 48, 40, 32, 24, 20, 16]; // Windows 標準圖示尺寸
 
 //===================================
 // 拖放功能實作
@@ -309,20 +312,175 @@ function drawCanvas() {
  */
 exportBtn.addEventListener('click', () => {
     if (!photo || !svg) return;
-    // 創建用於導出的 128x128 畫布
+    
+    // 顯示處理訊息
+    const status = document.createElement('div');
+    status.className = 'status-message';
+    status.textContent = '正在產生ICO檔案...';
+    document.body.appendChild(status);
+    
+    try {
+        // 更新狀態訊息以顯示進度
+        status.textContent = '正在產生多尺寸圖示...';
+        
+        // 使用自己實現的ICO創建方法
+        createICO().then(blob => {
+            status.textContent = '下載中...';
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = 'folder-icon.ico';
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            setTimeout(() => {
+                status.remove();
+            }, 2000);
+        }).catch(error => {
+            console.error('ICO創建錯誤:', error);
+            status.textContent = '發生錯誤，改用PNG下載';
+            fallbackToPNG();
+            setTimeout(() => {
+                status.remove();
+            }, 3000);
+        });
+    } catch (error) {
+        console.error('無法產生ICO檔案:', error);
+        status.textContent = '發生錯誤，改用PNG下載';
+        fallbackToPNG();
+        setTimeout(() => {
+            status.remove();
+        }, 3000);
+    }
+});
+
+/**
+ * 創建ICO格式檔案
+ * @return {Promise<Blob>} 包含ICO檔案的Blob對象
+ */
+async function createICO() {
+    // 收集各尺寸的PNG數據
+    const pngBlobs = await Promise.all(iconSizes.map(size => createSizedPNG(size)));
+    
+    // 創建ICO文件結構
+    // ICO文件格式: 
+    // - 標頭 (6 bytes)
+    // - 圖像目錄 (每個圖像16 bytes)
+    // - 圖像數據 (每個PNG塊)
+    
+    // 準備標頭數據
+    const headerBuffer = new ArrayBuffer(6);
+    const headerView = new DataView(headerBuffer);
+    headerView.setUint16(0, 0, true); // 保留值，必須為0
+    headerView.setUint16(2, 1, true); // 圖像類型: 1 = ICO
+    headerView.setUint16(4, pngBlobs.length, true); // 圖像數量
+    
+    // 準備目錄和圖像數據
+    const directorySize = pngBlobs.length * 16;
+    const directoryBuffer = new ArrayBuffer(directorySize);
+    const directoryView = new DataView(directoryBuffer);
+    
+    // 計算圖像數據的偏移量基準點
+    let dataOffset = 6 + directorySize;
+    const pngData = [];
+    
+    // 創建圖像目錄
+    for (let i = 0; i < pngBlobs.length; i++) {
+        const blob = pngBlobs[i];
+        const arrayBuffer = await blob.arrayBuffer();
+        const size = iconSizes[i];
+        
+        // 設定目錄項目
+        const offset = i * 16;
+        directoryView.setUint8(offset, size); // 寬度
+        directoryView.setUint8(offset + 1, size); // 高度
+        directoryView.setUint8(offset + 2, 0); // 調色板數量
+        directoryView.setUint8(offset + 3, 0); // 保留值
+        directoryView.setUint16(offset + 4, 1, true); // 色彩平面數
+        directoryView.setUint16(offset + 6, 32, true); // 每像素位元數
+        directoryView.setUint32(offset + 8, arrayBuffer.byteLength, true); // 圖像大小
+        directoryView.setUint32(offset + 12, dataOffset, true); // 圖像數據偏移
+        
+        // 更新下一個圖像的偏移量
+        dataOffset += arrayBuffer.byteLength;
+        
+        // 保存PNG數據以便稍後寫入
+        pngData.push(new Uint8Array(arrayBuffer));
+    }
+    
+    // 合併所有數據
+    const totalSize = dataOffset;
+    const resultBuffer = new ArrayBuffer(totalSize);
+    const resultArray = new Uint8Array(resultBuffer);
+    
+    // 寫入標頭
+    resultArray.set(new Uint8Array(headerBuffer), 0);
+    // 寫入目錄
+    resultArray.set(new Uint8Array(directoryBuffer), 6);
+    
+    // 寫入圖像數據
+    let currentOffset = 6 + directorySize;
+    for (const data of pngData) {
+        resultArray.set(data, currentOffset);
+        currentOffset += data.byteLength;
+    }
+    
+    // 創建並返回Blob
+    return new Blob([resultBuffer], { type: 'image/x-icon' });
+}
+
+/**
+ * 為指定尺寸創建PNG圖像
+ * @param {number} size - 圖像尺寸
+ * @return {Promise<Blob>} PNG格式的Blob對象
+ */
+async function createSizedPNG(size) {
+    return new Promise((resolve) => {
+        // 創建畫布
+        const iconCanvas = document.createElement('canvas');
+        iconCanvas.width = size;
+        iconCanvas.height = size;
+        const iconCtx = iconCanvas.getContext('2d');
+        
+        // 計算目前顯示區域的比例
+        const displayWidth = canvas.clientWidth;
+        
+        // 繪製縮小後的資料夾SVG
+        iconCtx.drawImage(svg, 0, 0, displayWidth, displayWidth, 0, 0, size, size);
+        
+        // 計算縮放比例
+        const scaleFactor = size / displayWidth;
+        
+        // 繪製縮小後的照片
+        const scaledWidth = photo.width * photoScaleValue * scaleFactor;
+        const scaledHeight = photo.height * photoScaleValue * scaleFactor;
+        const scaledX = photoX * scaleFactor;
+        const scaledY = photoY * scaleFactor;
+        iconCtx.drawImage(photo, scaledX, scaledY, scaledWidth, scaledHeight);
+        
+        // 將畫布轉換為PNG數據
+        iconCanvas.toBlob(resolve, 'image/png');
+    });
+}
+
+/**
+ * 若ICO轉換失敗，回退到PNG下載
+ */
+function fallbackToPNG() {
+    // 創建用於導出的 256x256 畫布 (更新為最大尺寸)
     const exportCanvas = document.createElement('canvas');
-    exportCanvas.width = 128;
-    exportCanvas.height = 128;
+    exportCanvas.width = 256;
+    exportCanvas.height = 256;
     const exportCtx = exportCanvas.getContext('2d');
     
     // 計算目前顯示區域的比例
     const displayWidth = canvas.clientWidth;
     
     // 繪製縮小後的資料夾 SVG
-    exportCtx.drawImage(svg, 0, 0, displayWidth, displayWidth, 0, 0, 128, 128);
+    exportCtx.drawImage(svg, 0, 0, displayWidth, displayWidth, 0, 0, 256, 256);
     
     // 計算縮放比例
-    const scaleFactor = 128 / displayWidth;
+    const scaleFactor = 256 / displayWidth;
     
     // 繪製縮小後的照片
     const scaledWidth = photo.width * photoScaleValue * scaleFactor;
@@ -331,39 +489,9 @@ exportBtn.addEventListener('click', () => {
     const scaledY = photoY * scaleFactor;
     exportCtx.drawImage(photo, scaledX, scaledY, scaledWidth, scaledHeight);
     
-    // 檢測行動裝置
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    
-    if (isMobile) {
-        // 行動裝置提供分享選項
-        if (navigator.share) {
-            exportCanvas.toBlob(async (blob) => {
-                try {
-                    const file = new File([blob], 'folder-icon.ico', { type: 'image/png' });
-                    await navigator.share({
-                        files: [file],
-                        title: '資料夾圖示'
-                    });
-                } catch (error) {
-                    // 分享失敗，退回到一般下載
-                    downloadIcon(exportCanvas);
-                }
-            });
-        } else {
-            // 不支援分享API，使用一般下載
-            downloadIcon(exportCanvas);
-        }
-    } else {
-        // 桌面裝置使用一般下載
-        downloadIcon(exportCanvas);
-    }
-});
-
-// 協助匯出圖示的函數
-function downloadIcon(canvas) {
     const link = document.createElement('a');
-    link.download = 'folder-icon.ico';
-    link.href = canvas.toDataURL('image/png');
+    link.download = 'folder-icon.png';
+    link.href = exportCanvas.toDataURL('image/png');
     link.click();
 }
 

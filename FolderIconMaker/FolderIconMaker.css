@@ -1,7 +1,7 @@
 @charset "utf-8";
 /**
  * 樣式表
- * 版本: 1.0.0
+ * 版本: 2.0.0
  * 描述: 資料夾圖標製作工具的樣式定義，用於控制介面外觀與互動元素
  * 作者: OldCookie
  * 建立日期: 2025年
@@ -195,6 +195,26 @@ button:hover {
     color: var(--text-color);
     background-color: var(--footer-bg);
     border-radius: 8px;
+}
+
+/* 新增狀態訊息樣式 */
+.status-message {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--button-bg);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    z-index: 100;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, 20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 /* 響應式設計 - 行動裝置 */
