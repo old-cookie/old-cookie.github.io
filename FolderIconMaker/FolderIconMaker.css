@@ -1,0 +1,232 @@
+@charset "utf-8";
+/**
+ * 樣式表
+ * 版本: 1.0.0
+ * 描述: 資料夾圖標製作工具的樣式定義，用於控制介面外觀與互動元素
+ * 作者: OldCookie
+ * 建立日期: 2025年
+ * 
+ * 此樣式表定義了網頁上所有元素的外觀，包括:
+ * - 整體頁面布局與容器排列
+ * - 畫布區域與繪圖表面
+ * - 控制按鈕與操作界面
+ * - 顏色選擇器與調色選項
+ * - 圖片上傳區域與拖放功能
+ * - 縮放控制與使用者交互元素
+ * - 自動深色模式支援 (跟隨系統設置)
+ * - 響應式設計與行動裝置支援
+ */
+
+:root {
+    /* 淺色模式變數 */
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --border-color: #cccccc;
+    --canvas-border: #cccccc;
+    --button-bg: #0078d4;
+    --button-hover: #106ebe;
+    --upload-bg: #f5f5f5;
+    --upload-hover: #eaeaea;
+    --upload-active: #f0f7ff;
+    --upload-active-border: #0078d4;
+    --upload-active-text: #0078d4;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --header-bg: #f8f8f8;
+    --footer-bg: #f8f8f8;
+}
+
+/* 系統深色模式自動偵測 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #121212;
+        --text-color: #e0e0e0;
+        --border-color: #444444;
+        --canvas-border: #444444;
+        --button-bg: #0078d4;
+        --button-hover: #106ebe;
+        --upload-bg: #1e1e1e;
+        --upload-hover: #2a2a2a;
+        --upload-active: #253140;
+        --upload-active-border: #0078d4;
+        --upload-active-text: #0078d4;
+        --shadow-color: rgba(0, 0, 0, 0.4);
+        --header-bg: #1a1a1a;
+        --footer-bg: #1a1a1a;
+    }
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    font-family: system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.app-header {
+    width: 100%;
+    max-width: 512px;
+    display: flex;
+    justify-content: center; /* 置中標題，因為沒有切換按鈕了 */
+    align-items: center;
+    padding: 10px 0;
+    background-color: var(--header-bg);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.canvas-container {
+    position: relative;
+    width: 100%;
+    max-width: 512px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+}
+
+canvas {
+    border: 1px solid var(--canvas-border);
+    cursor: move;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+    /* 防止觸摸裝置的默認行為 */
+}
+
+.controls {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 512px;
+}
+
+button {
+    padding: 8px 16px;
+    background: var(--button-bg);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: var(--button-hover);
+}
+
+.color-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.color-btn {
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--bg-color);
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 0 1px var(--border-color);
+}
+
+.color-btn:hover {
+    transform: scale(1.1);
+}
+
+.color-picker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 上傳區域樣式 */
+.upload-area {
+    border: 2px dashed var(--border-color);
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: border-color 0.3s, color 0.3s, background-color 0.3s;
+    position: relative;
+    background-color: var(--upload-bg);
+    width: 100%;
+    max-width: 512px;
+}
+
+.upload-area:hover {
+    background-color: var(--upload-hover);
+}
+
+.upload-area.dragover {
+    border-color: var(--upload-active-border);
+    color: var(--upload-active-text);
+    background-color: var(--upload-active);
+}
+
+#photoInput {
+    display: none;
+}
+
+#scaleControl {
+    margin-top: 15px;
+    width: 100%;
+    max-width: 512px;
+}
+
+.app-footer {
+    width: 100%;
+    max-width: 512px;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px 0;
+    font-size: 0.8rem;
+    color: var(--text-color);
+    background-color: var(--footer-bg);
+    border-radius: 8px;
+}
+
+/* 響應式設計 - 行動裝置 */
+@media (max-width: 600px) {
+    .app-header h1 {
+        font-size: 1.2rem;
+    }
+
+    .controls {
+        gap: 10px;
+    }
+
+    button {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    .upload-area {
+        padding: 15px;
+    }
+
+    .color-btn {
+        width: 25px;
+        height: 25px;
+    }
+
+    #scaleControl {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .color-picker {
+        margin-bottom: 5px;
+    }
+}
