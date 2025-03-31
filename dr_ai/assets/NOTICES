@@ -5967,6 +5967,11 @@ image_picker_linux
 image_picker_macos
 image_picker_platform_interface
 image_picker_windows
+local_auth
+local_auth_android
+local_auth_darwin
+local_auth_platform_interface
+local_auth_windows
 path_provider
 path_provider_android
 path_provider_foundation
