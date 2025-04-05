@@ -2,10 +2,11 @@
 <!--
 /**
  * 應用
- * 版本: 2.0.0
- * 描述: 資料夾圖示製作工具
+ * 版本: 2.1.0
+ * 描述: 資料夾圖標製作工具
  * 作者: OldCookie
  * 建立日期: 2025年
+ * 最後更新: 2025年4月6日
  * 
  * 技術棧:
  * - HTML5 (頁面結構)
@@ -23,43 +24,68 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0078d4">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="將照片與Windows 11風格資料夾圖示合併，創建自定義資料夾圖示，支援行動裝置與觸控操作">
     <title>資料夾圖示製作工具</title>
     <link href="FolderIconMaker.css" rel="stylesheet" />
+    <link rel="icon" href="assets/folder_app_icon.ico" type="image/x-icon">
 </head>
 
 <body>
     <header class="app-header">
         <h1>資料夾圖示製作工具</h1>
     </header>
-    <div class="upload-area" id="uploadArea">
-        <p>將您的照片拖曳到此處或點擊上傳</p>
-        <input type="file" id="photoInput" accept="image/*">
-    </div>
-    <div id="scaleControl" class="controls" style="display:none">
-        <label>
-            照片縮放：
-            <input type="range" id="photoScale" min="0.1" max="2" step="0.1" value="1">
-            <span id="scaleValue">1.0</span>
+    
+    <div class="upload-container">
+        <label for="photoInput" class="upload-area" id="uploadArea" aria-label="上傳照片區域">
+            <p>將您的照片拖曳到此處或點擊上傳</p>
+            <p class="upload-tip">支援 JPG、PNG 等常見格式</p>
         </label>
-        <button id="exportBtn" title="產生可用於Windows的資料夾圖示">匯出 ICO 圖示</button>
+        <input type="file" id="photoInput" accept="image/*" aria-label="選擇照片">
     </div>
-    <div class="controls">
-        <div class="color-picker">
-            <label>顏色 1：</label>
-            <input type="color" id="darkColor" value="#121313">
+    
+    <div id="scaleControl" class="card" style="display:none">
+        <div class="slider-label">
+            <span class="control-label">照片縮放</span>
+            <span id="scaleValue">1.0</span>
         </div>
-        <div class="color-picker">
-            <label>顏色 2：</label>
-            <input type="color" id="blueColor" value="#09B8E5">
+        <input type="range" id="photoScale" min="0.1" max="2" step="0.1" value="1" aria-label="調整照片大小">
+        <button id="exportBtn" aria-label="匯出資料夾圖示">匯出資料夾圖示</button>
+    </div>
+    
+    <div class="controls">
+        <div class="control-group">
+            <div class="control-label">資料夾顏色設定</div>
+            <div class="color-picker">
+                <label for="darkColor">深色部分：</label>
+                <input type="color" id="darkColor" value="#121313" aria-label="選擇深色部分顏色">
+            </div>
+            <div class="color-picker">
+                <label for="blueColor">亮藍部分：</label>
+                <input type="color" id="blueColor" value="#09B8E5" aria-label="選擇亮藍部分顏色">
+            </div>
         </div>
     </div>
+    
     <div class="controls">
-        <div>從照片提取的顏色：</div>
-        <div id="photoColors" class="color-options"></div>
+        <div class="control-group">
+            <div class="control-label">從照片提取的顏色：<span class="upload-tip">(點擊選擇，Shift+點擊設為藍色)</span></div>
+            <div id="photoColors" class="color-options"></div>
+        </div>
     </div>
+    
     <div class="canvas-container">
-        <canvas id="canvas" width="512" height="512"></canvas>
+        <canvas id="canvas" width="512" height="512" aria-label="資料夾圖示預覽"></canvas>
+        <div class="canvas-hint" id="canvasHint">拖曳可調整照片位置</div>
+        <div class="gesture-hint" id="gestureHint">👆</div>
     </div>
+    
+    <footer class="app-footer">
+        &copy; 2025 OldCookie | 資料夾圖示製作工具 v2.1.0
+    </footer>
+    
     <script src="FolderIconMaker.js"></script>
 </body>
 

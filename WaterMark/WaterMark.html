@@ -2,7 +2,7 @@
 <!--
 /**
  * WaterMark 照片編輯器與水印應用
- * 版本: 3.0.0
+ * 版本: 3.1.0
  * 描述: 提供簡易的網頁照片編輯與添加水印功能
  * 作者: OldCookie
  * 建立日期: 2025年
@@ -20,7 +20,7 @@
  * 4. 預覽並下載處理後的圖片
  */
 -->
-<html lang="zh-Hant">
+<html lang="zh-HK">
 
 <head>
     <meta charset="UTF-8">
@@ -29,12 +29,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-title" content="水印">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>照片編輯器與水印</title>
     <!-- Cropper.js CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" rel="stylesheet" />
     <!-- 自定義 CSS -->
     <link href="WaterMark.css" rel="stylesheet" />
+    <!-- 設置圖標 -->
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 </head>
 
 <body>
@@ -47,27 +51,6 @@
     </div>
 
     <div id="imagesContainer"></div>
-
-    <!-- AI 圖像放大選項 -->
-    <div class="ai-upscale-options" id="aiUpscaleOptions">
-        <h3>AI 圖像增強</h3>
-        <div class="upscale-toggle-container">
-            <label class="toggle" for="enableUpscale">
-                <input type="checkbox" id="enableUpscale" aria-label="啟用 AI 圖像放大">
-                <span class="toggle-slider"></span>
-            </label>
-            <label for="enableUpscale" class="toggle-label">啟用 AI 圖像放大</label>
-        </div>
-        <div class="upscale-factor-container">
-            <label for="upscaleFactor">放大倍率:</label>
-            <select id="upscaleFactor" disabled>
-                <option value="1.5">1.5x - 低</option>
-                <option value="2" selected>2x - 中</option>
-                <option value="4">4x - 高（處理較慢）</option>
-            </select>
-        </div>
-        <p class="upscale-info">AI 放大功能可以增強圖片細節，但處理時間會更長</p>
-    </div>
 
     <button class="process-button" id="processBtn">處理圖片</button>
 

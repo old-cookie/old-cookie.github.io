@@ -1,10 +1,11 @@
 @charset "utf-8";
 /**
  * 樣式表
- * 版本: 2.0.0
+ * 版本: 2.1.0
  * 描述: 資料夾圖標製作工具的樣式定義，用於控制介面外觀與互動元素
  * 作者: OldCookie
  * 建立日期: 2025年
+ * 最後更新: 2025年4月6日
  * 
  * 此樣式表定義了網頁上所有元素的外觀，包括:
  * - 整體頁面布局與容器排列
@@ -14,7 +15,9 @@
  * - 圖片上傳區域與拖放功能
  * - 縮放控制與使用者交互元素
  * - 自動深色模式支援 (跟隨系統設置)
- * - 響應式設計與行動裝置支援
+ * - 增強的響應式設計與行動裝置支援
+ * - 觸摸友好界面與手勢操作
+ * - 跨瀏覽器相容性
  */
 
 :root {
@@ -25,14 +28,21 @@
     --canvas-border: #cccccc;
     --button-bg: #0078d4;
     --button-hover: #106ebe;
+    --button-active: #005a9e;
     --upload-bg: #f5f5f5;
     --upload-hover: #eaeaea;
     --upload-active: #f0f7ff;
     --upload-active-border: #0078d4;
     --upload-active-text: #0078d4;
     --shadow-color: rgba(0, 0, 0, 0.1);
+    --card-bg: #ffffff;
     --header-bg: #f8f8f8;
     --footer-bg: #f8f8f8;
+    --tooltip-bg: rgba(0, 0, 0, 0.8);
+    --tooltip-text: #ffffff;
+    --selection-color: rgba(0, 120, 212, 0.2);
+    --slider-track: #dddddd;
+    --slider-thumb: #0078d4;
 }
 
 /* 系統深色模式自動偵測 */
@@ -44,57 +54,122 @@
         --canvas-border: #444444;
         --button-bg: #0078d4;
         --button-hover: #106ebe;
+        --button-active: #005a9e;
         --upload-bg: #1e1e1e;
         --upload-hover: #2a2a2a;
         --upload-active: #253140;
         --upload-active-border: #0078d4;
         --upload-active-text: #0078d4;
         --shadow-color: rgba(0, 0, 0, 0.4);
+        --card-bg: #1e1e1e;
         --header-bg: #1a1a1a;
         --footer-bg: #1a1a1a;
+        --tooltip-bg: rgba(50, 50, 50, 0.95);
+        --tooltip-text: #ffffff;
+        --selection-color: rgba(0, 120, 212, 0.3);
+        --slider-track: #444444;
+        --slider-thumb: #0078d4;
     }
+}
+
+/* 基礎樣式重置與全域設定 */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
 }
 
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    padding: 20px;
-    font-family: system-ui, -apple-system, sans-serif;
+    gap: 16px;
+    padding: 16px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
     transition: background-color 0.3s, color 0.3s;
+    min-height: 100vh;
+    line-height: 1.5;
 }
 
+/* 選擇文字的高亮樣式 */
+::selection {
+    background-color: var(--selection-color);
+}
+
+/* 頁首樣式 */
 .app-header {
     width: 100%;
     max-width: 512px;
     display: flex;
-    justify-content: center; /* 置中標題，因為沒有切換按鈕了 */
+    justify-content: center;
     align-items: center;
-    padding: 10px 0;
+    padding: 12px 0;
     background-color: var(--header-bg);
-    border-radius: 8px;
-    margin-bottom: 10px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 8px var(--shadow-color);
 }
 
 .app-header h1 {
     margin: 0;
     font-size: 1.5rem;
+    font-weight: 600;
 }
 
+/* 卡片式容器 */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    width: 100%;
+    max-width: 512px;
+}
+
+/* 畫布容器 */
 .canvas-container {
     position: relative;
     width: 100%;
     max-width: 512px;
     height: auto;
     aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+/* 畫布指導提示 */
+.canvas-hint {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--tooltip-bg);
+    color: var(--tooltip-text);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    opacity: 0.9;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.canvas-hint.hide {
+    opacity: 0;
 }
 
 canvas {
     border: 1px solid var(--canvas-border);
+    border-radius: 12px;
     cursor: move;
     width: 100%;
     height: 100%;
@@ -102,46 +177,130 @@ canvas {
     /* 防止觸摸裝置的默認行為 */
 }
 
+/* 控制面板 */
 .controls {
     display: flex;
-    gap: 20px;
+    gap: 16px;
     align-items: center;
     flex-wrap: wrap;
     width: 100%;
     max-width: 512px;
+    padding: 12px;
+    border-radius: 12px;
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 8px var(--shadow-color);
 }
 
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.control-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* 按鈕樣式 */
 button {
-    padding: 8px 16px;
+    padding: 10px 18px;
     background: var(--button-bg);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s, transform 0.1s;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 button:hover {
     background: var(--button-hover);
 }
 
+button:active {
+    background: var(--button-active);
+    transform: translateY(1px);
+}
+
+/* 波紋效果 */
+button::after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform .3s, opacity .5s;
+}
+
+button:active::after {
+    transform: scale(0, 0);
+    opacity: .3;
+    transition: 0s;
+}
+
+/* 匯出按鈕特殊樣式 */
+#exportBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+    padding: 12px;
+    font-size: 1rem;
+}
+
+#exportBtn::before {
+    content: '🖼️';
+    font-size: 1.2rem;
+}
+
+/* 顏色選擇區域 */
 .color-options {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
-    margin-top: 10px;
+    margin-top: 8px;
+    justify-content: center;
 }
 
 .color-btn {
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 36px;
     border: 2px solid var(--bg-color);
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 0 0 1px var(--border-color);
+    box-shadow: 0 2px 4px var(--shadow-color);
+    transition: transform 0.2s, box-shadow 0.2s;
+    -webkit-user-drag: none;
+    user-drag: none;
 }
 
-.color-btn:hover {
+.color-btn:hover, .color-btn:active {
     transform: scale(1.1);
+    box-shadow: 0 4px 8px var(--shadow-color);
 }
 
 .color-picker {
@@ -150,54 +309,192 @@ button:hover {
     gap: 10px;
 }
 
+.color-picker input[type="color"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.color-picker input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.color-picker input[type="color"]::-webkit-color-swatch {
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.color-picker input[type="color"]::-moz-color-swatch {
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+}
+
+/* 上傳容器樣式 */
+.upload-container {
+    width: 100%;
+    max-width: 512px;
+    margin-bottom: 16px;
+    position: relative;
+}
+
 /* 上傳區域樣式 */
 .upload-area {
     border: 2px dashed var(--border-color);
-    border-radius: 10px;
-    padding: 30px;
+    border-radius: 12px;
+    padding: 24px;
     text-align: center;
     cursor: pointer;
-    margin-bottom: 20px;
-    transition: border-color 0.3s, color 0.3s, background-color 0.3s;
+    transition: all 0.3s ease;
     position: relative;
     background-color: var(--upload-bg);
     width: 100%;
-    max-width: 512px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+}
+
+.upload-area::before {
+    content: '📁';
+    font-size: 2rem;
+    margin-bottom: 8px;
 }
 
 .upload-area:hover {
     background-color: var(--upload-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-color);
 }
 
 .upload-area.dragover {
     border-color: var(--upload-active-border);
     color: var(--upload-active-text);
     background-color: var(--upload-active);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px var(--shadow-color);
+}
+
+/* 上傳按鈕文字與圖示 */
+.upload-area p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.upload-tip {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-top: 8px;
 }
 
 #photoInput {
     display: none;
 }
 
+/* 縮放控制樣式 */
 #scaleControl {
-    margin-top: 15px;
+    margin-top: 12px;
     width: 100%;
     max-width: 512px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    border-radius: 12px;
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+/* 範圍滑桿樣式 */
+input[type="range"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: var(--slider-track);
+    border-radius: 4px;
+    outline: none;
+    margin: 8px 0;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    background: var(--slider-thumb);
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    background: var(--slider-thumb);
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+input[type="range"]::-ms-thumb {
+    width: 24px;
+    height: 24px;
+    background: var(--slider-thumb);
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.slider-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.slider-label span {
+    font-weight: 500;
+}
+
+#scaleValue {
+    background: var(--button-bg);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.9rem;
 }
 
 .app-footer {
     width: 100%;
     max-width: 512px;
     text-align: center;
-    margin-top: 20px;
-    padding: 10px 0;
+    margin-top: 16px;
+    padding: 12px 0;
     font-size: 0.8rem;
     color: var(--text-color);
     background-color: var(--footer-bg);
-    border-radius: 8px;
+    border-radius: 12px;
+    opacity: 0.8;
 }
 
-/* 新增狀態訊息樣式 */
+/* 狀態訊息樣式 */
 .status-message {
     position: fixed;
     bottom: 20px;
@@ -205,11 +502,32 @@ button:hover {
     transform: translateX(-50%);
     background-color: var(--button-bg);
     color: white;
-    padding: 10px 20px;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px var(--shadow-color);
+    padding: 12px 24px;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px var(--shadow-color);
     z-index: 100;
     animation: fadeIn 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 240px;
+    justify-content: center;
+}
+
+.status-message::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 2px solid white;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 @keyframes fadeIn {
@@ -217,36 +535,141 @@ button:hover {
     to { opacity: 1; transform: translate(-50%, 0); }
 }
 
-/* 響應式設計 - 行動裝置 */
+/* 手勢提示圖示 */
+.gesture-hint {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background-color: var(--tooltip-bg);
+    color: var(--tooltip-text);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    opacity: 0.7;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.gesture-hint.hide {
+    opacity: 0;
+}
+
+/* 響應式設計優化 */
 @media (max-width: 600px) {
+    body {
+        padding: 12px;
+        gap: 12px;
+    }
+    
     .app-header h1 {
         font-size: 1.2rem;
     }
-
+    
     .controls {
-        gap: 10px;
+        gap: 8px;
+        padding: 10px;
     }
-
+    
     button {
-        padding: 8px 12px;
-        font-size: 0.9rem;
+        padding: 12px 16px; /* 增加高度使觸控更容易 */
+        font-size: 1rem;
     }
-
+    
     .upload-area {
-        padding: 15px;
+        padding: 16px;
+        min-height: 100px;
     }
-
+    
+    .upload-area::before {
+        font-size: 1.5rem;
+    }
+    
     .color-btn {
-        width: 25px;
-        height: 25px;
+        width: 36px; /* 增加觸控目標尺寸 */
+        height: 36px;
     }
-
+    
+    /* 垂直排列控制項以避免擁擠 */
     #scaleControl {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
     }
-
+    
     .color-picker {
-        margin-bottom: 5px;
+        margin-bottom: 8px;
+        justify-content: space-between;
+    }
+    
+    /* 增強行動版的互動元素 */
+    input[type="range"]::-webkit-slider-thumb {
+        width: 28px; /* 增大滑桿按鈕 */
+        height: 28px;
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .status-message {
+        width: calc(100% - 32px);
+        max-width: 320px;
+        font-size: 0.9rem;
+    }
+    
+    /* 調整卡片內間距 */
+    .card {
+        padding: 12px;
+    }
+    
+    /* 改善小螢幕上的滾動體驗 */
+    html {
+        scroll-padding-top: 16px;
+    }
+    
+    /* 防止表單控制元素縮放造成的視覺問題 */
+    input, button, select, textarea {
+        font-size: 16px !important; /* 防止iOS自動縮放 */
+    }
+}
+
+/* 低高度裝置優化 */
+@media (max-height: 700px) {
+    body {
+        gap: 8px;
+    }
+    
+    .app-header {
+        padding: 8px 0;
+        margin-bottom: 4px;
+    }
+    
+    .upload-area {
+        min-height: 80px;
+        padding: 12px;
+    }
+    
+    .canvas-container {
+        max-height: 50vh;
+    }
+}
+
+/* 觸控裝置優化 */
+@media (pointer: coarse) {
+    button, .color-btn, .upload-area {
+        min-height: 44px; /* 確保觸控目標尺寸足夠 */
+    }
+    
+    .canvas-hint {
+        bottom: 60px; /* 避免與手指重疊 */
     }
 }

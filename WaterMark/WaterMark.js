@@ -2,7 +2,7 @@
 
 /**
  * WaterMark 照片編輯和水印處理腳本
- * 版本: 3.0.0
+ * 版本: 3.1.0
  * 描述: 提供照片上傳、編輯、添加水印及下載功能
  * 作者: OldCookie
  * 建立日期: 2025年
@@ -14,7 +14,6 @@
  * - 拖放式照片上傳
  * - 支持多張照片處理 (最多4張)
  * - 圖片裁剪 (自由比例、16:9、3:4)
- * - AI 圖像放大增強
  * - 自動添加水印
  * - 批量下載處理後的圖片
  */
@@ -28,17 +27,41 @@ const previewContainer = document.getElementById('previewContainer');
 const downloadAllBtn = document.getElementById('downloadAllBtn');
 const processBtn = document.getElementById('processBtn');
 
-// AI 放大相關變數
-const aiUpscaleOptions = document.getElementById('aiUpscaleOptions');
-const enableUpscale = document.getElementById('enableUpscale');
-const upscaleFactor = document.getElementById('upscaleFactor');
-
 let cropperInstances = [];
 let editedImages = [];
+let isMobile = window.innerWidth <= 768;
 
-// 啟用/禁用放大倍率選擇
-enableUpscale.addEventListener('change', function () {
-    upscaleFactor.disabled = !this.checked;
+// 檢查水印圖片是否存在
+function checkWatermarkExists() {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+            resolve(true);
+        };
+        img.onerror = () => {
+            resolve(false);
+        };
+        img.src = "assets/Cherryneko_Watermark_WithNameXUsername.svg";
+    });
+}
+
+// 創建默認水印
+async function createDefaultWatermark() {
+    const watermarkExists = await checkWatermarkExists();
+
+    if (!watermarkExists) {
+        console.warn("水印圖片未找到，將使用默認文字水印");
+    }
+}
+
+// 初始化應用程序
+function initApp() {
+    createDefaultWatermark();
+}
+
+// 監聽視窗大小變化以更新移動裝置狀態
+window.addEventListener('resize', function () {
+    isMobile = window.innerWidth <= 768;
 });
 
 // 處理拖曳
@@ -78,13 +101,25 @@ fileInput.addEventListener('change', (e) => {
 function handleFiles(files) {
     const existingFiles = imagesContainer.querySelectorAll('.image-container').length;
     const totalFiles = existingFiles + files.length;
+
     if (totalFiles > 4) {
         alert('您最多可以上傳4張照片。');
         return;
     }
 
+    // 限制檔案大小 (10MB)
+    const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+
     Array.from(files).forEach(file => {
-        if (!file.type.startsWith('image/')) return;
+        if (!file.type.startsWith('image/')) {
+            alert(`"${file.name}" 不是有效的圖片檔案。`);
+            return;
+        }
+
+        if (file.size > maxSize) {
+            alert(`"${file.name}" 檔案太大（超過10MB）。`);
+            return;
+        }
 
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -95,6 +130,7 @@ function handleFiles(files) {
             const cancelBtn = document.createElement('button');
             cancelBtn.classList.add('cancel-button');
             cancelBtn.textContent = '取消';
+            cancelBtn.setAttribute('aria-label', '取消此照片');
             imageContainer.appendChild(cancelBtn);
 
             const imgWrapper = document.createElement('div');
@@ -103,6 +139,8 @@ function handleFiles(files) {
             const img = document.createElement('img');
             img.src = event.target.result;
             img.alt = file.name;
+            // 防止圖片拖曳
+            img.draggable = false;
 
             imgWrapper.appendChild(img);
             imageContainer.appendChild(imgWrapper);
@@ -116,16 +154,19 @@ function handleFiles(files) {
             aspectFree.classList.add('aspect-btn');
             aspectFree.textContent = '自由';
             aspectFree.dataset.ratio = 'NaN';
+            aspectFree.setAttribute('aria-label', '自由比例裁剪');
 
             const aspect169 = document.createElement('button');
             aspect169.classList.add('aspect-btn');
             aspect169.textContent = '16:9';
             aspect169.dataset.ratio = '16/9';
+            aspect169.setAttribute('aria-label', '16:9 比例裁剪');
 
             const aspect34 = document.createElement('button');
             aspect34.classList.add('aspect-btn');
             aspect34.textContent = '3:4';
             aspect34.dataset.ratio = '3/4';
+            aspect34.setAttribute('aria-label', '3:4 比例裁剪');
 
             controls.appendChild(aspectFree);
             controls.appendChild(aspect169);
@@ -136,15 +177,27 @@ function handleFiles(files) {
 
             // 初始化 Cropper
             const cropper = new Cropper(img, {
-                viewMode: 1,
+                viewMode: 2, // 限制裁剪框不超出畫布
                 movable: true,
                 zoomable: true,
                 scalable: true,
                 aspectRatio: 16 / 9, // 默認為16:9
-                autoCropArea: 1,
+                autoCropArea: 0.8, // 裁剪框初始大小
                 responsive: true,
                 background: false,
                 modal: true,
+                guides: true, // 顯示裁剪參考線
+                center: true, // 顯示中心參考線
+                highlight: true, // 裁剪框高亮顯示
+                cropBoxResizable: true, // 允許調整裁剪框大小
+                toggleDragModeOnDblclick: true, // 雙擊切換拖動模式
+                ready: function () {
+                    // 在移動裝置上優化初始顯示
+                    if (isMobile) {
+                        // 自動調整縮放以適應螢幕
+                        cropper.zoomTo(0.7);
+                    }
+                }
             });
 
             cropperInstances.push(cropper);
@@ -225,12 +278,10 @@ function removePhoto(imageContainer, cropper) {
 // 函數：添加水印並準備預覽
 function processImages() {
     editedImages = [];
-    const isUpscalingEnabled = enableUpscale.checked;
-    const scaleFactor = isUpscalingEnabled ? parseFloat(upscaleFactor.value) : 1;
 
     // 更新處理按鈕狀態
     processBtn.disabled = true;
-    processBtn.textContent = isUpscalingEnabled ? 'AI 處理中...' : '處理中...';
+    processBtn.textContent = '處理中...';
 
     const promises = cropperInstances.map((cropper, index) => {
         return new Promise(async (resolve) => {
@@ -240,11 +291,6 @@ function processImages() {
 
             // 獲取裁剪後的圖像數據
             let imageData = canvas.toDataURL('image/png');
-
-            // 如果啟用了 AI 放大
-            if (isUpscalingEnabled) {
-                imageData = await upscaleImage(imageData, scaleFactor);
-            }
 
             // 創建新圖像以添加水印
             const img = new Image();
@@ -258,35 +304,45 @@ function processImages() {
                 const ctx = finalCanvas.getContext('2d');
                 ctx.drawImage(img, 0, 0);
 
-                const watermark = new Image();
-                watermark.src = "assets/Cherryneko_Watermark_WithNameXUsername.svg";
+                const watermarkExists = checkWatermarkExists();
 
-                watermark.onload = () => {
-                    // 計算水印大小（圖片寬度的1/5）
-                    const wmWidth = finalCanvas.width / 5;
-                    const wmHeight = (watermark.height / watermark.width) * wmWidth;
+                if (watermarkExists) {
+                    const watermark = new Image();
+                    watermark.src = "assets/Cherryneko_Watermark_WithNameXUsername.svg";
+                    watermark.setAttribute('crossOrigin', 'Anonymous');
 
-                    // 水印位置設置為右下角，10px 從邊緣
-                    ctx.drawImage(watermark,
-                        finalCanvas.width - wmWidth - 10,
-                        finalCanvas.height - wmHeight - 10,
-                        wmWidth, wmHeight);
+                    watermark.onload = () => {
+                        // 計算水印大小（圖片寬度的1/5）
+                        const wmWidth = finalCanvas.width / 5;
+                        const wmHeight = (watermark.height / watermark.width) * wmWidth;
 
+                        // 水印位置設置為右下角，10px 從邊緣
+                        ctx.drawImage(watermark,
+                            finalCanvas.width - wmWidth - 10,
+                            finalCanvas.height - wmHeight - 10,
+                            wmWidth, wmHeight);
+
+                        const dataURL = finalCanvas.toDataURL('image/png');
+                        editedImages.push(dataURL);
+                        resolve();
+                    };
+
+                    watermark.onerror = () => {
+                        addTextWatermark(ctx, finalCanvas);
+                        const dataURL = finalCanvas.toDataURL('image/png');
+                        editedImages.push(dataURL);
+                        resolve();
+                    };
+                } else {
+                    addTextWatermark(ctx, finalCanvas);
                     const dataURL = finalCanvas.toDataURL('image/png');
                     editedImages.push(dataURL);
                     resolve();
-                };
-
-                watermark.onerror = () => {
-                    alert('無法載入水印圖片。請確保水印文件存在。');
-                    // 即使水印無法載入，也使用未添加水印的圖像
-                    const dataURL = finalCanvas.toDataURL('image/png');
-                    editedImages.push(dataURL);
-                    resolve();
-                };
+                }
             };
 
             img.onerror = () => {
+                console.error('處理圖像時出錯。');
                 alert('處理圖像時出錯。');
                 resolve();
             };
@@ -301,94 +357,55 @@ function processImages() {
     });
 }
 
-// AI 圖像放大函數
-async function upscaleImage(imageDataUrl, scale) {
-    try {
-        // 創建一個新的 Image 對象來獲取圖像尺寸
-        const img = new Image();
-        img.src = imageDataUrl;
-
-        // 等待圖像載入
-        await new Promise(resolve => {
-            img.onload = resolve;
-        });
-
-        // 創建一個新的 Canvas
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-
-        // 設置新的尺寸
-        const newWidth = Math.round(img.width * scale);
-        const newHeight = Math.round(img.height * scale);
-
-        canvas.width = newWidth;
-        canvas.height = newHeight;
-
-        // 使用高質量的縮放
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-
-        // 實現基本的雙線性插值放大
-        ctx.drawImage(img, 0, 0, newWidth, newHeight);
-
-        // 使用簡單的銳化濾鏡增強細節
-        if (scale > 1) {
-            const imageData = ctx.getImageData(0, 0, newWidth, newHeight);
-            const data = imageData.data;
-
-            // 先備份原始資料
-            const original = new Uint8ClampedArray(data);
-
-            // 銳化強度 (0.1 到 0.3 是合理範圍)
-            const sharpenIntensity = 0.2;
-
-            // 對圖像應用簡單銳化濾鏡 (避免處理邊緣像素)
-            for (let y = 1; y < newHeight - 1; y++) {
-                for (let x = 1; x < newWidth - 1; x++) {
-                    const idx = (y * newWidth + x) * 4;
-
-                    // 對每個顏色通道應用銳化
-                    for (let c = 0; c < 3; c++) { // RGB 通道
-                        const current = original[idx + c];
-
-                        // 檢查周圍像素來銳化
-                        const top = original[((y - 1) * newWidth + x) * 4 + c];
-                        const bottom = original[((y + 1) * newWidth + x) * 4 + c];
-                        const left = original[(y * newWidth + (x - 1)) * 4 + c];
-                        const right = original[(y * newWidth + (x + 1)) * 4 + c];
-
-                        // 基本拉普拉斯銳化算法
-                        const sharpened = 5 * current - top - bottom - left - right;
-
-                        // 將銳化值與原始值混合
-                        data[idx + c] = Math.min(255, Math.max(0,
-                            current * (1 - sharpenIntensity) + sharpened * sharpenIntensity));
-                    }
-                }
-            }
-
-            ctx.putImageData(imageData, 0, 0);
-        }
-
-        return canvas.toDataURL('image/png');
-    } catch (error) {
-        console.error('圖像放大錯誤:', error);
-        return imageDataUrl; // 如果出錯，返回原始圖像
-    }
+// 添加文字水印（當圖片水印不可用時）
+function addTextWatermark(ctx, canvas) {
+    const text = "© WaterMark";
+    ctx.font = "bold " + (canvas.width / 30) + "px Arial";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "bottom";
+    ctx.fillText(text, canvas.width - 10, canvas.height - 10);
 }
 
 // 函數：顯示預覽
 function displayPreview() {
     previewContainer.innerHTML = '';
     editedImages.forEach((dataURL, index) => {
+        const imgWrapper = document.createElement('div');
+        imgWrapper.className = 'preview-image-wrapper';
+
         const img = document.createElement('img');
         img.src = dataURL;
         img.alt = `編輯後的照片 ${index + 1}`;
-        previewContainer.appendChild(img);
+        img.draggable = false;
+
+        // 添加單獨下載按鈕
+        const downloadBtn = document.createElement('button');
+        downloadBtn.className = 'download-single-button';
+        downloadBtn.innerHTML = '下載';
+        downloadBtn.setAttribute('aria-label', `下載照片 ${index + 1}`);
+        downloadBtn.addEventListener('click', () => {
+            downloadImage(dataURL, `edited_image_${index + 1}.png`);
+        });
+
+        imgWrapper.appendChild(img);
+        imgWrapper.appendChild(downloadBtn);
+        previewContainer.appendChild(imgWrapper);
     });
+
     previewSection.style.display = 'block';
     // 滾動到預覽區域
     previewSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+// 函數：下載單張圖片
+function downloadImage(dataURL, filename) {
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 // 函數：下載所有圖片
@@ -397,13 +414,21 @@ downloadAllBtn.addEventListener('click', () => {
 });
 
 function downloadAllImages() {
+    if (editedImages.length === 0) {
+        alert('沒有可下載的圖片。');
+        return;
+    }
+
+    // 在移動裝置上一次下載多個檔案可能有問題，提供提示
+    if (isMobile && editedImages.length > 1) {
+        alert('即將下載所有圖片。如果您使用的是移動裝置，可能需要點擊每張圖片下方的下載按鈕個別下載。');
+    }
+
     editedImages.forEach((dataURL, index) => {
-        const link = document.createElement('a');
-        link.href = dataURL;
-        link.download = `edited_image_${index + 1}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        // 添加延遲避免瀏覽器阻擋多個下載
+        setTimeout(() => {
+            downloadImage(dataURL, `edited_image_${index + 1}.png`);
+        }, index * 500);
     });
 }
 
@@ -413,14 +438,7 @@ processBtn.addEventListener('click', () => {
         alert('請先上傳並配置照片。');
         return;
     }
-    processBtn.disabled = true;
-    processBtn.textContent = '處理中...';
     processImages();
-    // 在處理完成後重新啟用按鈕（延遲1秒模擬處理時間）
-    setTimeout(() => {
-        processBtn.disabled = false;
-        processBtn.textContent = '處理圖片';
-    }, 1000);
 });
 
 // 函數：更新 "處理圖片" 按鈕和上傳區域的顯示狀態
@@ -428,10 +446,8 @@ function updateProcessButtonVisibility() {
     const totalImages = imagesContainer.querySelectorAll('.image-container').length;
     if (totalImages > 0) {
         processBtn.style.display = 'block';
-        aiUpscaleOptions.style.display = 'block'; // 顯示 AI 放大選項
     } else {
         processBtn.style.display = 'none';
-        aiUpscaleOptions.style.display = 'none'; // 隱藏 AI 放大選項
         // 隱藏預覽區域
         previewSection.style.display = 'none';
     }
@@ -442,3 +458,6 @@ function updateProcessButtonVisibility() {
         uploadArea.classList.remove('hidden'); // 顯示上傳區域
     }
 }
+
+// 啟動應用程序
+document.addEventListener('DOMContentLoaded', initApp);
