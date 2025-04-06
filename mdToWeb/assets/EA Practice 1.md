@@ -39,7 +39,7 @@ This should raise the residents' satisfaction with the company.
 #### Enhancing company image
 
 In addition, if motion sensors are used, it will lower the electricity consumption and as a result, the monthly management fee could be reduced.
-This shows that the company cares about the residents and responds to their concerns. 
+This shows that the company cares about the residents and responds to their concerns.
 Thus, it will enhance the company image.
 
 ### Conclusion
