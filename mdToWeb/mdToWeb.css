@@ -149,10 +149,9 @@ main {
 /* 文件列表樣式 */
 .file-list {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 0.5rem;
-    max-height: 150px;
+    max-height: 250px;
     overflow-y: auto;
     background-color: var(--bg-primary);
     border-radius: 4px;
@@ -170,9 +169,7 @@ main {
     cursor: pointer;
     transition: background-color 0.2s;
     background-color: var(--bg-secondary);
-    min-width: 120px;
-    max-width: 200px;
-    flex: 1;
+    width: 100%;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;

@@ -145,52 +145,55 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 使用 Promise 包裝，以便在完成後執行後續操作
         return new Promise((resolve, reject) => {
-            // 使用 fetch 直接獲取真實目錄內容，添加緩存破壞參數
-            fetch(`${path}?_=${new Date().getTime()}&v=${version}`)
+            // 從 JSON 檔案載入檔案列表數據
+            fetch(`assets/filelist.json?v=${version}`)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('無法獲取目錄內容');
+                        throw new Error('無法獲取檔案列表數據');
                     }
-                    return response.text();
+                    return response.json();
                 })
-                .then(html => {
-                    // 解析目錄列表
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const links = Array.from(doc.querySelectorAll('a'));
-                    
-                    // 提取目錄和文件
-                    const folders = [];
-                    const files = [];
-                    
-                    links.forEach(link => {
-                        const href = link.getAttribute('href');
-                        // 跳過父目錄連結
-                        if (href === '../' || href === '..') return;
-                        
-                        if (href.endsWith('/')) {
-                            // 目錄
-                            folders.push(href.slice(0, -1));
-                        } else if (href.endsWith('.md')) {
-                            // Markdown 文件
-                            files.push(href);
+                .then(data => {
+                    // 檢查JSON中是否包含當前路徑的數據
+                    if (data[path]) {
+                        const { folders, files } = data[path];
+                        renderFileList(path, folders, files);
+                    } else {
+                        // 如果找不到路徑，則回到根目錄
+                        if (path !== 'assets/') {
+                            currentPath = 'assets/';
+                            currentPathEl.textContent = currentPath;
+                            updateUrlParams(null, currentPath);
+                            
+                            if (data['assets/']) {
+                                const { folders, files } = data['assets/'];
+                                renderFileList('assets/', folders, files);
+                            } else {
+                                // 如果連根目錄數據都找不到，顯示錯誤
+                                fileList.innerHTML = '<div class="loading">錯誤: 找不到檔案列表數據</div>';
+                            }
+                        } else {
+                            // 如果是根目錄但找不到數據，顯示錯誤
+                            fileList.innerHTML = '<div class="loading">錯誤: 找不到檔案列表數據</div>';
                         }
-                    });
-                    
-                    renderFileList(path, folders, files);
+                    }
                     resolve();
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     fileList.innerHTML = `<div class="loading">錯誤: ${error.message}</div>`;
                     
-                    // 如果無法獲取目錄，顯示默認文件
+                    // 如果完全無法載入JSON，顯示默認檔案列表
                     if (path === 'assets/') {
-                        renderFileList(path, [], ['demo.md']);
-                        resolve();
-                    } else {
-                        reject(error);
+                        const defaultFiles = [
+                            'demo.md',
+                            'EA 範例.md',
+                            'EA Practice 1.md',
+                            'Press Release Sample.md'
+                        ];
+                        renderFileList(path, [], defaultFiles);
                     }
+                    resolve();
                 });
         });
     }
@@ -219,13 +222,14 @@ document.addEventListener('DOMContentLoaded', function() {
             fileList.appendChild(folderItem);
         });
         
-        // 再顯示 Markdown 文件 - 只顯示文件名而不是完整路徑
+        // 再顯示 Markdown 文件 - 只顯示文件名而不是完整路徑，且隱藏 .md 副檔名
         files.forEach(file => {
             if (file.endsWith('.md')) {
                 const folderItem = document.createElement('div');
                 folderItem.className = 'file-item markdown';
-                // 只顯示文件名，不顯示完整路徑
-                folderItem.innerHTML = `<i class="fas fa-file-alt"></i> ${file}`;
+                // 只顯示文件名，不顯示副檔名
+                const displayName = file.replace(/\.md$/, '');
+                folderItem.innerHTML = `<i class="fas fa-file-alt"></i> ${displayName}`;
                 folderItem.addEventListener('click', () => {
                     loadMarkdownFile(`${path}${file}`);
                 });
