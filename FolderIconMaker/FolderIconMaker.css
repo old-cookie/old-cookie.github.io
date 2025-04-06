@@ -295,7 +295,6 @@ button:active::after {
     box-shadow: 0 2px 4px var(--shadow-color);
     transition: transform 0.2s, box-shadow 0.2s;
     -webkit-user-drag: none;
-    user-drag: none;
 }
 
 .color-btn:hover, .color-btn:active {
@@ -366,6 +365,7 @@ button:active::after {
     -ms-user-select: none;
     -webkit-user-drag: none;
     user-drag: none;
+    -moz-user-select: none; /* 確保Firefox兼容性 */
 }
 
 .upload-area::before {

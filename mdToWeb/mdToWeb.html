@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-HK">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,23 +8,31 @@
     <meta http-equiv="Cache-Control" content="max-age=180">
     <title>Markdown to Web 轉換器</title>
     <link rel="stylesheet" href="mdToWeb.css?v=20250406-1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="all" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="all"
+        crossorigin="anonymous">
     <!-- Highlight.js 用於代碼高亮 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css?v=11.7.0" id="light-theme-highlight">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css?v=11.7.0" id="dark-theme-highlight" disabled>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css?v=11.7.0"
+        id="light-theme-highlight">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css?v=11.7.0"
+        id="dark-theme-highlight" disabled>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js?v=11.7.0"></script>
     <!-- 添加指定程式語言支援 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/python.min.js?v=11.7.0"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js?v=11.7.0"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js?v=11.7.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/java.min.js?v=11.7.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/json.min.js?v=11.7.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/xml.min.js?v=11.7.0"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/markdown.min.js?v=11.7.0"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/markdown.min.js?v=11.7.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/dart.min.js?v=11.7.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/swift.min.js?v=11.7.0"></script>
     <!-- Marked.js 用於 Markdown 轉換 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js?v=latest"></script>
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -34,7 +43,7 @@
                 </button>
             </div>
         </header>
-        
+
         <main>
             <div class="file-browser-container">
                 <div class="folder-path">
@@ -48,7 +57,7 @@
                     <div class="loading">正在載入檔案清單...</div>
                 </div>
             </div>
-            
+
             <div class="preview-section">
                 <div class="preview-header">
                     <h2>預覽</h2>
@@ -56,12 +65,9 @@
                 <div id="preview-container"></div>
             </div>
         </main>
-        
-        <footer>
-            <p>&copy; 2025 Markdown to Web 轉換器 | <a href="https://github.com/old-cookie" target="_blank">GitHub</a></p>
-        </footer>
     </div>
-    
+
     <script src="mdToWeb.js?v=20250406"></script>
 </body>
+
 </html>

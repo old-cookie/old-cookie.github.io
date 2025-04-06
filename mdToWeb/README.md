@@ -15,21 +15,23 @@
 ## 使用方法
 
 ### 基本使用
+
 1. 瀏覽文件目錄
 2. 點擊任意 Markdown 文件以查看其格式化內容
 3. 使用主題切換按鈕在淺色/深色模式間切換
 
 ### URL 分享功能
+
 您可以使用以下格式的 URL 直接訪問特定檔案：
-```
-https://old-cookie.github.io/mdToWeb/mdToWeb.html?path=assets/docs&file=example.md
-```
+[demo](https://old-cookie.github.io/mdToWeb/mdToWeb.html?path=assets/docs&file=demo.md)
 
 URL 參數說明：
+
 - `path`：指定文件的路徑（相對於 assets 目錄）
 - `file`：指定要打開的 Markdown 文件名
 
 ### 支援的程式語言高亮
+
 - Python
 - JavaScript
 - Java

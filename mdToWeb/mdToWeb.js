@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentMdContent = '';
     
     // 版本號，用於緩存破壞
-    const version = '20250406';
+    const version = new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + Math.floor(Math.random() * 100);
     
     // 初始化
     init();

@@ -53,6 +53,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -106,6 +107,10 @@ header h1 {
     justify-content: center;
     width: 2.5rem;
     height: 2.5rem;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 #theme-toggle-btn:hover {
@@ -168,6 +173,10 @@ main {
     min-width: 120px;
     max-width: 200px;
     flex: 1;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 /* 預覽區域樣式 */
@@ -226,6 +235,10 @@ main {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .file-item span.file-name {
@@ -338,6 +351,10 @@ main {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .btn:hover {
@@ -491,6 +508,10 @@ main {
     border-top-right-radius: 4px;
     opacity: 0.9;
     font-family: 'Consolas', monospace;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 /* 優化代碼塊樣式 */
