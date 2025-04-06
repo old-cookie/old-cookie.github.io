@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown to Web 轉換器</title>
+    <link rel="stylesheet" href="mdToWeb.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Highlight.js 用於代碼高亮 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <!-- Marked.js 用於 Markdown 轉換 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Markdown to Web</h1>
+            <div class="theme-toggle">
+                <button id="theme-toggle-btn">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+        
+        <main>
+            <div class="input-section">
+                <div class="file-controls">
+                    <div class="file-browser">
+                        <h3>Markdown 檔案瀏覽</h3>
+                        <div class="folder-path">
+                            <span id="current-path">assets/</span>
+                            <button id="go-up-btn" class="btn">
+                                <i class="fas fa-level-up-alt"></i> 上一層
+                            </button>
+                        </div>
+                        <div id="file-list" class="file-list">
+                            <!-- 檔案和目錄列表將在這裡動態生成 -->
+                            <div class="loading">正在載入檔案清單...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="editor-container">
+                    <textarea id="md-input" placeholder="在此輸入 Markdown 或從檔案列表選擇..."></textarea>
+                    <div class="control-buttons">
+                        <button id="save-md-btn" class="btn">
+                            <i class="fas fa-save"></i> 保存 Markdown
+                        </button>
+                        <button id="convert-btn" class="btn btn-primary">
+                            <i class="fas fa-sync-alt"></i> 轉換
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="output-section">
+                <div class="preview-header">
+                    <h2>預覽</h2>
+                    <button id="export-html-btn" class="btn">
+                        <i class="fas fa-file-export"></i> 導出 HTML
+                    </button>
+                </div>
+                <div id="preview-container"></div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Markdown to Web 轉換器 | <a href="https://github.com/old-cookie" target="_blank">GitHub</a></p>
+        </footer>
+    </div>
+    
+    <script src="mdToWeb.js"></script>
+</body>
+</html>
