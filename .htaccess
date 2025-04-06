@@ -1,0 +1,42 @@
+# 設定安全標頭
+<IfModule mod_headers.c>
+    # 添加 X-Content-Type-Options 以防止 MIME 類型嗅探
+    Header set X-Content-Type-Options "nosniff"
+    
+    # 為字體檔案設定正確的 MIME 類型
+    <FilesMatch "\.(woff|woff2)$">
+        Header set Content-Type "font/woff2"
+        Header unset Content-Type-Options
+    </FilesMatch>
+    
+    # 設定字體和資源的快取策略
+    <FilesMatch "\.(woff|woff2|js|css|png|jpg|jpeg|gif|ico)$">
+        Header set Cache-Control "max-age=604800, public"
+    </FilesMatch>
+    
+    # 設定需要更頻繁更新的資源（標記了版本參數的資源）
+    <FilesMatch "\.(?:js|css)\?v=">
+        Header set Cache-Control "max-age=31536000, public"
+    </FilesMatch>
+    
+    # 設定 HTML 檔案的快取策略
+    <FilesMatch "\.html$">
+        Header set Cache-Control "max-age=180, private"
+    </FilesMatch>
+    
+    # 設定 Markdown 檔案的快取控制
+    <FilesMatch "\.md$">
+        Header set Cache-Control "max-age=180, private"
+    </FilesMatch>
+</IfModule>
+
+# 啟用 GZIP 壓縮，改善效能
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json font/woff2
+</IfModule>
+
+# 確保正確的字符集
+AddDefaultCharset UTF-8
+
+# 設定默認 MIME 類型
+DefaultType text/html

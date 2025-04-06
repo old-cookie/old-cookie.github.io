@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentFile = '';
     let currentMdContent = '';
     
+    // 版本號，用於緩存破壞
+    const version = '20250406';
+    
     // 初始化
     init();
     
@@ -20,12 +23,74 @@ document.addEventListener('DOMContentLoaded', function() {
         // 設置主題
         initTheme();
         
+        // 檢查 URL 參數是否指定了需要打開的文件
+        const urlParams = new URLSearchParams(window.location.search);
+        const fileParam = urlParams.get('file');
+        const pathParam = urlParams.get('path');
+        
+        // 如果 URL 中指定了路徑，則先設置當前路徑
+        if (pathParam) {
+            currentPath = decodeURIComponent(pathParam);
+            // 確保路徑以斜線結尾
+            if (!currentPath.endsWith('/')) {
+                currentPath += '/';
+            }
+            // 確保路徑格式正確
+            if (!currentPath.startsWith('assets/')) {
+                currentPath = 'assets/';
+            }
+        }
+        
         // 加載文件列表
-        loadFileList(currentPath);
+        loadFileList(currentPath).then(() => {
+            // 如果 URL 中指定了文件，則在加載文件列表後打開該文件
+            if (fileParam) {
+                const fileToOpen = decodeURIComponent(fileParam);
+                if (fileToOpen.endsWith('.md')) {
+                    loadMarkdownFile(`${currentPath}${fileToOpen}`);
+                }
+            }
+        });
         
         // 事件監聽器
         themeToggleBtn.addEventListener('click', toggleTheme);
         goUpBtn.addEventListener('click', navigateUp);
+        
+        // 監聽瀏覽器的前進後退操作
+        window.addEventListener('popstate', handlePopState);
+    }
+    
+    // 處理瀏覽器的前進後退操作
+    function handlePopState(event) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const fileParam = urlParams.get('file');
+        const pathParam = urlParams.get('path');
+        
+        // 檢查是否有路徑參數
+        if (pathParam) {
+            currentPath = decodeURIComponent(pathParam);
+            if (!currentPath.endsWith('/')) {
+                currentPath += '/';
+            }
+            if (!currentPath.startsWith('assets/')) {
+                currentPath = 'assets/';
+            }
+            
+            // 加載文件列表
+            loadFileList(currentPath).then(() => {
+                // 如果有文件參數，則打開該文件
+                if (fileParam) {
+                    const fileToOpen = decodeURIComponent(fileParam);
+                    if (fileToOpen.endsWith('.md')) {
+                        loadMarkdownFile(`${currentPath}${fileToOpen}`, false);
+                    }
+                }
+            });
+        } else {
+            // 如果沒有路徑參數，則回到默認路徑
+            currentPath = 'assets/';
+            loadFileList(currentPath);
+        }
     }
     
     // 主題初始化
@@ -78,49 +143,56 @@ document.addEventListener('DOMContentLoaded', function() {
         currentPathEl.textContent = path;
         fileList.innerHTML = '<div class="loading">正在載入檔案清單...</div>';
         
-        // 使用 fetch 直接獲取真實目錄內容
-        fetch(`${path}?_=${new Date().getTime()}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('無法獲取目錄內容');
-                }
-                return response.text();
-            })
-            .then(html => {
-                // 解析目錄列表
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const links = Array.from(doc.querySelectorAll('a'));
-                
-                // 提取目錄和文件
-                const folders = [];
-                const files = [];
-                
-                links.forEach(link => {
-                    const href = link.getAttribute('href');
-                    // 跳過父目錄連結
-                    if (href === '../' || href === '..') return;
+        // 使用 Promise 包裝，以便在完成後執行後續操作
+        return new Promise((resolve, reject) => {
+            // 使用 fetch 直接獲取真實目錄內容，添加緩存破壞參數
+            fetch(`${path}?_=${new Date().getTime()}&v=${version}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('無法獲取目錄內容');
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    // 解析目錄列表
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const links = Array.from(doc.querySelectorAll('a'));
                     
-                    if (href.endsWith('/')) {
-                        // 目錄
-                        folders.push(href.slice(0, -1));
-                    } else if (href.endsWith('.md')) {
-                        // Markdown 文件
-                        files.push(href);
+                    // 提取目錄和文件
+                    const folders = [];
+                    const files = [];
+                    
+                    links.forEach(link => {
+                        const href = link.getAttribute('href');
+                        // 跳過父目錄連結
+                        if (href === '../' || href === '..') return;
+                        
+                        if (href.endsWith('/')) {
+                            // 目錄
+                            folders.push(href.slice(0, -1));
+                        } else if (href.endsWith('.md')) {
+                            // Markdown 文件
+                            files.push(href);
+                        }
+                    });
+                    
+                    renderFileList(path, folders, files);
+                    resolve();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    fileList.innerHTML = `<div class="loading">錯誤: ${error.message}</div>`;
+                    
+                    // 如果無法獲取目錄，顯示默認文件
+                    if (path === 'assets/') {
+                        renderFileList(path, [], ['demo.md']);
+                        resolve();
+                    } else {
+                        reject(error);
                     }
                 });
-                
-                renderFileList(path, folders, files);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                fileList.innerHTML = `<div class="loading">錯誤: ${error.message}</div>`;
-                
-                // 如果無法獲取目錄，顯示默認文件
-                if (path === 'assets/') {
-                    renderFileList(path, [], ['demo.md']);
-                }
-            });
+        });
     }
     
     // 渲染文件列表
@@ -175,6 +247,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         currentPath = path;
+        
+        // 更新 URL 參數
+        updateUrlParams(null, path);
+        
+        // 加載文件列表
         loadFileList(path);
     }
     
@@ -195,11 +272,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // 加載 Markdown 文件
-    function loadMarkdownFile(filePath) {
+    function loadMarkdownFile(filePath, updateUrl = true) {
         currentFile = filePath;
         
-        // 使用 fetch 獲取文件內容
-        fetch(filePath)
+        // 如果需要更新 URL
+        if (updateUrl) {
+            // 從文件路徑中提取路徑和文件名
+            const pathParts = filePath.split('/');
+            const fileName = pathParts.pop();
+            const path = pathParts.join('/') + '/';
+            
+            // 更新 URL 參數
+            updateUrlParams(fileName, path);
+        }
+        
+        // 使用 fetch 獲取文件內容，添加緩存破壞參數
+        fetch(`${filePath}?v=${version}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('無法獲取文件內容');
@@ -209,12 +297,47 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(content => {
                 currentMdContent = content;
                 convertMarkdown();
+                
+                // 更新頁面標題
+                const title = extractTitle(content);
+                if (title) {
+                    document.title = `${title} - Markdown to Web`;
+                } else {
+                    // 如果沒有提取到標題，則使用文件名作為標題
+                    const fileName = filePath.split('/').pop();
+                    document.title = `${fileName} - Markdown to Web`;
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
                 currentMdContent = `# 錯誤\n\n無法載入文件: ${error.message}`;
                 convertMarkdown();
+                document.title = `錯誤 - Markdown to Web`;
             });
+    }
+    
+    // 更新 URL 參數
+    function updateUrlParams(file, path) {
+        // 創建新的 URL 參數
+        const urlParams = new URLSearchParams();
+        
+        // 如果有文件，則添加文件參數
+        if (file) {
+            urlParams.set('file', file);
+        }
+        
+        // 如果有路徑，則添加路徑參數
+        if (path) {
+            // 移除路徑結尾的斜線以簡化 URL
+            const cleanPath = path.endsWith('/') ? path.slice(0, -1) : path;
+            urlParams.set('path', cleanPath);
+        }
+        
+        // 構建新的 URL
+        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+        
+        // 使用 History API 更新 URL，不重新加載頁面
+        window.history.pushState({ file, path }, '', newUrl);
     }
     
     // 轉換 Markdown 為 HTML
@@ -329,12 +452,12 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 如果是相對路徑且不是以 http 或 data: 開頭
             if (src && !src.startsWith('http') && !src.startsWith('data:')) {
-                // 根據當前文件路徑修正圖片路徑
+                // 根據當前文件路徑修正圖片路徑，添加緩存破壞參數
                 if (currentFile) {
                     const filePath = currentFile.split('/');
                     filePath.pop(); // 移除文件名
                     const dirPath = filePath.join('/');
-                    img.src = `${dirPath}/${src}`;
+                    img.src = `${dirPath}/${src}?v=${version}`;
                 }
             }
         });
