@@ -11,6 +11,8 @@
     --code-bg: #f0f0f0;
     --btn-bg: #e9ecef;
     --btn-hover: #dde1e5;
+    --delete-color: #dc3545;
+    --delete-hover: #bd2130;
 }
 
 [data-theme="dark"] {
@@ -26,6 +28,8 @@
     --code-bg: #2d2d2d;
     --btn-bg: #3a3a3a;
     --btn-hover: #444444;
+    --delete-color: #e74c3c;
+    --delete-hover: #c0392b;
 }
 
 /* 自動適應系統主題 */
@@ -108,17 +112,84 @@ header h1 {
     background-color: var(--btn-hover);
 }
 
+/* 修改主要佈局 */
 main {
     flex: 1;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-@media (min-width: 768px) {
-    main {
-        grid-template-columns: 1fr 1fr;
-    }
+/* 文件瀏覽器容器樣式 */
+.file-browser-container {
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1rem;
+}
+
+/* 檔案路徑樣式 */
+.folder-path {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background-color: var(--bg-primary);
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 0.5rem;
+}
+
+/* 文件列表樣式 */
+.file-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: var(--bg-primary);
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    padding: 0.5rem;
+}
+
+/* 文件項目樣式 */
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: var(--bg-secondary);
+    min-width: 120px;
+    max-width: 200px;
+    flex: 1;
+}
+
+/* 預覽區域樣式 */
+.preview-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+#preview-container {
+    flex: 1;
+    background-color: var(--bg-primary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    min-height: 400px;
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
 }
 
 .input-section, .output-section {
@@ -148,16 +219,6 @@ main {
     width: 100%;
 }
 
-.folder-path {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    background-color: var(--bg-primary);
-    border-radius: 4px;
-    border: 1px solid var(--border-color);
-}
-
 #current-path {
     flex: 1;
     font-family: 'Consolas', monospace;
@@ -166,30 +227,20 @@ main {
     white-space: nowrap;
 }
 
-.file-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    max-height: 200px;
-    overflow-y: auto;
-    background-color: var(--bg-primary);
-    border-radius: 4px;
-    border: 1px solid var(--border-color);
-    padding: 0.5rem;
-}
-
-.file-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+.file-item span.file-name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .file-item:hover {
     background-color: var(--btn-bg);
+}
+
+.file-item:hover .file-action {
+    visibility: visible;
+    opacity: 1;
 }
 
 .file-item i {
@@ -203,6 +254,24 @@ main {
 
 .file-item.markdown {
     color: var(--text-primary);
+}
+
+.file-action {
+    font-size: 0.9rem;
+    padding: 0.25rem;
+    border-radius: 3px;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.2s, opacity 0.2s;
+}
+
+.delete-action {
+    color: var(--delete-color);
+    cursor: pointer;
+}
+
+.delete-action:hover {
+    color: var(--delete-hover);
 }
 
 .loading {
@@ -288,15 +357,6 @@ main {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-}
-
-#preview-container {
-    background-color: var(--bg-primary);
-    border-radius: 8px;
-    padding: 1.5rem;
-    min-height: 300px;
-    overflow-x: auto;
-    border: 1px solid var(--border-color);
 }
 
 /* Markdown 內容樣式 */
@@ -411,6 +471,40 @@ footer a {
 
 footer a:hover {
     text-decoration: underline;
+}
+
+/* 文件操作相關樣式 */
+.file-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.file-actions .btn {
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.data-management {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.data-management .btn {
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.empty-preview {
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 2rem;
 }
 
 /* 適配小螢幕 */

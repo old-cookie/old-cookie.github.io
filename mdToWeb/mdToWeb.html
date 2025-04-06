@@ -24,42 +24,22 @@
         </header>
         
         <main>
-            <div class="input-section">
-                <div class="file-controls">
-                    <div class="file-browser">
-                        <h3>Markdown 檔案瀏覽</h3>
-                        <div class="folder-path">
-                            <span id="current-path">assets/</span>
-                            <button id="go-up-btn" class="btn">
-                                <i class="fas fa-level-up-alt"></i> 上一層
-                            </button>
-                        </div>
-                        <div id="file-list" class="file-list">
-                            <!-- 檔案和目錄列表將在這裡動態生成 -->
-                            <div class="loading">正在載入檔案清單...</div>
-                        </div>
-                    </div>
+            <div class="file-browser-container">
+                <div class="folder-path">
+                    <span id="current-path">assets/</span>
+                    <button id="go-up-btn" class="btn">
+                        <i class="fas fa-level-up-alt"></i> 上一層
+                    </button>
                 </div>
-                
-                <div class="editor-container">
-                    <textarea id="md-input" placeholder="在此輸入 Markdown 或從檔案列表選擇..."></textarea>
-                    <div class="control-buttons">
-                        <button id="save-md-btn" class="btn">
-                            <i class="fas fa-save"></i> 保存 Markdown
-                        </button>
-                        <button id="convert-btn" class="btn btn-primary">
-                            <i class="fas fa-sync-alt"></i> 轉換
-                        </button>
-                    </div>
+                <div id="file-list" class="file-list">
+                    <!-- 檔案和目錄列表將在這裡動態生成 -->
+                    <div class="loading">正在載入檔案清單...</div>
                 </div>
             </div>
             
-            <div class="output-section">
+            <div class="preview-section">
                 <div class="preview-header">
                     <h2>預覽</h2>
-                    <button id="export-html-btn" class="btn">
-                        <i class="fas fa-file-export"></i> 導出 HTML
-                    </button>
                 </div>
                 <div id="preview-container"></div>
             </div>
