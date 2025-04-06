@@ -38,10 +38,16 @@ document.addEventListener('DOMContentLoaded', function() {
             document.documentElement.setAttribute('data-theme', 'dark');
             themeIcon.classList.remove('fa-moon');
             themeIcon.classList.add('fa-sun');
+            // 啟用暗色代碼高亮主題
+            document.getElementById('light-theme-highlight').disabled = true;
+            document.getElementById('dark-theme-highlight').disabled = false;
         } else {
             document.documentElement.setAttribute('data-theme', 'light');
             themeIcon.classList.remove('fa-sun');
             themeIcon.classList.add('fa-moon');
+            // 啟用亮色代碼高亮主題
+            document.getElementById('light-theme-highlight').disabled = false;
+            document.getElementById('dark-theme-highlight').disabled = true;
         }
     }
     
@@ -53,11 +59,17 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('theme', 'light');
             themeIcon.classList.remove('fa-sun');
             themeIcon.classList.add('fa-moon');
+            // 切換到亮色代碼高亮主題
+            document.getElementById('light-theme-highlight').disabled = false;
+            document.getElementById('dark-theme-highlight').disabled = true;
         } else {
             document.documentElement.setAttribute('data-theme', 'dark');
             localStorage.setItem('theme', 'dark');
             themeIcon.classList.remove('fa-moon');
             themeIcon.classList.add('fa-sun');
+            // 切換到暗色代碼高亮主題
+            document.getElementById('light-theme-highlight').disabled = true;
+            document.getElementById('dark-theme-highlight').disabled = false;
         }
     }
     
@@ -218,8 +230,35 @@ document.addEventListener('DOMContentLoaded', function() {
             gfm: true,
             headerIds: true,
             highlight: function(code, lang) {
-                const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-                return hljs.highlight(code, { language }).value;
+                // 處理語言別名
+                if (lang === 'js') lang = 'javascript';
+                if (lang === 'py') lang = 'python';
+                if (lang === 'html') lang = 'xml';
+                
+                // 只支持指定的語言：Python、JavaScript、Java、JSON、XML、Markdown、Dart、Swift
+                const supportedLanguages = ['python', 'javascript', 'java', 'json', 'xml', 'markdown', 'dart', 'swift'];
+                
+                // 如果有指定語言且該語言在支援列表中
+                if (lang && supportedLanguages.includes(lang)) {
+                    try {
+                        return hljs.highlight(code, { language: lang, ignoreIllegals: true }).value;
+                    } catch (error) {
+                        console.error('Highlight error:', error);
+                    }
+                }
+                
+                // 如果無指定語言或不在支援列表中，嘗試檢測是否為支援的語言
+                try {
+                    const result = hljs.highlightAuto(code, supportedLanguages);
+                    if (result.relevance > 5) {
+                        return result.value;
+                    }
+                } catch (error) {
+                    console.error('Auto highlight error:', error);
+                }
+                
+                // 最後回退到純文本
+                return hljs.highlight(code, { language: 'plaintext' }).value;
             }
         });
         
@@ -229,6 +268,57 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 應用圖片路徑修正
         fixImagePaths();
+        
+        // 為代碼塊添加語言標籤
+        addCodeLanguageLabels();
+    }
+    
+    // 為代碼塊添加語言標籤
+    function addCodeLanguageLabels() {
+        const codeBlocks = previewContainer.querySelectorAll('pre code');
+        codeBlocks.forEach(codeBlock => {
+            // 獲取代碼塊的語言
+            const classes = codeBlock.className.split(' ');
+            let language = '';
+            
+            for (const cls of classes) {
+                if (cls.startsWith('language-')) {
+                    language = cls.replace('language-', '');
+                    break;
+                }
+            }
+            
+            // 獲取人類可讀的語言名稱
+            let languageName = '';
+            switch (language) {
+                case 'javascript': languageName = 'JavaScript'; break;
+                case 'python': languageName = 'Python'; break;
+                case 'java': languageName = 'Java'; break;
+                case 'json': languageName = 'JSON'; break;
+                case 'xml': languageName = 'XML/HTML'; break;
+                case 'markdown': languageName = 'Markdown'; break;
+                case 'dart': languageName = 'Dart'; break;
+                case 'swift': languageName = 'Swift'; break;
+                case 'plaintext': languageName = 'Text'; break;
+                default: languageName = language ? language.charAt(0).toUpperCase() + language.slice(1) : '';
+            }
+            
+            // 如果識別出語言，添加語言標籤
+            if (languageName) {
+                const pre = codeBlock.parentElement;
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-block-wrapper';
+                
+                const languageLabel = document.createElement('div');
+                languageLabel.className = 'code-language-label';
+                languageLabel.textContent = languageName;
+                
+                // 克隆 pre 元素，將其移入包裝器
+                pre.parentNode.insertBefore(wrapper, pre);
+                wrapper.appendChild(languageLabel);
+                wrapper.appendChild(pre);
+            }
+        });
     }
     
     // 修正圖片路徑

@@ -23,7 +23,7 @@
 <html lang="zh-HK">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta content="IE=Edge" http-equiv="X-UA-Compatible">
     <meta name="description" content="水印">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,7 +35,7 @@
     <!-- Cropper.js CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" rel="stylesheet" />
     <!-- 自定義 CSS -->
-    <link href="WaterMark.css" rel="stylesheet" />
+    <link href="WaterMark.css?v=20250406" rel="stylesheet" />
     <!-- 設置圖標 -->
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -52,18 +52,18 @@
 
     <div id="imagesContainer"></div>
 
-    <button class="process-button" id="processBtn">處理圖片</button>
+    <button class="process-button" id="processBtn" title="處理圖片並添加水印">處理圖片</button>
 
     <div class="preview-section" id="previewSection">
         <h2>預覽</h2>
         <div class="preview-container" id="previewContainer"></div>
-        <button class="download-button" id="downloadAllBtn">全部下載</button>
+        <button class="download-button" id="downloadAllBtn" title="下載所有處理過的圖片">全部下載</button>
     </div>
 
     <!-- Cropper.js JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
     <!-- 自定義 JS -->
-    <script src="WaterMark.js"></script>
+    <script src="WaterMark.js?v=20250406"></script>
 </body>
 
 </html>

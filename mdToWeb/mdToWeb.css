@@ -192,7 +192,8 @@ main {
     border: 1px solid var(--border-color);
 }
 
-.input-section, .output-section {
+.input-section,
+.output-section {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -371,12 +372,29 @@ main {
     color: var(--text-primary);
 }
 
-#preview-container h1 { font-size: 2rem; }
-#preview-container h2 { font-size: 1.75rem; }
-#preview-container h3 { font-size: 1.5rem; }
-#preview-container h4 { font-size: 1.25rem; }
-#preview-container h5 { font-size: 1.1rem; }
-#preview-container h6 { font-size: 1rem; }
+#preview-container h1 {
+    font-size: 2rem;
+}
+
+#preview-container h2 {
+    font-size: 1.75rem;
+}
+
+#preview-container h3 {
+    font-size: 1.5rem;
+}
+
+#preview-container h4 {
+    font-size: 1.25rem;
+}
+
+#preview-container h5 {
+    font-size: 1.1rem;
+}
+
+#preview-container h6 {
+    font-size: 1rem;
+}
 
 #preview-container p {
     margin-bottom: 1rem;
@@ -455,6 +473,52 @@ main {
     margin: 2rem 0;
 }
 
+/* 程式碼高亮相關樣式 */
+.code-block-wrapper {
+    position: relative;
+    margin: 1.5rem 0;
+}
+
+.code-language-label {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    background-color: var(--bg-secondary);
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 4px;
+    opacity: 0.9;
+    font-family: 'Consolas', monospace;
+}
+
+/* 優化代碼塊樣式 */
+pre {
+    background-color: var(--code-bg);
+    padding: 1.5rem 1rem 1rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+}
+
+code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.9rem;
+    tab-size: 4;
+}
+
+/* 行內代碼樣式 */
+:not(pre) > code {
+    background-color: var(--code-bg);
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    color: var(--accent-color);
+}
+
 footer {
     margin-top: 2rem;
     text-align: center;
@@ -512,39 +576,39 @@ footer a:hover {
     header h1 {
         font-size: 1.5rem;
     }
-    
+
     .file-controls {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .saved-files-container {
         flex-direction: column;
     }
-    
+
     #md-input {
         height: 200px;
     }
-    
+
     .control-buttons {
         flex-direction: column;
     }
-    
+
     .btn {
         width: 100%;
         justify-content: center;
     }
-    
+
     .folder-path {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     #go-up-btn {
         margin-top: 0.5rem;
         width: 100%;
     }
-    
+
     .file-list {
         max-height: 150px;
     }

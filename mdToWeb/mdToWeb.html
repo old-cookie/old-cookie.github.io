@@ -1,14 +1,24 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markdown to Web 轉換器</title>
-    <link rel="stylesheet" href="mdToWeb.css">
+    <link rel="stylesheet" href="mdToWeb.css?v=20250406">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Highlight.js 用於代碼高亮 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css" id="light-theme-highlight">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css" id="dark-theme-highlight" disabled>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <!-- 添加指定程式語言支援 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/dart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/swift.min.js"></script>
     <!-- Marked.js 用於 Markdown 轉換 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
@@ -17,7 +27,7 @@
         <header>
             <h1>Markdown to Web</h1>
             <div class="theme-toggle">
-                <button id="theme-toggle-btn">
+                <button id="theme-toggle-btn" title="切換主題">
                     <i class="fas fa-moon"></i>
                 </button>
             </div>
@@ -27,7 +37,7 @@
             <div class="file-browser-container">
                 <div class="folder-path">
                     <span id="current-path">assets/</span>
-                    <button id="go-up-btn" class="btn">
+                    <button id="go-up-btn" class="btn" title="返回上一層目錄">
                         <i class="fas fa-level-up-alt"></i> 上一層
                     </button>
                 </div>
@@ -50,6 +60,6 @@
         </footer>
     </div>
     
-    <script src="mdToWeb.js"></script>
+    <script src="mdToWeb.js?v=20250406"></script>
 </body>
 </html>
