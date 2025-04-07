@@ -7740,12 +7740,6 @@ SOFTWARE.
 --------------------------------------------------------------------------------
 dynamic_color
 encrypt_shared_preferences
-flutter_opencc_ffi_ios
-flutter_opencc_ffi_macos
-flutter_opencc_ffi_native
-flutter_opencc_ffi_platform_interface
-flutter_opencc_ffi_web
-flutter_opencc_ffi_windows
 rxdart
 
                                  Apache License

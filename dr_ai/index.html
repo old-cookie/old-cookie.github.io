@@ -96,36 +96,36 @@
     if (navigator.mediaDevices === undefined) {
       navigator.mediaDevices = {};
     }
-    
+
     // 某些舊瀏覽器可能部分實現mediaDevices，但不提供getUserMedia
     if (navigator.mediaDevices.getUserMedia === undefined) {
-      navigator.mediaDevices.getUserMedia = function(constraints) {
+      navigator.mediaDevices.getUserMedia = function (constraints) {
         // 獲取舊的API版本(如果存在)
         var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-        
+
         // 如果舊API不存在，返回一個錯誤
         if (!getUserMedia) {
           return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
         }
-        
+
         // 將舊API封裝為Promise
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
           getUserMedia.call(navigator, constraints, resolve, reject);
         });
       }
     }
-    
+
     // 檢測混合內容是否被阻擋
     function checkMixedContentBlocking() {
       if (window.location.protocol === 'https:') {
         fetch('http://oldcookie.asuscomm.com:11434/api/ping', { mode: 'no-cors' })
-          .catch(function() {
+          .catch(function () {
             // 如果出現錯誤，可能是混合內容被阻擋
             console.log('可能存在混合內容阻擋問題');
-            
+
             // 等待頁面加載完成後顯示提示
-            window.addEventListener('load', function() {
-              setTimeout(function() {
+            window.addEventListener('load', function () {
+              setTimeout(function () {
                 var loaderElement = document.querySelector('.loader');
                 if (loaderElement) {
                   // 創建提示元素
@@ -136,7 +136,7 @@
                   alertDiv.style.backgroundColor = 'rgba(255,0,0,0.1)';
                   alertDiv.style.borderRadius = '5px';
                   alertDiv.innerHTML = '網站可能需要設定允許混合內容。<a href="mixed_content_help.html" target="_blank" style="color:blue;">點此查看設定說明</a>';
-                  
+
                   // 插入到loading元素之後
                   loaderElement.parentNode.insertBefore(alertDiv, loaderElement.nextSibling);
                 }
@@ -145,10 +145,10 @@
           });
       }
     }
-    
+
     // 執行檢測
     checkMixedContentBlocking();
-    
+
     // 原有代碼
     let deferredPrompt;
     window.addEventListener("beforeinstallprompt", (e) => { deferredPrompt = e; });

@@ -1,4 +1,0 @@
-s2hk.json
-STCharacters.ocd2
-STPhrases.ocd2
-HKVariants.ocd2
