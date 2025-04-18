@@ -55,7 +55,7 @@ Three options were initially proposed for immediate investigation:
 
 ---
 
-## Task PART2
+## Task PART 2
 
 Now, read the fourth section of the proposal, the Investigation Conclusions, and your supervisor's handwritten notes below. Then, **you must use all of the notes** to finish writing the final two sections of the proposal - Recommended Proposal (Implementation; Elaboration on Benefits) and Conclusion in about **350** words in the Answer Book provided. **You need to explain why you support the recommended option by elaborating on its benefits. To strengthen your arguments for the chosen option, *you must expand the given in the notes with more details*. Your answer should demonstrate your ability to communicate your message with subtlety, tact and sensitivity.**
 
