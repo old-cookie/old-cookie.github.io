@@ -9,3 +9,5 @@
 [Clock](clock.html)
 
 [Markdown to Web](https://old-cookie.github.io/mdToWeb/mdToWeb.html)
+
+[local_send_plus](https://old-cookie.github.io/local_send_plus/index.html)
