@@ -2,14 +2,15 @@
 <!--
 /**
  * 應用
- * 版本: 2.1.0
- * 描述: 資料夾圖標製作工具
+ * 版本: 2.2.0
+ * 描述: 資料夾圖標製作工具 - Material 3 設計
  * 作者: OldCookie
  * 建立日期: 2025年
  * 最後更新: 2025年4月6日
  * 
  * 技術棧:
  * - HTML5 (頁面結構)
+ * - Material Web Components (Material 3 組件)
  * - CSS3 (頁面樣式，來自 FolderIconMaker.css)
  * - JavaScript (交互功能，來自 FolderIconMaker.js)
  * 
@@ -24,68 +25,152 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0078d4">
+    <meta name="theme-color" content="#6750a4">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="description" content="將照片與Windows 11風格資料夾圖示合併，創建自定義資料夾圖示，支援行動裝置與觸控操作">
     <title>資料夾圖示製作工具</title>
+    <!-- Material 3 Design Tokens -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        rel="stylesheet">
+
+    <!-- Material Web Components -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@material/web/": "https://esm.run/@material/web/"
+        }
+      }
+    </script>
+    <script type="module">
+        import '@material/web/all.js';
+        import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
+        document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+    </script>
+
     <link href="FolderIconMaker.css" rel="stylesheet" />
     <link rel="icon" href="assets/folder_app_icon.ico" type="image/x-icon">
 </head>
 
 <body>
-    <header class="app-header">
-        <h1>資料夾圖示製作工具</h1>
-    </header>
-    
-    <div class="upload-container">
-        <label for="photoInput" class="upload-area" id="uploadArea" aria-label="上傳照片區域">
-            <p>將您的照片拖曳到此處或點擊上傳</p>
-            <p class="upload-tip">支援 JPG、PNG 等常見格式</p>
-        </label>
-        <input type="file" id="photoInput" accept="image/*" aria-label="選擇照片">
-    </div>
-    
-    <div id="scaleControl" class="card" style="display:none">
-        <div class="slider-label">
-            <span class="control-label">照片縮放</span>
-            <span id="scaleValue">1.0</span>
-        </div>
-        <input type="range" id="photoScale" min="0.1" max="2" step="0.1" value="1" aria-label="調整照片大小">
-        <button id="exportBtn" aria-label="匯出資料夾圖示">匯出資料夾圖示</button>
-    </div>
-    
-    <div class="controls">
-        <div class="control-group">
-            <div class="control-label">資料夾顏色設定</div>
-            <div class="color-picker">
-                <label for="darkColor">深色部分：</label>
-                <input type="color" id="darkColor" value="#121313" aria-label="選擇深色部分顏色">
-            </div>
-            <div class="color-picker">
-                <label for="blueColor">亮藍部分：</label>
-                <input type="color" id="blueColor" value="#09B8E5" aria-label="選擇亮藍部分顏色">
+    <md-top-app-bar>
+        <md-icon-button slot="navigation">
+            <span class="material-symbols-outlined">folder</span>
+        </md-icon-button>
+        <div slot="headline" class="app-title">
+            <div class="title-main">
+                <span class="title-text">資料夾圖示製作工具</span>
+                <span class="title-version">v2.2.0</span>
             </div>
         </div>
+    </md-top-app-bar>
+
+    <div class="app-content">
+        <md-card class="upload-card">
+            <div class="upload-container">
+                <label for="photoInput" class="upload-area" id="uploadArea" aria-label="上傳照片區域">
+                    <span class="material-symbols-outlined upload-icon">add_photo_alternate</span>
+                    <p class="md-typescale-body-large">將您的照片拖曳到此處或點擊上傳</p>
+                    <p class="md-typescale-body-small upload-tip">支援 JPG、PNG 等常見格式</p>
+                </label>
+                <input type="file" id="photoInput" accept="image/*" aria-label="選擇照片">
+            </div>
+        </md-card>
+        <md-card id="scaleControl" class="upload-card scale-card" style="display:none">
+            <div class="scale-content">
+                <div class="slider-label">
+                    <span class="md-typescale-title-medium">照片縮放</span>
+                    <span class="scale-display md-typescale-label-large" id="scaleValue">1.00x</span>
+                </div>
+                <div class="scale-controls">
+                    <md-icon-button id="scaleDecrease" aria-label="縮小照片">
+                        <span class="material-symbols-outlined">remove</span>
+                    </md-icon-button>
+                    <md-slider id="photoScale" min="0.1" max="2" step="0.01" value="1" aria-label="調整照片大小">
+                    </md-slider>
+                    <md-icon-button id="scaleIncrease" aria-label="放大照片">
+                        <span class="material-symbols-outlined">add</span>
+                    </md-icon-button>
+                </div>
+                <div class="background-removal-control">
+                    <div class="control-label">
+                        <span class="material-symbols-outlined">auto_fix_high</span>
+                        <span class="md-typescale-body-large">移除照片背景</span>
+                    </div>
+                    <md-switch id="backgroundRemoval" aria-label="切換背景移除功能"></md-switch>
+                </div>
+                <div class="background-adjustment-control" id="backgroundAdjustment" style="display:none">
+                    <div class="slider-label">
+                        <span class="md-typescale-body-medium">背景移除強度</span>
+                        <span class="tolerance-display md-typescale-label-medium" id="toleranceValue">30</span>
+                    </div>
+                    <div class="scale-controls">
+                        <md-icon-button id="toleranceDecrease" aria-label="降低背景移除強度">
+                            <span class="material-symbols-outlined">remove</span>
+                        </md-icon-button>
+                        <md-slider id="toleranceSlider" min="10" max="80" step="5" value="30" aria-label="調整背景移除強度">
+                        </md-slider>
+                        <md-icon-button id="toleranceIncrease" aria-label="提高背景移除強度">
+                            <span class="material-symbols-outlined">add</span>
+                        </md-icon-button>
+                    </div>
+                </div>
+
+                <md-filled-button id="exportBtn" aria-label="匯出資料夾圖示">
+                    <span class="material-symbols-outlined" slot="icon">download</span>
+                    匯出資料夾圖示
+                </md-filled-button>
+            </div>
+        </md-card>
+
+        <md-card class="controls-card">
+            <div class="control-group">
+                <div class="md-typescale-title-medium control-title">資料夾顏色設定</div>
+                <div class="color-picker-group">
+                    <div class="color-picker">
+                        <div class="color-label">
+                            <span class="material-symbols-outlined">palette</span>
+                            <span class="md-typescale-body-large">資料夾主體</span>
+                        </div>
+                        <input type="color" id="darkColor" value="#121313" aria-label="選擇資料夾主體顏色">
+                    </div>
+                    <div class="color-picker">
+                        <div class="color-label">
+                            <span class="material-symbols-outlined">palette</span>
+                            <span class="md-typescale-body-large">資料夾標籤</span>
+                        </div>
+                        <input type="color" id="blueColor" value="#09B8E5" aria-label="選擇資料夾標籤顏色">
+                    </div>
+                </div>
+            </div>
+        </md-card>
+
+        <md-card class="colors-card" id="colorsCard" style="display:none">
+            <div class="control-group">
+                <div class="md-typescale-title-medium control-title">從照片提取的顏色</div>
+                <div id="photoColors" class="color-options"></div>
+            </div>
+        </md-card>
+
+        <md-card class="canvas-card">
+            <div class="canvas-container">
+                <canvas id="canvas" width="512" height="512" aria-label="資料夾圖示預覽"></canvas>
+                <div class="canvas-hint" id="canvasHint">
+                    <span class="material-symbols-outlined">pan_tool</span>
+                    <span>拖曳可調整照片位置</span>
+                </div>
+                <md-fab class="gesture-hint" id="gestureHint" size="small">
+                    <span class="material-symbols-outlined" slot="icon">touch_app</span>
+                </md-fab>
+            </div>
+        </md-card>
     </div>
-    
-    <div class="controls">
-        <div class="control-group">
-            <div class="control-label">從照片提取的顏色：<span class="upload-tip">(點擊選擇，Shift+點擊設為藍色)</span></div>
-            <div id="photoColors" class="color-options"></div>
-        </div>
-    </div>
-    
-    <div class="canvas-container">
-        <canvas id="canvas" width="512" height="512" aria-label="資料夾圖示預覽"></canvas>
-        <div class="canvas-hint" id="canvasHint">拖曳可調整照片位置</div>
-        <div class="gesture-hint" id="gestureHint">👆</div>
-    </div>
-    
+
     <footer class="app-footer">
-        &copy; 2025 OldCookie | 資料夾圖示製作工具 v2.1.0
+        <div class="md-typescale-body-small">&copy; 2025 OldCookie | 資料夾圖示製作工具 v2.2.0</div>
     </footer>
-    
+
     <script src="FolderIconMaker.js"></script>
 </body>
 
