@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Even or Odd AI Checker</title>
+    <link rel="stylesheet" href="EvenOrOdd.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        rel="stylesheet">
+    <script type="importmap">
+      {
+        "imports": {
+          "@material/web/": "https://esm.run/@material/web/"
+        }
+      }
+    </script>
+    <script type="module">
+        import '@material/web/all.js';
+        import {
+            styles as typescaleStyles
+        } from '@material/web/typography/md-typescale-styles.js';
+        document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>Even or Odd AI Checker</h1>
+                <md-icon-button id="themeToggle" aria-label="Toggle theme">
+                    <md-icon>dark_mode</md-icon>
+                </md-icon-button>
+            </div>
+        </header>
+        <main>
+            <md-outlined-text-field id="numberInput" type="number" label="Enter an integer"
+                supporting-text="Input any integer to check if it's even or odd">
+                <md-icon slot="leading-icon">numbers</md-icon>
+            </md-outlined-text-field>
+            <md-filled-button id="checkButton">
+                <md-icon slot="icon">psychology</md-icon>
+                Check Number
+            </md-filled-button>
+            <div id="resultArea">
+                <p id="resultText">The AI will determine if the number is even or odd.</p>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+    <script src="EvenOrOdd.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,181 @@
+:root {
+    --md-sys-color-primary: rgb(103 80 164);
+    --md-sys-color-on-primary: rgb(255 255 255);
+    --md-sys-color-primary-container: rgb(234 221 255);
+    --md-sys-color-on-primary-container: rgb(33 0 93);
+    --md-sys-color-secondary: rgb(98 91 113);
+    --md-sys-color-on-secondary: rgb(255 255 255);
+    --md-sys-color-secondary-container: rgb(232 222 248);
+    --md-sys-color-on-secondary-container: rgb(29 25 43);
+    --md-sys-color-tertiary: rgb(125 82 96);
+    --md-sys-color-on-tertiary: rgb(255 255 255);
+    --md-sys-color-tertiary-container: rgb(255 216 228);
+    --md-sys-color-on-tertiary-container: rgb(49 17 29);
+    --md-sys-color-error: rgb(179 38 30);
+    --md-sys-color-on-error: rgb(255 255 255);
+    --md-sys-color-error-container: rgb(249 222 220);
+    --md-sys-color-on-error-container: rgb(65 14 11);
+    --md-sys-color-background: rgb(255 251 254);
+    --md-sys-color-on-background: rgb(28 27 31);
+    --md-sys-color-surface: rgb(255 251 254);
+    --md-sys-color-on-surface: rgb(28 27 31);
+    --md-sys-color-surface-variant: rgb(231 224 236);
+    --md-sys-color-on-surface-variant: rgb(73 69 79);
+    --md-sys-color-outline: rgb(121 116 126);
+    --md-sys-color-outline-variant: rgb(202 196 208);
+    --md-sys-color-shadow: rgb(0 0 0);
+    --md-sys-color-scrim: rgb(0 0 0);
+    --md-sys-color-inverse-surface: rgb(49 48 51);
+    --md-sys-color-inverse-on-surface: rgb(244 239 244);
+    --md-sys-color-inverse-primary: rgb(208 188 255);
+    --md-sys-color-surface-dim: rgb(222 216 225);
+    --md-sys-color-surface-bright: rgb(255 251 254);
+    --md-sys-color-surface-container-lowest: rgb(255 255 255);
+    --md-sys-color-surface-container-low: rgb(247 242 250);
+    --md-sys-color-surface-container: rgb(243 237 247);
+    --md-sys-color-surface-container-high: rgb(236 230 240);
+    --md-sys-color-surface-container-highest: rgb(230 224 233);
+    --md-ref-elevation-level0: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+    --md-sys-elevation-level0: var(--md-ref-elevation-level0);
+    --md-ref-elevation-level1: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+    --md-sys-elevation-level1: var(--md-ref-elevation-level1);
+    --md-ref-elevation-level2: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+    --md-sys-elevation-level2: var(--md-ref-elevation-level2);
+    --md-ref-elevation-level3: 0px 1px 3px 0px rgba(0, 0, 0, 0.3), 0px 4px 8px 3px rgba(0, 0, 0, 0.15);
+    --md-sys-elevation-level3: var(--md-ref-elevation-level3);
+    --md-ref-elevation-level4: 0px 2px 3px 0px rgba(0, 0, 0, 0.3), 0px 6px 10px 4px rgba(0, 0, 0, 0.15);
+    --md-sys-elevation-level4: var(--md-ref-elevation-level4);
+    --md-ref-elevation-level5: 0px 4px 4px 0px rgba(0, 0, 0, 0.3), 0px 8px 12px 6px rgba(0, 0, 0, 0.15);
+    --md-sys-elevation-level5: var(--md-ref-elevation-level5);
+}
+
+[data-theme="dark"] {
+    --md-sys-color-primary: rgb(208 188 255);
+    --md-sys-color-on-primary: rgb(55 30 115);
+    --md-sys-color-primary-container: rgb(79 55 139);
+    --md-sys-color-on-primary-container: rgb(234 221 255);
+    --md-sys-color-secondary: rgb(204 194 220);
+    --md-sys-color-on-secondary: rgb(51 45 65);
+    --md-sys-color-secondary-container: rgb(74 68 88);
+    --md-sys-color-on-secondary-container: rgb(232 222 248);
+    --md-sys-color-tertiary: rgb(239 184 200);
+    --md-sys-color-on-tertiary: rgb(73 37 50);
+    --md-sys-color-tertiary-container: rgb(99 59 72);
+    --md-sys-color-on-tertiary-container: rgb(255 216 228);
+    --md-sys-color-error: rgb(242 184 181);
+    --md-sys-color-on-error: rgb(96 20 16);
+    --md-sys-color-error-container: rgb(140 29 24);
+    --md-sys-color-on-error-container: rgb(249 222 220);
+    --md-sys-color-background: rgb(16 14 19);
+    --md-sys-color-on-background: rgb(230 224 233);
+    --md-sys-color-surface: rgb(16 14 19);
+    --md-sys-color-on-surface: rgb(230 224 233);
+    --md-sys-color-surface-variant: rgb(73 69 79);
+    --md-sys-color-on-surface-variant: rgb(202 196 208);
+    --md-sys-color-outline: rgb(148 143 154);
+    --md-sys-color-outline-variant: rgb(73 69 79);
+    --md-sys-color-shadow: rgb(0 0 0);
+    --md-sys-color-scrim: rgb(0 0 0);
+    --md-sys-color-inverse-surface: rgb(230 224 233);
+    --md-sys-color-inverse-on-surface: rgb(49 48 51);
+    --md-sys-color-inverse-primary: rgb(103 80 164);
+    --md-sys-color-surface-dim: rgb(16 14 19);
+    --md-sys-color-surface-bright: rgb(54 52 56);
+    --md-sys-color-surface-container-lowest: rgb(11 9 13);
+    --md-sys-color-surface-container-low: rgb(24 23 27);
+    --md-sys-color-surface-container: rgb(28 27 31);
+    --md-sys-color-surface-container-high: rgb(38 37 41);
+    --md-sys-color-surface-container-highest: rgb(49 48 51);
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: var(--md-sys-color-surface);
+    border-radius: 28px;
+    box-shadow: var(--md-sys-elevation-level2);
+    text-align: center;
+}
+
+header {
+    margin-bottom: 24px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    color: var(--md-sys-color-primary);
+    font-size: 24px;
+    font-weight: 400;
+    margin: 0;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+md-outlined-text-field {
+    width: 100%;
+}
+
+md-filled-button {
+    width: 100%;
+}
+
+#resultArea {
+    margin-top: 16px;
+    padding: 16px;
+    background-color: var(--md-sys-color-surface-variant);
+    color: var(--md-sys-color-on-surface-variant);
+    border-radius: 8px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#resultText {
+    margin: 0;
+    font-size: 16px;
+}
+
+footer {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+
+footer p {
+    font-size: 12px;
+    color: var(--md-sys-color-on-surface-variant);
+    margin: 0;
+}
+
+html {
+    color-scheme: light;
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+}
