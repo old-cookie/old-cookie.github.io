@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Icon Maker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <script type="importmap">
+      {
+        "imports": {
+          "@material/web/": "https://esm.run/@material/web/"
+        }
+      }
+    </script>
+    <script type="module">
+        import '@material/web/all.js';
+        import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
+
+        document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+    </script>
+    <link rel="stylesheet" href="ProfileIconMaker.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header-controls">
+                <md-icon-button id="themeToggle" title="切換深色模式">
+                    <md-icon>light_mode</md-icon>
+                </md-icon-button>
+            </div>
+            <h1 class="md-typescale-display-medium">Profile Icon Maker</h1>
+            <p class="md-typescale-title-medium">建立完美的正方形頭像圖片（圓形預覽效果）</p>
+        </header>
+
+        <main>
+            <!-- 上傳區域 -->
+            <div class="upload-section">
+                <md-elevated-card class="upload-card">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-content">
+                            <md-icon class="upload-icon">upload</md-icon>
+                            <h3 class="md-typescale-headline-small">上傳照片</h3>
+                            <p class="md-typescale-body-medium">拖放圖片或點擊選擇</p>
+                            <p class="md-typescale-body-small file-types">支援 JPG、PNG、GIF 格式</p>
+                        </div>
+                        <input type="file" id="fileInput" accept="image/*" hidden>
+                    </div>
+                </md-elevated-card>
+            </div>
+
+            <!-- 編輯區域 -->
+            <div class="editor-section" id="editorSection" style="display: none;">
+                <md-elevated-card class="editor-card">
+                    <div class="editor-container">
+                        <!-- 預覽區域 -->
+                        <div class="preview-area">
+                            <div class="canvas-container">
+                                <canvas id="canvas" width="400" height="400"></canvas>
+                                <div class="circle-overlay"></div>
+                                <div class="crop-overlay">
+                                    <div class="crop-handle nw"></div>
+                                    <div class="crop-handle ne"></div>
+                                    <div class="crop-handle sw"></div>
+                                    <div class="crop-handle se"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 控制面板 -->
+                        <div class="controls-panel">
+                            <md-filled-card class="format-info-card">
+                                <div class="format-info">
+                                    <p class="md-typescale-body-medium"><strong>輸出格式：</strong>正方形 JPG 圖片 (3000×3000)</p>
+                                    <p class="md-typescale-body-small">自動優化文件大小（≤1MB）</p>
+                                </div>
+                            </md-filled-card>
+
+                            <div class="control-group">
+                                <label for="scaleSlider" class="md-typescale-body-large">縮放大小</label>
+                                <md-slider id="scaleSlider" min="0.5" max="3" value="1" step="0.1" labeled ticks>
+                                </md-slider>
+                                <span id="scaleValue" class="md-typescale-body-medium">100%</span>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="rotateSlider" class="md-typescale-body-large">旋轉角度</label>
+                                <md-slider id="rotateSlider" min="-180" max="180" value="0" step="1" labeled ticks>
+                                </md-slider>
+                                <span id="rotateValue" class="md-typescale-body-medium">0°</span>
+                            </div>
+
+                            <md-filled-card class="position-hint-card">
+                                <div class="position-hint">
+                                    <md-icon>pan_tool</md-icon>
+                                    <p class="md-typescale-body-medium">直接拖拽圖片來調整位置</p>
+                                </div>
+                            </md-filled-card>
+
+                            <div class="action-buttons">
+                                <md-outlined-button id="resetBtn">
+                                    <md-icon slot="icon">refresh</md-icon>
+                                    重置
+                                </md-outlined-button>
+                                <md-outlined-button id="newImageBtn">
+                                    <md-icon slot="icon">add_a_photo</md-icon>
+                                    選擇新圖片
+                                </md-outlined-button>
+                                <md-filled-button id="downloadBtn">
+                                    <md-icon slot="icon">download</md-icon>
+                                    下載圖片
+                                </md-filled-button>
+                            </div>
+                        </div>
+                    </div>
+                </md-elevated-card>
+            </div>
+        </main>
+    </div>
+
+    <script src="ProfileIconMaker.js"></script>
+</body>
+
+</html>
