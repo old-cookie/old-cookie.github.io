@@ -1,0 +1,474 @@
+@import "https://cdn.jsdelivr.net/npm/@material/web/dist/theme/theme.css";
+
+:root {
+    --md-sys-color-primary: #6750A4;
+    --md-sys-color-on-primary: #FFFFFF;
+    --md-sys-color-primary-container: #EADDFF;
+    --md-sys-color-on-primary-container: #21005D;
+    --md-sys-color-secondary: #625B71;
+    --md-sys-color-on-secondary: #FFFFFF;
+    --md-sys-color-secondary-container: #E8DEF8;
+    --md-sys-color-on-secondary-container: #1D192B;
+    --md-sys-color-tertiary: #7D5260;
+    --md-sys-color-on-tertiary: #FFFFFF;
+    --md-sys-color-tertiary-container: #FFD8E4;
+    --md-sys-color-on-tertiary-container: #31111D;
+    --md-sys-color-error: #B3261E;
+    --md-sys-color-on-error: #FFFFFF;
+    --md-sys-color-error-container: #F9DEDC;
+    --md-sys-color-on-error-container: #410E0B;
+    --md-sys-color-background: #FFFBFE;
+    --md-sys-color-on-background: #1C1B1F;
+    --md-sys-color-surface: #FFFBFE;
+    --md-sys-color-on-surface: #1C1B1F;
+    --md-sys-color-surface-variant: #E7E0EC;
+    --md-sys-color-on-surface-variant: #49454F;
+    --md-sys-color-outline: #79747E;
+    --md-sys-color-shadow: #000000;
+    --md-sys-color-inverse-surface: #313033;
+    --md-sys-color-inverse-on-surface: #F4EFF4;
+    --md-sys-color-inverse-primary: #D0BCFF;
+    --md-sys-color-surface-tint-color: #6750A4;
+}
+
+/* Dark Theme */
+body.dark-theme {
+    --md-sys-color-primary: #D0BCFF;
+    --md-sys-color-on-primary: #381E72;
+    --md-sys-color-primary-container: #4F378B;
+    --md-sys-color-on-primary-container: #EADDFF;
+    --md-sys-color-secondary: #CCC2DC;
+    --md-sys-color-on-secondary: #332D41;
+    --md-sys-color-secondary-container: #4A4458;
+    --md-sys-color-on-secondary-container: #E8DEF8;
+    --md-sys-color-tertiary: #EFB8C8;
+    --md-sys-color-on-tertiary: #492532;
+    --md-sys-color-tertiary-container: #633B48;
+    --md-sys-color-on-tertiary-container: #FFD8E4;
+    --md-sys-color-error: #F2B8B5;
+    --md-sys-color-on-error: #601410;
+    --md-sys-color-error-container: #8C1D18;
+    --md-sys-color-on-error-container: #F9DEDC;
+    --md-sys-color-background: #1C1B1F;
+    --md-sys-color-on-background: #E6E1E5;
+    --md-sys-color-surface: #1C1B1F;
+    --md-sys-color-on-surface: #E6E1E5;
+    --md-sys-color-surface-variant: #49454F;
+    --md-sys-color-on-surface-variant: #CAC4D0;
+    --md-sys-color-outline: #938F99;
+    --md-sys-color-inverse-surface: #E6E1E5;
+    --md-sys-color-inverse-on-surface: #313033;
+    --md-sys-color-inverse-primary: #6750A4;
+    --md-sys-color-surface-tint-color: #D0BCFF;
+}
+
+
+body {
+    font-family: 'Roboto', 'Microsoft JhengHei', 'Noto Color Emoji', sans-serif;
+    line-height: 1.6;
+    background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+header {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    background-color: var(--md-sys-color-surface-container-low);
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.header-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+#theme-toggle {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+header h1 {
+    color: var(--md-sys-color-primary);
+    font-size: 2.5rem;
+    margin: 0;
+    padding: 0;
+}
+
+header p {
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.search-container {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+#search-input {
+    width: 100%;
+    --md-outlined-text-field-container-shape: 28px;
+}
+
+main {
+    position: relative;
+    z-index: 1;
+}
+
+.soup-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.soup-item-card {
+    cursor: pointer;
+    --md-elevated-card-container-color: var(--md-sys-color-surface-container-lowest);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.soup-item-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--md-sys-color-primary);
+    margin-bottom: 1rem;
+}
+
+.card-meta {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.chip-type {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+.chip-category {
+    background-color: var(--md-sys-color-tertiary-container);
+    color: var(--md-sys-color-on-tertiary-container);
+}
+
+.chip-ai {
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    cursor: pointer;
+}
+
+.chip md-icon {
+    font-size: 1.2rem;
+}
+
+/* Detail Page */
+.soup-detail-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.detail-card {
+    --md-outlined-card-container-color: var(--md-sys-color-surface);
+    padding: 1.5rem;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.header-left-items {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.detail-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--md-sys-color-primary);
+}
+
+.detail-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.content-section {
+    margin-bottom: 1.5rem;
+}
+
+.content-section h2 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    padding-bottom: 0.5rem;
+}
+
+.markdown-content {
+    line-height: 1.7;
+    color: var(--md-sys-color-on-surface);
+}
+
+.soup-bottom {
+    background-color: var(--md-sys-color-surface-container-highest);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, padding 0.5s ease-in-out;
+}
+
+.soup-bottom.show {
+    max-height: 2000px; /* A large enough value */
+    opacity: 1;
+    padding: 1.5rem;
+}
+
+.detail-footer {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Markdown Styles */
+.markdown-content strong {
+    color: var(--md-sys-color-primary);
+}
+
+.markdown-content em {
+    color: var(--md-sys-color-secondary);
+    font-style: italic;
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid var(--md-sys-color-primary);
+    background: var(--md-sys-color-surface-container-low);
+    padding: 1em;
+    margin: 1em 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.markdown-content code {
+    background: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface-variant);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.markdown-content pre {
+    background: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-on-surface-variant);
+    padding: 1em;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+/* Snackbar */
+#snackbar-container {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+md-snackbar {
+    --md-snackbar-container-color: var(--md-sys-color-inverse-surface);
+    --md-sys-color-inverse-on-surface: var(--md-sys-color-inverse-on-surface);
+}
+
+/* Helper class for empty state */
+.empty-state {
+    text-align: center;
+    color: var(--md-sys-color-on-surface-variant);
+    grid-column: 1 / -1;
+    padding: 4rem 1rem;
+}
+
+.empty-state md-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--md-sys-color-secondary);
+}
+
+.empty-state h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--md-sys-color-on-background);
+}
+
+/* 強制 Material Icons 使用正確的字體 */
+md-icon {
+    font-family: 'Material Symbols Outlined' !important;
+    font-feature-settings: 'liga';
+    -webkit-font-feature-settings: 'liga';
+}
+
+/* 按鈕樣式修復 */
+md-filled-button,
+md-filled-tonal-button,
+md-filled-tonal-icon-button,
+md-elevated-button,
+md-outlined-button {
+    cursor: pointer !important;
+    user-select: none;
+}
+
+md-filled-button:hover,
+md-filled-tonal-button:hover,
+md-filled-tonal-icon-button:hover,
+md-elevated-button:hover,
+md-outlined-button:hover {
+    cursor: pointer !important;
+}
+
+/* 文字選取控制 - 只允許 JSON 內容被選取 */
+* {
+    user-select: none;
+}
+
+/* 只允許 markdown 內容被選取 */
+.markdown-content,
+.markdown-content * {
+    user-select: text !important;
+}
+
+/* 確保其他 UI 元素不能被選取 */
+.chip,
+.chip *,
+.detail-header,
+.detail-header *,
+.detail-footer,
+.detail-footer *,
+.card-header,
+.card-header *,
+h1, h2, h3, h4, h5, h6,
+header,
+header * {
+    user-select: none !important;
+}
+
+/* 讓按鈕更像標籤的樣式 */
+md-filled-tonal-button,
+md-filled-tonal-icon-button {
+    --md-filled-tonal-button-container-shape: 20px;
+    --md-filled-tonal-button-with-icon-icon-size: 20px;
+    --md-filled-tonal-button-container-height: 48px;
+    --md-filled-tonal-icon-button-container-size: 48px;
+    --md-filled-tonal-icon-button-icon-size: 24px;
+    font-weight: 500;
+    font-size: 16px;
+    min-width: 80px;
+    padding: 0 12px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: inline-flex;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+md-filled-tonal-button:hover,
+md-filled-tonal-icon-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 詳細頁面按鈕樣式 */
+.detail-actions md-filled-tonal-button,
+.detail-footer md-filled-tonal-button,
+.header-left-items md-filled-tonal-button {
+    --md-filled-tonal-button-container-color: var(--md-sys-color-primary-container);
+    --md-filled-tonal-button-label-text-color: var(--md-sys-color-primary);
+    --md-filled-tonal-button-icon-color: var(--md-sys-color-primary);
+    border-radius: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    border: 2px solid var(--md-sys-color-outline-variant);
+}
+
+/* 主題切換和搜尋按鈕 */
+#theme-toggle,
+#clear-search {
+    --md-filled-tonal-icon-button-icon-color: var(--md-sys-color-primary);
+    --md-filled-tonal-icon-button-container-color: transparent;
+    border: none;
+}
+
+#theme-toggle {
+    background: none !important;
+    box-shadow: none !important;
+}
+
+body.dark-theme .detail-actions md-filled-tonal-button,
+body.dark-theme .detail-footer md-filled-tonal-button,
+body.dark-theme .header-left-items md-filled-tonal-button {
+    --md-filled-tonal-button-container-color: var(--md-sys-color-secondary-container);
+    --md-filled-tonal-button-label-text-color: var(--md-sys-color-on-secondary-container);
+    --md-filled-tonal-button-icon-color: var(--md-sys-color-on-secondary-container);
+    border: 2px solid var(--md-sys-color-outline);
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme #theme-toggle,
+body.dark-theme #clear-search {
+    --md-filled-tonal-icon-button-icon-color: var(--md-sys-color-on-surface);
+    --md-filled-tonal-icon-button-container-color: transparent;
+    border: none;
+}
+
+body.dark-theme #theme-toggle {
+    background: none !important;
+    box-shadow: none !important;
+}
