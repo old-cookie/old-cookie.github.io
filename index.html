@@ -12,18 +12,14 @@
     <script type="importmap">
       {
         "imports": {
-          "@material/web/": "https://esm.run/@material/web/"
+          "@material/web/": "https://cdn.jsdelivr.net/npm/@material/web@2.1.0/"
         }
       }
     </script>
     <script type="module">
-        import '@material/web/button/button.js';
-        import '@material/web/card/card.js';
-        import '@material/web/icon/icon.js';
-        import {
-            styles as typescaleStyles
-        } from '@material/web/typography/md-typescale-styles.js';
-        document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+        import '@material/web/button/filled-button.js';
+        import '@material/web/elevation/elevation.js';
+        import '@material/web/ripple/ripple.js';
     </script>
     <style>
         :root {

@@ -14,7 +14,17 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     
     <!-- Material Web Components -->
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@material/web/all.js?module"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "tslib": "https://cdn.jsdelivr.net/npm/tslib@2.6.0/tslib.es6.js",
+            "lit": "https://cdn.jsdelivr.net/npm/lit@3.0.0/index.js",
+            "lit/decorators.js": "https://cdn.jsdelivr.net/npm/lit@3.0.0/decorators.js",
+            "@material/web/": "https://cdn.jsdelivr.net/npm/@material/web/"
+        }
+    }
+    </script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@material/web/all.js"></script>
     
     <link rel="stylesheet" href="soup.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
