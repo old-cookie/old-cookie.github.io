@@ -22,7 +22,7 @@ let currentSoup = null;
  * 當頁面載入完成時執行初始化
  * 設定Markdown解析器配置並載入資料
  */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // 檢查並配置Markdown解析器
     if (typeof marked !== 'undefined') {
         marked.setOptions({
@@ -31,10 +31,10 @@ document.addEventListener('DOMContentLoaded', function() {
             sanitize: false    // 不過濾HTML標籤（信任內容）
         });
     }
-    
+
     // 開始載入海龜湯資料
     loadSoupData();
-    
+
     // 綁定全域事件監聽器（搜尋、主題切換等）
     bindGlobalEventListeners();
 });
@@ -47,27 +47,27 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 async function loadSoupData() {
     const container = document.getElementById('soup-container');
-    
+
     // 顯示載入進度條
     container.innerHTML = '<md-linear-progress indeterminate></md-linear-progress>';
-    
+
     try {
         // 並行載入兩個JSON文件以提升效能
         const [normalResponse, aiResponse] = await Promise.all([
             fetch('./assets/soups.json'),      // 一般海龜湯題目
             fetch('./assets/ai_soups.json')   // AI生成的題目
         ]);
-        
+
         let combinedData = {};
-        
+
         // 處理一般海龜湯資料
         if (normalResponse.ok) {
             const data = await normalResponse.json();
-            combinedData = {...combinedData, ...data};
+            combinedData = { ...combinedData, ...data };
         } else {
             console.warn('無法載入 soups.json');
         }
-        
+
         // 處理AI生成的海龜湯資料，並標記為AI生成
         if (aiResponse.ok) {
             const aiData = await aiResponse.json();
@@ -75,20 +75,20 @@ async function loadSoupData() {
             for (const key in aiData) {
                 aiData[key].ai = true;
             }
-            combinedData = {...combinedData, ...aiData};
+            combinedData = { ...combinedData, ...aiData };
         } else {
             console.warn('無法載入 ai_soups.json');
         }
-        
+
         // 檢查是否有任何資料載入成功
         if (Object.keys(combinedData).length === 0) {
             throw new Error('所有資料源均無法載入');
         }
-        
+
         // 儲存合併後的資料並檢查URL參數
         soupData = combinedData;
         checkUrlParams();
-        
+
     } catch (error) {
         console.error('載入資料時發生錯誤:', error);
         // 顯示錯誤訊息給使用者
@@ -113,7 +113,7 @@ function checkUrlParams() {
     const urlParams = new URLSearchParams(window.location.search);
     // 取得第一個參數的key作為海龜湯名稱
     const soupName = urlParams.keys().next().value;
-    
+
     // 如果URL有指定題目且該題目存在，則顯示詳細頁面
     if (soupName && soupData[soupName]) {
         currentSoup = soupName;
@@ -135,14 +135,14 @@ function renderSoupList() {
     const container = document.getElementById('soup-container');
     const header = document.querySelector('header h1');
     const headerDesc = document.querySelector('header p');
-    
+
     // 更新頁面標題和描述
     header.textContent = '🐢 海龜湯題庫';
     headerDesc.textContent = '點擊卡片查看詳情，挑戰你的推理能力！';
-    
+
     // 將資料轉換為陣列格式以便處理
     const soupItems = Object.entries(soupData);
-    
+
     // 檢查是否有資料可顯示
     if (soupItems.length === 0) {
         container.innerHTML = `
@@ -154,12 +154,12 @@ function renderSoupList() {
         `;
         return;
     }
-    
+
     // 產生所有題目卡片的HTML
-    container.innerHTML = soupItems.map(([title, data]) => 
+    container.innerHTML = soupItems.map(([title, data]) =>
         createSoupItemHTML(title, data)
     ).join('');
-    
+
     // 綁定卡片點擊事件
     bindCardClickEvents();
 }
@@ -175,15 +175,15 @@ function renderDetailPage(title, data) {
     const container = document.getElementById('soup-container');
     const header = document.querySelector('header h1');
     const headerDesc = document.querySelector('header p');
-    
+
     // 更新頁面標題
     header.innerHTML = `🐢 ${escapeHtml(title)}`;
     headerDesc.innerHTML = `詳細內容 - 點擊按鈕顯示答案（湯底）`;
-    
+
     // 檢查是否有規則內容和是否為AI生成
     const hasRules = data.規則 && data.規則.trim() !== '';
     const isAI = data.ai === true;
-    
+
     // 產生詳細頁面HTML結構
     container.innerHTML = `
         <div class="soup-detail-container">
@@ -252,7 +252,7 @@ function renderDetailPage(title, data) {
             </md-elevated-card>
         </div>
     `;
-    
+
     // 綁定揭曉按鈕事件
     bindRevealButtonEvent();
 }
@@ -267,7 +267,7 @@ function goBackToList() {
     const url = new URL(window.location);
     url.search = '';
     window.history.pushState({}, '', url);
-    
+
     // 重置當前選中狀態並渲染列表
     currentSoup = null;
     renderSoupList();
@@ -314,12 +314,12 @@ function createSoupItemHTML(title, data) {
  */
 function formatMarkdownText(text) {
     if (!text) return '';
-    
+
     // 如果marked庫可用，使用Markdown渲染
     if (typeof marked !== 'undefined') {
         return marked.parse(text);
     }
-    
+
     // 否則進行基本的HTML轉義和換行處理
     return escapeHtml(text).replace(/\n/g, '<br>');
 }
@@ -343,7 +343,7 @@ function escapeHtml(text) {
  */
 function bindCardClickEvents() {
     document.querySelectorAll('.soup-item-card').forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function () {
             const soupName = this.getAttribute('data-soup');
             navigateToDetail(soupName);
         });
@@ -360,7 +360,7 @@ function navigateToDetail(soupName) {
     const url = new URL(window.location);
     url.search = `?${encodeURIComponent(soupName)}`;
     window.history.pushState({}, '', url);
-    
+
     // 設定當前選中的題目並渲染詳細頁面
     currentSoup = soupName;
     renderDetailPage(soupName, soupData[soupName]);
@@ -375,13 +375,13 @@ function bindGlobalEventListeners() {
     // ========== 搜索功能 ==========
     const searchInput = document.getElementById('search-input');
     const clearButton = document.getElementById('clear-search');
-    
+
     // 監聽搜索輸入變化
-    searchInput.addEventListener('input', function() {
+    searchInput.addEventListener('input', function () {
         const searchTerm = this.value.trim();
         // 根據是否有搜索內容顯示/隱藏清除按鈕
         clearButton.style.display = searchTerm ? 'flex' : 'none';
-        
+
         if (!searchTerm) {
             // 如果搜索欄為空，根據當前狀態決定顯示內容
             if (currentSoup) goBackToList();
@@ -393,7 +393,7 @@ function bindGlobalEventListeners() {
     });
 
     // 清除搜索按鈕點擊事件
-    clearButton.addEventListener('click', function() {
+    clearButton.addEventListener('click', function () {
         searchInput.value = '';
         this.style.display = 'none';
         // 根據當前狀態決定顯示內容
@@ -425,7 +425,7 @@ function bindGlobalEventListeners() {
     window.addEventListener('popstate', () => checkUrlParams());
 
     // ========== 快捷鍵功能 ==========
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         // R鍵：重新載入資料
         if (e.key === 'r' || e.key === 'R') {
             e.preventDefault();
@@ -454,23 +454,23 @@ function filterSoupList(searchTerm) {
     const container = document.getElementById('soup-container');
     const header = document.querySelector('header h1');
     const headerDesc = document.querySelector('header p');
-    
+
     // 更新頁面標題顯示搜索狀態
     header.textContent = `🔍 搜索結果`;
     headerDesc.innerHTML = `"${escapeHtml(searchTerm)}" 的結果`;
-    
+
     // 將搜索詞轉為小寫以進行不區分大小寫的搜索
     const searchLower = searchTerm.toLowerCase();
-    
+
     // 在多個欄位中搜索匹配的題目
-    const filteredItems = Object.entries(soupData).filter(([title, data]) => 
+    const filteredItems = Object.entries(soupData).filter(([title, data]) =>
         title.toLowerCase().includes(searchLower) ||           // 題目名稱
         data.湯面.toLowerCase().includes(searchLower) ||        // 湯面內容
         data.湯底.toLowerCase().includes(searchLower) ||        // 湯底內容
         data.類型.toLowerCase().includes(searchLower) ||        // 類型
         (data.規則 && data.規則.toLowerCase().includes(searchLower)) // 規則（如果存在）
     );
-    
+
     // 如果沒有找到匹配結果
     if (filteredItems.length === 0) {
         container.innerHTML = `
@@ -482,12 +482,12 @@ function filterSoupList(searchTerm) {
         `;
         return;
     }
-    
+
     // 顯示搜索結果
-    container.innerHTML = filteredItems.map(([title, data]) => 
+    container.innerHTML = filteredItems.map(([title, data]) =>
         createSoupItemHTML(title, data)
     ).join('');
-    
+
     // 重新綁定卡片點擊事件
     bindCardClickEvents();
 }
@@ -501,13 +501,13 @@ function bindRevealButtonEvent() {
     const button = document.querySelector('.reveal-button');
     if (!button) return;
 
-    button.addEventListener('click', function() {
+    button.addEventListener('click', function () {
         const soupTitle = this.getAttribute('data-soup');
         const bottom = document.getElementById(`bottom-${soupTitle}`);
-        
+
         // 切換答案區域的顯示狀態
         const isRevealed = bottom.classList.toggle('show');
-        
+
         // 根據狀態更新按鈕文字和圖示
         this.label = isRevealed ? '隱藏真相' : '揭曉真相';
         this.querySelector('md-icon').textContent = isRevealed ? 'visibility_off' : 'visibility';
@@ -523,26 +523,26 @@ function bindRevealButtonEvent() {
 function downloadAsMarkdown(soupTitle) {
     const data = soupData[soupTitle];
     if (!data) return;
-    
+
     // 建構Markdown內容
     let markdownContent = `# ${soupTitle}\n\n`;
     markdownContent += `> ${data.類型}\n\n`;
-    
+
     // 如果有規則內容，添加規則章節
     if (data.規則 && data.規則.trim() !== '') {
         markdownContent += `## ${data.規則.includes('主持人手冊') ? '主持人手冊' : '遊戲規則'}\n\n${data.規則}\n\n`;
     }
-    
+
     // 添加湯面和湯底內容
     markdownContent += `## 湯面\n\n${data.湯面}\n\n`;
     markdownContent += `## 湯底\n\n${data.湯底}\n\n`;
-    
+
     // 添加標籤資訊
     const tags = [data.ai ? 'AI' : null, soupTitle.includes('規則怪談') ? '規則怪談' : '海龜湯'].filter(Boolean);
     if (tags.length > 0) {
         markdownContent += `---\n\n**標籤：** ${tags.join(', ')}\n`;
     }
-    
+
     // 創建並下載文件
     const blob = new Blob([markdownContent], { type: 'text/markdown;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -550,10 +550,10 @@ function downloadAsMarkdown(soupTitle) {
     a.href = url;
     a.download = `${soupTitle}.md`;
     a.click();
-    
+
     // 清理URL物件
     URL.revokeObjectURL(url);
-    
+
     // 顯示下載成功提示
     showSnackbar(`✅ 已開始下載：${soupTitle}.md`);
 }
@@ -567,14 +567,14 @@ function downloadAsMarkdown(soupTitle) {
 function showSnackbar(message) {
     const container = document.getElementById('snackbar-container');
     const snackbar = document.createElement('md-snackbar');
-    
+
     // 設定Snackbar屬性
     snackbar.labelText = message;
     snackbar.open = true;
-    
+
     // 添加到容器中
     container.appendChild(snackbar);
-    
+
     // 監聽關閉事件，自動移除元素
     snackbar.addEventListener('closed', () => {
         container.removeChild(snackbar);

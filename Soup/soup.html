@@ -1,34 +1,29 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>海龜湯題庫 - Material Web 3</title>
-    
-    <!-- Google Fonts: Roboto and Noto Color Emoji -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-    <!-- Material Symbols -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    
-    <!-- Material Web Components -->
     <script type="importmap">
-    {
-        "imports": {
-            "tslib": "https://cdn.jsdelivr.net/npm/tslib@2.6.0/tslib.es6.js",
-            "lit": "https://cdn.jsdelivr.net/npm/lit@3.0.0/index.js",
-            "lit/decorators.js": "https://cdn.jsdelivr.net/npm/lit@3.0.0/decorators.js",
-            "@material/web/": "https://cdn.jsdelivr.net/npm/@material/web/"
+        {
+            "imports": {
+                "@material/web/": "https://esm.run/@material/web/"
+            }
         }
-    }
     </script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@material/web/all.js"></script>
-    
+    <script type="module">
+        import '@material/web/all.js';
+        import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
+        document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+    </script>
     <link rel="stylesheet" href="soup.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
+
 <body class="m3-theme">
     <header>
         <md-elevation></md-elevation>
@@ -41,21 +36,21 @@
         <p>點擊卡片查看詳情，挑戰你的推理能力！</p>
         <div class="search-container">
             <md-outlined-text-field id="search-input" label="搜尋海龜湯" class="search-input">
-                                <md-filled-tonal-icon-button id="clear-search" slot="trailing-icon" aria-label="清除搜尋" style="display: none;">
+                <md-filled-tonal-icon-button id="clear-search" slot="trailing-icon" aria-label="清除搜尋"
+                    style="display: none;">
                     <md-icon>close</md-icon>
                 </md-filled-tonal-icon-button>
             </md-outlined-text-field>
         </div>
     </header>
-
     <main>
         <div id="soup-container" class="soup-container">
             <md-linear-progress indeterminate></md-linear-progress>
         </div>
     </main>
-    
     <div id="snackbar-container"></div>
 
     <script src="soup.js"></script>
 </body>
+
 </html>

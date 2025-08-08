@@ -139,7 +139,7 @@ main {
 
 .soup-item-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
@@ -269,7 +269,8 @@ main {
 }
 
 .soup-bottom.show {
-    max-height: 2000px; /* A large enough value */
+    max-height: 2000px;
+    /* A large enough value */
     opacity: 1;
     padding: 1.5rem;
 }
@@ -394,7 +395,12 @@ md-outlined-button:hover {
 .detail-footer *,
 .card-header,
 .card-header *,
-h1, h2, h3, h4, h5, h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
 header,
 header * {
     user-select: none !important;
