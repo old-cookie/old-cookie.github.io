@@ -108,13 +108,31 @@ header p {
 }
 
 .search-container {
-    max-width: 500px;
+    max-width: 600px;
     margin: 0 auto;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
 }
 
 #search-input {
-    width: 100%;
+    flex: 1;
     --md-outlined-text-field-container-shape: 28px;
+}
+
+.add-soup-button {
+    --md-filled-button-container-color: var(--md-sys-color-primary);
+    --md-filled-button-label-text-color: var(--md-sys-color-on-primary);
+    --md-filled-button-icon-color: var(--md-sys-color-on-primary);
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.add-soup-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 main {
@@ -180,9 +198,31 @@ main {
     color: var(--md-sys-color-on-secondary-container);
 }
 
-.chip-category {
+/* 變格和本格的特定顏色 */
+.chip-type-本格 {
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+}
+
+.chip-type-變格 {
     background-color: var(--md-sys-color-tertiary-container);
     color: var(--md-sys-color-on-tertiary-container);
+}
+
+.chip-category {
+    background-color: var(--md-sys-color-outline-variant);
+    color: var(--md-sys-color-on-surface);
+}
+
+/* 海龜湯和規則怪談的不同顏色 */
+.chip-category-海龜湯 {
+    background-color: #E3F2FD;
+    color: #0D47A1;
+}
+
+.chip-category-規則怪談 {
+    background-color: #FCE4EC;
+    color: #880E4F;
 }
 
 .chip-ai {
@@ -350,6 +390,41 @@ md-snackbar {
     color: var(--md-sys-color-on-background);
 }
 
+/* Add Soup Page */
+.add-soup-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.add-soup-content {
+    margin-top: 1.5rem;
+}
+
+.add-soup-description {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    color: var(--md-sys-color-on-surface-variant);
+    line-height: 1.6;
+}
+
+.add-soup-page .iframe-container {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: var(--md-sys-color-surface-container-lowest);
+    margin: 0 auto;
+}
+
+.add-soup-page .iframe-container iframe {
+    width: 100%;
+    border: none;
+    display: block;
+    min-height: 1200px;
+}
+
 /* 強制 Material Icons 使用正確的字體 */
 md-icon {
     font-family: 'Material Symbols Outlined' !important;
@@ -457,6 +532,17 @@ md-filled-tonal-icon-button:hover {
     box-shadow: none !important;
 }
 
+/* Dark theme colors for chips */
+body.dark-theme .chip-category-海龜湯 {
+    background-color: #1565C0;
+    color: #E3F2FD;
+}
+
+body.dark-theme .chip-category-規則怪談 {
+    background-color: #C2185B;
+    color: #FCE4EC;
+}
+
 body.dark-theme .detail-actions md-filled-tonal-button,
 body.dark-theme .detail-footer md-filled-tonal-button,
 body.dark-theme .header-left-items md-filled-tonal-button {
@@ -477,4 +563,61 @@ body.dark-theme #clear-search {
 body.dark-theme #theme-toggle {
     background: none !important;
     box-shadow: none !important;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .add-soup-section {
+        padding: 0 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .iframe-container {
+        border-radius: 8px;
+    }
+
+    .iframe-container iframe {
+        height: 600px;
+    }
+
+    .soup-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 0.5rem;
+    }
+
+    /* 新增頁面響應式 */
+    .add-soup-page {
+        padding: 0 0.5rem;
+    }
+
+    .add-soup-description {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .add-soup-page .iframe-container {
+        border-radius: 8px;
+    }
+
+    .add-soup-page .iframe-container iframe {
+        min-height: 800px;
+    }
+
+    /* 搜尋容器響應式 */
+    .search-container {
+        flex-direction: column;
+        gap: 0.75rem;
+        max-width: 100%;
+    }
+
+    .add-soup-button {
+        width: 100%;
+        justify-content: center;
+    }
 }

@@ -39,10 +39,126 @@ document.addEventListener('DOMContentLoaded', function () {
     bindGlobalEventListeners();
 });
 
+// ==================== CSV 解析工具 ====================
+/**
+ * 解析 CSV 文字為物件陣列
+ * @param {string} csvText - CSV 格式的文字
+ * @returns {Array} 解析後的物件陣列
+ */
+function parseCSV(csvText) {
+    const lines = csvText.split('\n').filter(line => line.trim());
+    if (lines.length === 0) return [];
+
+    // 取得表頭
+    const headers = lines[0].split(',').map(header => header.trim());
+    const rows = [];
+
+    // 解析每一行數據
+    for (let i = 1; i < lines.length; i++) {
+        const values = parseCSVLine(lines[i]);
+        if (values.length === headers.length) {
+            const row = {};
+            headers.forEach((header, index) => {
+                row[header] = values[index];
+            });
+            rows.push(row);
+        }
+    }
+
+    return rows;
+}
+
+/**
+ * 解析單行 CSV，處理引號和逗號
+ * @param {string} line - 單行 CSV 文字
+ * @returns {Array} 解析後的值陣列
+ */
+function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    let i = 0;
+
+    while (i < line.length) {
+        const char = line[i];
+
+        if (char === '"') {
+            if (inQuotes && line[i + 1] === '"') {
+                // 雙引號轉義
+                current += '"';
+                i += 2;
+            } else {
+                // 切換引號狀態
+                inQuotes = !inQuotes;
+                i++;
+            }
+        } else if (char === ',' && !inQuotes) {
+            // 遇到逗號且不在引號內，結束當前字段
+            result.push(current.trim());
+            current = '';
+            i++;
+        } else {
+            current += char;
+            i++;
+        }
+    }
+
+    // 添加最後一個字段
+    result.push(current.trim());
+    return result;
+}
+
+/**
+ * 轉換 CSV 數據為海龜湯格式
+ * @param {Array} csvData - CSV 解析後的數據
+ * @returns {Object} 海龜湯數據物件
+ */
+function convertCSVToSoupData(csvData) {
+    const soupData = {};
+
+    csvData.forEach(row => {
+        const title = row['湯名'];
+        if (!title) return;
+
+        // 忽略時間戳記和電郵地址欄位
+        // 檢查是否為 AI 生成題目（通過特定欄位或標記判斷）
+        const isAI = row['AI'] === 'TRUE' || row['AI'] === '1' || row['AI'] === 'ai' ||
+            row['AI'] === '是' || row['AI'] === 'true' || row['AI'] === 'AI' ||
+            row['AI 生成?'] === '是' || row['AI 生成?'] === 'TRUE' || row['AI 生成?'] === '1' ||
+            row['ai'] === 'TRUE' || row['ai'] === '1' ||
+            row['類型'] === 'AI' ||
+            (row['規則'] && row['規則'].includes('AI')) ||
+            (row['湯底'] && row['湯底'].includes('AI'));
+
+        // 處理規則和主持人手冊合併
+        let rules = '';
+        if (row['規則'] && row['規則'].trim()) {
+            rules = row['規則'].trim();
+        }
+        if (row['主持人手冊'] && row['主持人手冊'].trim()) {
+            if (rules) {
+                rules += '\n\n主持人手冊\n' + row['主持人手冊'].trim();
+            } else {
+                rules = '主持人手冊\n' + row['主持人手冊'].trim();
+            }
+        }
+
+        soupData[title] = {
+            類型: row['類型'] || '',
+            規則: rules,
+            湯面: (row['湯面'] || '').replace(/\\n/g, '\n'),
+            湯底: (row['湯底'] || '').replace(/\\n/g, '\n'),
+            ai: isAI  // 標記是否為 AI 生成
+        };
+    });
+
+    return soupData;
+}
+
 // ==================== 資料載入 ====================
 /**
  * 載入海龜湯資料
- * 並行載入一般題目和AI生成題目，合併後顯示
+ * 從單一線上 CSV 文件載入所有數據（包含 AI 和非 AI 題目）
  * 支援錯誤處理和進度顯示
  */
 async function loadSoupData() {
@@ -52,41 +168,33 @@ async function loadSoupData() {
     container.innerHTML = '<md-linear-progress indeterminate></md-linear-progress>';
 
     try {
-        // 並行載入兩個JSON文件以提升效能
-        const [normalResponse, aiResponse] = await Promise.all([
-            fetch('./assets/soups.json'),      // 一般海龜湯題目
-            fetch('./assets/ai_soups.json')   // AI生成的題目
-        ]);
+        // 載入統一的線上 CSV 數據（包含所有題目）
+        console.log('📡 正在載入統一線上 CSV 數據...');
+        const csvResponse = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRurmLf0G6MG6bwMEt1nMKDAteXShwQCe7st4zgfbZoCZauCNzRiLOVykh-LCeoyNZLiyEpJWKunwLx/pub?gid=1825511488&single=true&output=csv');
 
-        let combinedData = {};
-
-        // 處理一般海龜湯資料
-        if (normalResponse.ok) {
-            const data = await normalResponse.json();
-            combinedData = { ...combinedData, ...data };
-        } else {
-            console.warn('無法載入 soups.json');
+        if (!csvResponse.ok) {
+            throw new Error(`HTTP ${csvResponse.status}: 無法連接到 Google Sheets CSV`);
         }
 
-        // 處理AI生成的海龜湯資料，並標記為AI生成
-        if (aiResponse.ok) {
-            const aiData = await aiResponse.json();
-            // 為所有AI題目添加標記
-            for (const key in aiData) {
-                aiData[key].ai = true;
-            }
-            combinedData = { ...combinedData, ...aiData };
-        } else {
-            console.warn('無法載入 ai_soups.json');
-        }
+        const csvText = await csvResponse.text();
+        const csvData = parseCSV(csvText);
+        const soupDataFromCSV = convertCSVToSoupData(csvData);
+
+        // 分析載入的數據
+        const totalCount = Object.keys(soupDataFromCSV).length;
+        const aiCount = Object.values(soupDataFromCSV).filter(item => item.ai).length;
+        const normalCount = totalCount - aiCount;
 
         // 檢查是否有任何資料載入成功
-        if (Object.keys(combinedData).length === 0) {
-            throw new Error('所有資料源均無法載入');
+        if (totalCount === 0) {
+            throw new Error('CSV 數據為空或格式錯誤');
         }
 
-        // 儲存合併後的資料並檢查URL參數
-        soupData = combinedData;
+        // 儲存資料並檢查URL參數
+        soupData = soupDataFromCSV;
+        console.log('✅ 成功載入統一 CSV 數據:', totalCount, '個題目');
+        console.log('📊 其中一般題目:', normalCount, '個，AI 題目:', aiCount, '個');
+
         checkUrlParams();
 
     } catch (error) {
@@ -96,8 +204,12 @@ async function loadSoupData() {
             <div class="empty-state">
                 <md-icon>error</md-icon>
                 <h2>😅 載入資料時發生錯誤</h2>
-                <p>請確認 assets/soups.json 或 assets/ai_soups.json 檔案存在且格式正確。</p>
+                <p>無法連接到線上資料源，請檢查網路連線。</p>
                 <p>錯誤詳情: ${error.message}</p>
+                <md-filled-button onclick="loadSoupData()" style="margin-top: 1rem;">
+                    <md-icon slot="icon">refresh</md-icon>
+                    重新載入
+                </md-filled-button>
             </div>
         `;
     }
@@ -111,6 +223,13 @@ async function loadSoupData() {
  */
 function checkUrlParams() {
     const urlParams = new URLSearchParams(window.location.search);
+
+    // 檢查是否是新增頁面
+    if (urlParams.get('action') === 'add') {
+        renderAddSoupPage();
+        return;
+    }
+
     // 取得第一個參數的key作為海龜湯名稱
     const soupName = urlParams.keys().next().value;
 
@@ -149,7 +268,7 @@ function renderSoupList() {
             <div class="empty-state">
                 <md-icon>search_off</md-icon>
                 <h2>🤔 沒有找到海龜湯資料</h2>
-                <p>請檢查 soups.json 檔案內容。</p>
+                <p>請檢查線上資料來源或網路連線。</p>
             </div>
         `;
         return;
@@ -183,6 +302,9 @@ function renderDetailPage(title, data) {
     // 檢查是否有規則內容和是否為AI生成
     const hasRules = data.規則 && data.規則.trim() !== '';
     const isAI = data.ai === true;
+    const category = title.includes('規則怪談') ? '規則怪談' : '海龜湯';
+    const typeClass = getTypeChipClass(data.類型);
+    const categoryClass = getCategoryChipClass(category);
 
     // 產生詳細頁面HTML結構
     container.innerHTML = `
@@ -207,8 +329,8 @@ function renderDetailPage(title, data) {
 
                 <!-- 題目標籤區域 -->
                 <div class="card-meta" style="justify-content: flex-start; margin-bottom: 1.5rem;">
-                    <div class="chip chip-type"><md-icon>category</md-icon>${escapeHtml(data.類型)}</div>
-                    <div class="chip chip-category"><md-icon>style</md-icon>${title.includes('規則怪談') ? '規則怪談' : '海龜湯'}</div>
+                    <div class="chip ${typeClass}"><md-icon>category</md-icon>${escapeHtml(data.類型)}</div>
+                    <div class="chip ${categoryClass}"><md-icon>style</md-icon>${category}</div>
                     ${isAI ? `<div class="chip chip-ai" onclick="goToPromptPage()"><md-icon>smart_toy</md-icon>AI 生成</div>` : ''}
                 </div>
 
@@ -257,6 +379,54 @@ function renderDetailPage(title, data) {
     bindRevealButtonEvent();
 }
 
+/**
+ * 渲染新增海龜湯頁面
+ * 顯示 Google 表單的 iframe 供使用者填寫新題目
+ */
+function renderAddSoupPage() {
+    // 更新 URL
+    const url = new URL(window.location);
+    url.searchParams.set('action', 'add');
+    window.history.pushState({}, '', url);
+
+    // 設置容器內容
+    const container = document.getElementById('soup-container');
+    container.innerHTML = `
+        <div class="add-soup-page">
+            <div class="detail-header">
+                <div class="header-left-items">
+                    <md-filled-tonal-button onclick="goBackToList()" class="back-button">
+                        <md-icon slot="icon">arrow_back</md-icon>
+                        返回列表
+                    </md-filled-tonal-button>
+                </div>
+                <h1 class="detail-title">新增海龜湯題目</h1>
+                <div class="detail-actions">
+                    <md-filled-tonal-button onclick="window.open('https://old-cookie.github.io/EnterTon/EnterTon.html', '_blank')" aria-label="開啟 EnterTon 工具">
+                        <md-icon slot="icon">text_format</md-icon>
+                        換行工具
+                    </md-filled-tonal-button>
+                </div>
+            </div>
+            <div class="add-soup-content">
+                <p class="add-soup-description">
+                    歡迎分享！填寫下方表單後加入題庫。
+                </p>
+                <div class="iframe-container">
+                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSerxSMTksN-qhB71RGPvUPhzvsRBVhhklXXlQ1yUKeD5NAlaw/viewform?embedded=true" 
+                            width="100%" 
+                            height="1600" 
+                            frameborder="0" 
+                            marginheight="0" 
+                            marginwidth="0">
+                        正在載入表單...
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 // ==================== 導航功能 ====================
 /**
  * 返回到海龜湯列表頁面
@@ -291,18 +461,50 @@ function goToPromptPage() {
  */
 function createSoupItemHTML(title, data) {
     const isAI = data.ai === true;
+    const category = title.includes('規則怪談') ? '規則怪談' : '海龜湯';
+    const typeClass = getTypeChipClass(data.類型);
+    const categoryClass = getCategoryChipClass(category);
+
     return `
         <md-elevated-card class="soup-item-card" data-soup="${escapeHtml(title)}">
             <div class="card-header">
                 <div class="card-title">${escapeHtml(title)}</div>
                 <div class="card-meta">
-                    <div class="chip chip-type"><md-icon>category</md-icon>${escapeHtml(data.類型)}</div>
-                    <div class="chip chip-category"><md-icon>style</md-icon>${title.includes('規則怪談') ? '規則怪談' : '海龜湯'}</div>
+                    <div class="chip ${typeClass}"><md-icon>category</md-icon>${escapeHtml(data.類型)}</div>
+                    <div class="chip ${categoryClass}"><md-icon>style</md-icon>${category}</div>
                     ${isAI ? `<div class="chip chip-ai" onclick="event.stopPropagation(); goToPromptPage()"><md-icon>smart_toy</md-icon>AI 生成</div>` : ''}
                 </div>
             </div>
         </md-elevated-card>
     `;
+}
+
+/**
+ * 獲取類型標籤的 CSS 類別
+ * @param {string} type - 類型名稱
+ * @returns {string} CSS 類別名稱
+ */
+function getTypeChipClass(type) {
+    // 檢查類型中是否包含變格或本格
+    if (type.includes('變格')) {
+        return 'chip-type-變格';
+    } else if (type.includes('本格')) {
+        return 'chip-type-本格';
+    }
+    return 'chip-type';
+}
+
+/**
+ * 獲取類別標籤的 CSS 類別
+ * @param {string} category - 類別名稱
+ * @returns {string} CSS 類別名稱
+ */
+function getCategoryChipClass(category) {
+    const categoryMap = {
+        '海龜湯': 'chip-category-海龜湯',
+        '規則怪談': 'chip-category-規則怪談'
+    };
+    return categoryMap[category] || 'chip-category';
 }
 
 // ==================== 文字處理工具 ====================
@@ -399,6 +601,12 @@ function bindGlobalEventListeners() {
         // 根據當前狀態決定顯示內容
         if (currentSoup) goBackToList();
         else renderSoupList();
+    });
+
+    // ========== 新增海龜湯按鈕 ==========
+    const addSoupButton = document.getElementById('add-soup-button');
+    addSoupButton.addEventListener('click', function () {
+        renderAddSoupPage();
     });
 
     // ========== 主題切換功能 ==========
@@ -580,26 +788,3 @@ function showSnackbar(message) {
         container.removeChild(snackbar);
     });
 }
-
-// ==================== 開發者資訊 ====================
-/**
- * 控制台歡迎訊息和功能說明
- * 在開發者工具中顯示應用程式資訊和可用功能
- */
-console.log(`
-🐢 海龜湯題庫 (Material Web 3) 載入完成！
-
-功能特色：
-✨ Material Web 3 介面
-✨ Markdown 格式支援
-🤖 AI 湯題支援
-🔗 路由功能
-🔍 搜索功能
-
-快捷鍵：
-- R: 重新載入資料
-- ESC: 返回列表
-- /: 聚焦搜索欄
-
-享受推理的樂趣吧！ 🕵️‍♂️
-`);

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter To \n - Line Break Converter</title>
+    <style>
+        #input,
+        #output {
+            width: 100%;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Enter To \n</h1>
+    <p>Enter text with line breaks and convert breaks to "\n", so all text is in a single line.</p>
+    
+    <div>
+        <h2>Input (text with linebreaks)</h2>
+        <textarea id="input"></textarea>
+        <br><button id="process" onClick="onProcess()">Process</button>
+    </div>
+
+    <div>
+        <h2>Output</h2>
+        <textarea id="output" readonly></textarea>
+        <br><button id="Copy" onClick="onCopy()">Copy</button>
+    </div>
+
+    <script>
+        function onProcess() {
+            var input = document.getElementById("input").value;
+
+            if (!input) {
+                // Null or undefined or bad input
+                alert("Invalid input");
+                return;
+            }
+
+            var output = "";
+
+            // Replace line-breaks with "\n"
+            output = input.replace(/(?:\r\n|\r|\n)/g, '\\n');
+
+            document.getElementById("output").value = output;
+        }
+
+        function onCopy() {
+            var output = document.getElementById("output");
+
+            if (!output.value) {
+                alert("No text to copy");
+                return;
+            }
+
+            // Select the text in the output textarea
+            output.select();
+            output.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text to clipboard
+            try {
+                document.execCommand('copy');
+                alert("Text copied to clipboard!");
+            } catch (err) {
+                // Fallback for modern browsers
+                navigator.clipboard.writeText(output.value).then(function () {
+                    alert("Text copied to clipboard!");
+                }).catch(function (err) {
+                    alert("Failed to copy text");
+                });
+            }
+        }
+    </script>
+</body>
+</html>
