@@ -1,0 +1,207 @@
+/* Portfolio specific styles - extends material3-common.css */
+@import url('./material3-common.css');
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+    background: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
+    font-family: 'Roboto', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+    min-height: 100vh;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 48px;
+    position: relative;
+}
+
+.header-controls {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.header h1 {
+    color: var(--md-sys-color-primary);
+    margin-bottom: 16px;
+}
+
+.header p {
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.project-icon {
+    font-size: 32px;
+    color: var(--md-sys-color-primary);
+    margin-bottom: 16px;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.project-card {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.project-card:hover {
+    transform: translateY(-2px);
+}
+
+h1 {
+    font-size: 3.5rem;
+    font-weight: 400;
+    color: var(--md-sys-color-primary);
+    margin-bottom: 8px;
+    line-height: 1.2;
+    letter-spacing: -0.25px;
+    position: relative;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--md-sys-color-primary), transparent);
+    border-radius: 2px;
+    animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+
+    0%,
+    100% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.subtitle {
+    font-size: 1.125rem;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-bottom: 16px;
+    font-weight: 400;
+}
+
+.project-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface);
+    margin: 0 0 0.75rem 0;
+    line-height: 1.4;
+}
+
+.project-description {
+    font-size: 0.875rem;
+    color: var(--md-sys-color-on-surface-variant);
+    line-height: 1.5;
+    margin: 0 0 1.25rem 0;
+    flex: 1;
+}
+
+.project-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--md-sys-color-primary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: color 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    margin-top: auto;
+}
+
+.project-link .material-symbols-outlined {
+    margin-left: 8px;
+    font-size: 18px;
+    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.project-link:hover {
+    color: var(--md-sys-color-secondary);
+}
+
+.project-link:hover .material-symbols-outlined {
+    transform: translateX(4px);
+}
+
+footer {
+    margin-top: auto;
+    padding: 32px 0;
+    text-align: center;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+
+footer p {
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    body {
+        padding: 16px;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 12px;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+        margin-bottom: 32px;
+    }
+
+    .header {
+        margin-bottom: 32px;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .project-card {
+        padding: 20px;
+    }
+
+    .header-controls {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        margin-bottom: 16px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 12px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .project-card {
+        padding: 16px;
+    }
+}

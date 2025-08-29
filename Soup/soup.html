@@ -5,8 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>海龜湯題庫</title>
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        rel="stylesheet">
 
     <script type="importmap">
         {
@@ -21,6 +24,10 @@
         document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
     </script>
     <link rel="stylesheet" href="soup.css">
+
+    <!-- Material 3 Theme Manager -->
+    <script src="../shared/material3-theme.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
@@ -29,12 +36,9 @@
         <md-elevation></md-elevation>
         <div class="header-content">
             <h1>🐢 海龜湯題庫</h1>
-            <md-filled-tonal-icon-button id="theme-toggle" aria-label="切換主題">
-                <md-icon>dark_mode</md-icon>
-            </md-filled-tonal-icon-button>
+            <div class="header-controls"></div>
         </div>
-        <p>點擊卡片查看詳情，挑戰你的推理能力！<br>
-            <small style="opacity: 0.7;">📊 數據來源：統一線上 Google Sheets | 🔄 即時同步</small>
+        <p>點擊卡片查看詳情，挑戰你的推理能力！
         </p>
         <div class="search-container">
             <md-outlined-text-field id="search-input" label="搜尋海龜湯" class="search-input">

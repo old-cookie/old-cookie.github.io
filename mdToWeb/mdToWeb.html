@@ -7,9 +7,15 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Cache-Control" content="max-age=180">
     <title>Markdown to Web 轉換器</title>
-    <link rel="stylesheet" href="mdToWeb.css?v=20250406-1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="all"
-        crossorigin="anonymous">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="mdToWeb.css?v=20250829">
+    
     <!-- Highlight.js 用於代碼高亮 -->
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css?v=11.7.0"
@@ -31,25 +37,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/swift.min.js?v=11.7.0"></script>
     <!-- Marked.js 用於 Markdown 轉換 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js?v=latest"></script>
+    
+    <!-- Material 3 Theme Manager -->
+    <script src="../shared/material3-theme.js"></script>
 </head>
 
 <body>
-    <div class="container">
+    <div class="md-container">
         <header>
             <h1>Markdown to Web</h1>
-            <div class="theme-toggle">
-                <button id="theme-toggle-btn" title="切換主題">
-                    <i class="fas fa-moon"></i>
-                </button>
-            </div>
+            <div class="header-controls"></div>
         </header>
 
         <main>
-            <div class="file-browser-container">
+            <div class="file-browser-container md-card">
                 <div class="folder-path">
                     <span id="current-path">assets/</span>
-                    <button id="go-up-btn" class="btn" title="返回上一層目錄">
-                        <i class="fas fa-level-up-alt"></i> 上一層
+                    <button id="go-up-btn" class="btn" title="返回上一層目錄" aria-label="返回上一層目錄">
+                        <span class="material-symbols-outlined">arrow_upward</span> 上一層
                     </button>
                 </div>
                 <div id="file-list" class="file-list">
@@ -58,16 +63,21 @@
                 </div>
             </div>
 
-            <div class="preview-section">
+            <div class="preview-section md-card">
                 <div class="preview-header">
-                    <h2>預覽</h2>
+                    <h2 class="title-large">預覽</h2>
                 </div>
-                <div id="preview-container"></div>
+                <div id="preview-container">
+                    <div class="empty-preview">
+                        <span class="material-symbols-outlined" style="font-size: 48px; opacity: 0.5;">description</span>
+                        <p>選擇一個 Markdown 檔案來預覽</p>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
-    <script src="mdToWeb.js?v=20250406"></script>
+    <script src="mdToWeb.js?v=20250829"></script>
 </body>
 
 </html>

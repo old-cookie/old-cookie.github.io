@@ -10,46 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const numberInput = document.getElementById('numberInput');
     const checkButton = document.getElementById('checkButton');
     const resultText = document.getElementById('resultText');
-    const themeToggle = document.getElementById('themeToggle');
-    
+
     // AI model session
     let session;
-
-    /**
-     * Theme Management Functions
-     * Handles light/dark mode switching with persistent storage
-     */
-    
-    // Initialize theme from localStorage or default to light
-    function initializeTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        updateThemeIcon(savedTheme);
-    }
-    // Update the theme toggle icon based on current theme
-    function updateThemeIcon(theme) {
-        const icon = themeToggle.querySelector('md-icon');
-        icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
-    }
-    
-    // Handle theme toggle button click
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        updateThemeIcon(newTheme);
-    });
-
-    // Initialize theme on page load
-    initializeTheme();
 
     /**
      * AI Model Management Functions
      * Handles ONNX model loading and initialization
      */
-    
+
     // Load the ONNX model asynchronously
     async function loadModel() {
         try {
@@ -74,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * Number Processing and AI Inference
      * Main logic for processing user input and getting AI predictions
      */
-    
+
     // Handle check button click - main prediction logic
     checkButton.addEventListener('click', async () => {
         const inputValue = numberInput.value;
@@ -90,8 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!session) {
             resultText.textContent = 'Model not loaded yet. Please wait.';
             return;
-        }        resultText.textContent = 'AI is thinking...';
-        
+        } resultText.textContent = 'AI is thinking...';
+
         try {
             /**
              * Feature Engineering (Must match training data)
@@ -104,15 +73,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const normalizedLastDigit = lastDigit / 9.0;
             const isOddDigit = lastDigit % 2;
             const scaledLastDigit = lastDigit / 10.0;
-            
+
             // Create input tensor with the same features as training
             const inputTensor = new ort.Tensor('float32', new Float32Array([normalizedLastDigit, isOddDigit, scaledLastDigit]), [1, 3]);
             const feeds = {
                 'input': inputTensor
-            };            const results = await session.run(feeds);
+            }; const results = await session.run(feeds);
             const outputTensor = results.output;
             const outputData = outputTensor.data;
-            
+
             /**
              * Determine if even or odd based on the AI model output
              * Model architecture from notebook outputs a single probability value:
@@ -131,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // > 0.5 for odd numbers
                 // <= 0.5 for even numbers
                 prediction = outputData[0] > 0.5 ? 'Odd' : 'Even';
-                
+
                 // Calculate and display confidence
                 const confidence = Math.abs(outputData[0] - 0.5) * 2; // Convert to 0-1 scale
                 console.log(`Confidence: ${(confidence * 100).toFixed(1)}%`);

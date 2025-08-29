@@ -2,28 +2,23 @@
 
 /**
  * WaterMark 照片編輯器樣式表
- * 版本: 3.1.0
- * 描述: 為照片編輯和水印應用提供樣式定義
+ * 版本: 4.0.0 - Material 3 重制版
+ * 描述: 基於 Material 3 設計系統的照片編輯和水印應用
  * 作者: OldCookie
  * 建立日期: 2025年
  * 
  * 此樣式表定義了網頁上所有元素的外觀，包括:
- * - 深色主題界面
+ * - Material 3 深色主題界面
  * - 上傳區域交互效果
  * - 裁剪工具控件樣式
  * - 預覽和下載區域樣式
  * - 響應式設計調整
  */
 
+@import url('../shared/material3-common.css');
+
+/* 自定義選擇禁用 */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 16px;
-    background-color: #121212;
-    /* 深色背景 */
-    color: #e0e0e0;
-    /* 淺色文字 */
-    line-height: 1.6;
     max-width: 1200px;
     margin: 0 auto;
     -webkit-touch-callout: none;
@@ -37,21 +32,21 @@ body {
 h1 {
     text-align: center;
     margin-bottom: 20px;
-    color: #ffffff;
-    font-size: 28px;
+    color: var(--md-sys-color-primary);
+    font: var(--md-sys-typescale-headline-medium-font);
 }
 
 .upload-area {
-    border: 2px dashed #424242;
-    border-radius: 10px;
+    border: 2px dashed var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-large);
     padding: 30px;
     text-align: center;
     cursor: pointer;
-    color: #b0b0b0;
+    color: var(--md-sys-color-on-surface-variant);
     margin-bottom: 20px;
-    transition: border-color 0.3s, color 0.3s, background-color 0.3s;
+    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
     position: relative;
-    background-color: #1e1e1e;
+    background-color: var(--md-sys-color-surface-container-low);
 }
 
 .upload-area.hidden {
@@ -59,14 +54,15 @@ h1 {
 }
 
 .upload-area.dragover {
-    border-color: #ffffff;
-    color: #ffffff;
-    background-color: #2c2c2c;
+    border-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary-container);
+    background-color: var(--md-sys-color-primary-container);
+    transform: scale(1.02);
 }
 
 .upload-area p {
     margin: 0;
-    font-size: 16px;
+    font: var(--md-sys-typescale-body-large-font);
 }
 
 #fileInput {
@@ -76,40 +72,40 @@ h1 {
 .image-container {
     margin-bottom: 30px;
     position: relative;
-    border: 1px solid #424242;
+    border: 1px solid var(--md-sys-color-outline-variant);
     padding: 10px;
-    border-radius: 8px;
-    background-color: #1e1e1e;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    transition: transform 0.2s;
+    border-radius: var(--md-sys-shape-corner-large);
+    background-color: var(--md-sys-color-surface-container-low);
+    box-shadow: var(--md-sys-elevation-level2);
+    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
 }
 
 .image-container:hover {
     transform: translateY(-2px);
+    box-shadow: var(--md-sys-elevation-level3);
 }
 
 .cancel-button {
-    background-color: #bb0000;
-    color: #ffffff;
+    background-color: var(--md-sys-color-error);
+    color: var(--md-sys-color-on-error);
     border: none;
-    border-radius: 5px;
+    border-radius: var(--md-sys-shape-corner-medium);
     cursor: pointer;
     padding: 12px 0;
-    font-size: 16px;
-    font-weight: bold;
-    opacity: 0.9;
-    transition: opacity 0.3s, background-color 0.3s;
+    font: var(--md-sys-typescale-label-large-font);
+    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
     width: 100%;
     margin-bottom: 10px;
 }
 
 .cancel-button.sure {
-    background-color: #8f0000;
+    background-color: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
 }
 
 .cancel-button:hover {
-    opacity: 1;
-    background-color: #8f0000;
+    box-shadow: var(--md-sys-elevation-level1);
+    transform: translateY(-1px);
 }
 
 .cropper-wrapper {
@@ -118,19 +114,18 @@ h1 {
     margin-bottom: 10px;
     position: relative;
     overflow: hidden;
-    border-radius: 5px;
+    border-radius: var(--md-sys-shape-corner-medium);
 }
 
 .cropper-wrapper img {
     max-width: 100%;
     display: block;
     margin: 0 auto;
-    border-radius: 5px;
+    border-radius: var(--md-sys-shape-corner-medium);
     -webkit-user-drag: none;
     -khtml-user-drag: none;
     -moz-user-drag: none;
     -o-user-drag: none;
-    user-drag: none;
 }
 
 .controls {
@@ -144,41 +139,45 @@ h1 {
 
 .aspect-btn {
     padding: 10px 16px;
-    background-color: #007bff;
-    color: #ffffff;
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
     border: none;
-    border-radius: 5px;
+    border-radius: var(--md-sys-shape-corner-medium);
     cursor: pointer;
-    font-size: 15px;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.2s;
+    font: var(--md-sys-typescale-label-large-font);
+    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
     flex: 1 1 30%;
     max-width: 100px;
     text-align: center;
 }
 
 .aspect-btn.active {
-    background-color: #0056b3;
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
     transform: scale(1.05);
+    box-shadow: var(--md-sys-elevation-level2);
 }
 
 .aspect-btn:hover {
-    background-color: #0056b3;
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    box-shadow: var(--md-sys-elevation-level1);
 }
 
 .preview-section {
     display: none;
     margin-top: 40px;
-    background-color: #1a1a1a;
+    background-color: var(--md-sys-color-surface-container-low);
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    border-radius: var(--md-sys-shape-corner-large);
+    box-shadow: var(--md-sys-elevation-level2);
 }
 
 .preview-section h2 {
     text-align: center;
     margin-bottom: 20px;
-    color: #ffffff;
+    color: var(--md-sys-color-on-surface);
+    font: var(--md-sys-typescale-title-large-font);
 }
 
 .preview-container {
@@ -192,19 +191,19 @@ h1 {
 .preview-container img {
     width: 100%;
     height: auto;
-    border: 1px solid #424242;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-large);
+    box-shadow: var(--md-sys-elevation-level1);
+    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
     -webkit-user-drag: none;
     -khtml-user-drag: none;
     -moz-user-drag: none;
     -o-user-drag: none;
-    user-drag: none;
 }
 
 .preview-container img:hover {
     transform: scale(1.02);
+    box-shadow: var(--md-sys-elevation-level3);
 }
 
 .preview-image-wrapper {
@@ -214,14 +213,13 @@ h1 {
 
 .download-single-button {
     padding: 8px 16px;
-    background-color: #28a745;
-    color: #ffffff;
+    background-color: var(--md-sys-color-tertiary);
+    color: var(--md-sys-color-on-tertiary);
     border: none;
-    border-radius: 5px;
+    border-radius: var(--md-sys-shape-corner-medium);
     cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    transition: background-color 0.3s;
+    font: var(--md-sys-typescale-label-medium-font);
+    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
     display: block;
     margin: 10px auto 0;
     width: 80%;
@@ -229,30 +227,33 @@ h1 {
 }
 
 .download-single-button:hover {
-    background-color: #218838;
+    background-color: var(--md-sys-color-tertiary-container);
+    color: var(--md-sys-color-on-tertiary-container);
+    box-shadow: var(--md-sys-elevation-level1);
 }
 
 .download-button,
 .process-button {
     padding: 14px 24px;
-    background-color: #28a745;
-    color: #ffffff;
+    background-color: var(--md-sys-color-tertiary);
+    color: var(--md-sys-color-on-tertiary);
     border: none;
-    border-radius: 5px;
+    border-radius: var(--md-sys-shape-corner-large);
     cursor: pointer;
     margin: 20px auto;
     display: block;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.2s;
+    font: var(--md-sys-typescale-label-large-font);
+    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
     max-width: 200px;
     width: 100%;
 }
 
 .download-button:hover,
 .process-button:hover {
-    background-color: #218838;
+    background-color: var(--md-sys-color-tertiary-container);
+    color: var(--md-sys-color-on-tertiary-container);
     transform: translateY(-2px);
+    box-shadow: var(--md-sys-elevation-level2);
 }
 
 .download-button:active,
@@ -262,9 +263,11 @@ h1 {
 
 .download-button:disabled,
 .process-button:disabled {
-    background-color: #555555;
+    background-color: var(--md-sys-color-surface-variant);
+    color: var(--md-sys-color-on-surface-variant);
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
 }
 
 #processBtn {
@@ -278,7 +281,7 @@ h1 {
     }
 
     h1 {
-        font-size: 24px;
+        font: var(--md-sys-typescale-headline-small-font);
         margin-bottom: 15px;
     }
 
@@ -287,7 +290,7 @@ h1 {
     }
 
     .upload-area p {
-        font-size: 14px;
+        font: var(--md-sys-typescale-body-medium-font);
     }
 
     .image-container {
@@ -306,6 +309,8 @@ h1 {
         padding: 10px 5px;
         font-size: 14px;
         max-width: 30%;
+        min-height: 44px;
+        /* 觸控友好 */
     }
 
     .cropper-wrapper {
@@ -315,6 +320,7 @@ h1 {
     .cancel-button {
         font-size: 14px;
         padding: 10px 0;
+        min-height: 44px;
     }
 
     .preview-container {
@@ -327,18 +333,20 @@ h1 {
         padding: 12px 20px;
         font-size: 15px;
         margin: 15px auto;
+        min-height: 44px;
     }
 
     .download-single-button {
         padding: 8px 12px;
         font-size: 13px;
         width: 90%;
+        min-height: 44px;
     }
 }
 
 @media (max-width: 480px) {
     h1 {
-        font-size: 20px;
+        font: var(--md-sys-typescale-title-large-font);
     }
 
     .upload-area {
@@ -352,6 +360,7 @@ h1 {
     .aspect-btn {
         padding: 8px 5px;
         font-size: 13px;
+        min-height: 40px;
     }
 
     .preview-container {
@@ -361,5 +370,10 @@ h1 {
     .download-button,
     .process-button {
         max-width: 100%;
+        min-height: 48px;
+    }
+
+    .download-single-button {
+        min-height: 40px;
     }
 }

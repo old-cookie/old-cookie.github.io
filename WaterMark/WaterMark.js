@@ -164,9 +164,9 @@ function handleFiles(files) {
 
             const aspect34 = document.createElement('button');
             aspect34.classList.add('aspect-btn');
-            aspect34.textContent = '3:4';
-            aspect34.dataset.ratio = '3/4';
-            aspect34.setAttribute('aria-label', '3:4 比例裁剪');
+            aspect34.textContent = '4:5';
+            aspect34.dataset.ratio = '4/5';
+            aspect34.setAttribute('aria-label', '4:5 比例裁剪');
 
             controls.appendChild(aspectFree);
             controls.appendChild(aspect169);

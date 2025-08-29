@@ -609,24 +609,8 @@ function bindGlobalEventListeners() {
         renderAddSoupPage();
     });
 
-    // ========== 主題切換功能 ==========
-    const themeToggle = document.getElementById('theme-toggle');
-    themeToggle.addEventListener('click', () => {
-        // 切換深色主題類別
-        const isDark = document.body.classList.toggle('dark-theme');
-        // 更新按鈕圖示
-        themeToggle.querySelector('md-icon').textContent = isDark ? 'light_mode' : 'dark_mode';
-        // 儲存主題偏好到本地存儲
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    });
-
-    // ========== 初始化主題設定 ==========
-    const savedTheme = localStorage.getItem('theme');
-    // 根據儲存的偏好或系統偏好設定主題
-    if (savedTheme === 'dark' || (savedTheme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.body.classList.add('dark-theme');
-        themeToggle.querySelector('md-icon').textContent = 'light_mode';
-    }
+    // ========== 初始化完成 ==========
+    console.log('海龜湯題庫初始化完成');
 
     // ========== 瀏覽器歷史管理 ==========
     // 監聽瀏覽器前進/後退按鈕

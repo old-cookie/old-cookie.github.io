@@ -30,10 +30,14 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="description" content="將照片與Windows 11風格資料夾圖示合併，創建自定義資料夾圖示，支援行動裝置與觸控操作">
     <title>資料夾圖示製作工具</title>
-    <!-- Material 3 Design Tokens -->
+
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
         rel="stylesheet">
+
+    <!-- Material 3 Common Styles -->
+    <link rel="stylesheet" href="../shared/material3-common.css">
 
     <!-- Material Web Components -->
     <script type="importmap">
@@ -51,6 +55,9 @@
 
     <link href="FolderIconMaker.css" rel="stylesheet" />
     <link rel="icon" href="assets/folder_app_icon.ico" type="image/x-icon">
+
+    <!-- Material 3 Theme Manager -->
+    <script src="../shared/material3-theme.js"></script>
 </head>
 
 <body>
@@ -163,10 +170,6 @@
             </div>
         </md-card>
     </div>
-
-    <footer class="app-footer">
-        <div class="md-typescale-body-small">&copy; 2025 OldCookie | 資料夾圖示製作工具 v2.2.0</div>
-    </footer>
 
     <script src="FolderIconMaker.js"></script>
 </body>

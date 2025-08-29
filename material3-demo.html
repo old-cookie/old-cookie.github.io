@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material 3 設計系統展示</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        rel="stylesheet">
+
+    <!-- Material 3 Common Styles -->
+    <link rel="stylesheet" href="shared/material3-common.css">
+
+    <style>
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin: 32px 0;
+        }
+
+        .demo-section {
+            padding: 24px;
+        }
+
+        .demo-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .demo-elevation {
+            padding: 24px;
+            margin: 16px 0;
+            text-align: center;
+            border-radius: var(--md-sys-shape-corner-large);
+            background: var(--md-sys-color-surface-container);
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .color-swatch {
+            height: 80px;
+            border-radius: var(--md-sys-shape-corner-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .typography-showcase {
+            margin: 16px 0;
+        }
+
+        .typography-showcase>* {
+            margin: 8px 0;
+        }
+    </style>
+
+    <!-- Material 3 Theme Manager -->
+    <script src="shared/material3-theme.js"></script>
+</head>
+
+<body>
+    <div class="md-container">
+        <header style="text-align: center; margin-bottom: 48px; position: relative;">
+            <h1 class="display-medium" style="color: var(--md-sys-color-primary); margin-bottom: 16px;">
+                Material 3 設計系統
+            </h1>
+            <p class="body-large" style="color: var(--md-sys-color-on-surface-variant);">
+                統一的設計語言，適用於所有項目
+            </p>
+        </header>
+
+        <main>
+            <!-- 顏色系統 -->
+            <section class="md-card demo-section">
+                <h2 class="headline-small" style="margin-bottom: 24px;">顏色系統</h2>
+                <div class="color-palette">
+                    <div class="color-swatch"
+                        style="background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary);">
+                        Primary
+                    </div>
+                    <div class="color-swatch"
+                        style="background: var(--md-sys-color-secondary); color: var(--md-sys-color-on-secondary);">
+                        Secondary
+                    </div>
+                    <div class="color-swatch"
+                        style="background: var(--md-sys-color-tertiary); color: var(--md-sys-color-on-tertiary);">
+                        Tertiary
+                    </div>
+                    <div class="color-swatch"
+                        style="background: var(--md-sys-color-surface-container); color: var(--md-sys-color-on-surface);">
+                        Surface
+                    </div>
+                    <div class="color-swatch"
+                        style="background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);">
+                        Primary Container
+                    </div>
+                    <div class="color-swatch"
+                        style="background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container);">
+                        Secondary Container
+                    </div>
+                </div>
+            </section>
+
+            <!-- 排版系統 -->
+            <section class="md-card demo-section">
+                <h2 class="headline-small" style="margin-bottom: 24px;">排版系統</h2>
+                <div class="typography-showcase">
+                    <div class="display-large">Display Large</div>
+                    <div class="display-medium">Display Medium</div>
+                    <div class="display-small">Display Small</div>
+                    <div class="headline-large">Headline Large</div>
+                    <div class="headline-medium">Headline Medium</div>
+                    <div class="headline-small">Headline Small</div>
+                    <div class="title-large">Title Large</div>
+                    <div class="title-medium">Title Medium</div>
+                    <div class="title-small">Title Small</div>
+                    <div class="body-large">Body Large - 這是正文的大號文字，適用於重要內容</div>
+                    <div class="body-medium">Body Medium - 這是正文的中號文字，是最常用的文字大小</div>
+                    <div class="body-small">Body Small - 這是正文的小號文字，適用於次要資訊</div>
+                    <div class="label-large">Label Large</div>
+                    <div class="label-medium">Label Medium</div>
+                    <div class="label-small">Label Small</div>
+                </div>
+            </section>
+
+            <!-- 按鈕系統 -->
+            <section class="md-card demo-section">
+                <h2 class="headline-small" style="margin-bottom: 24px;">按鈕系統</h2>
+                <div class="demo-buttons">
+                    <button class="md-button md-button-filled">Filled Button</button>
+                    <button class="md-button md-button-outlined">Outlined Button</button>
+                    <button class="md-button md-button-text">Text Button</button>
+                    <button class="md-button md-button-tonal">Tonal Button</button>
+                </div>
+            </section>
+
+            <!-- 高度系統 -->
+            <section class="md-card demo-section">
+                <h2 class="headline-small" style="margin-bottom: 24px;">高度系統</h2>
+                <div class="demo-grid">
+                    <div class="demo-elevation md-elevation-1">Elevation 1</div>
+                    <div class="demo-elevation md-elevation-2">Elevation 2</div>
+                    <div class="demo-elevation md-elevation-3">Elevation 3</div>
+                    <div class="demo-elevation md-elevation-4">Elevation 4</div>
+                </div>
+            </section>
+
+            <!-- 形狀系統 -->
+            <section class="md-card demo-section">
+                <h2 class="headline-small" style="margin-bottom: 24px;">形狀系統</h2>
+                <div class="demo-grid">
+                    <div class="md-card md-rounded-none">None (0px)</div>
+                    <div class="md-card md-rounded-xs">Extra Small (4px)</div>
+                    <div class="md-card md-rounded-sm">Small (8px)</div>
+                    <div class="md-card md-rounded-md">Medium (12px)</div>
+                    <div class="md-card md-rounded-lg">Large (16px)</div>
+                    <div class="md-card md-rounded-xl">Extra Large (28px)</div>
+                </div>
+            </section>
+
+            <!-- 輸入元件 -->
+            <section class="md-card demo-section">
+                <h2 class="headline-small" style="margin-bottom: 24px;">輸入元件</h2>
+                <div class="md-flex md-flex-column md-gap-16">
+                    <input type="text" class="md-input" placeholder="標準輸入框">
+                    <textarea class="md-input" rows="4" placeholder="多行文字輸入框"></textarea>
+                </div>
+            </section>
+
+            <!-- 專案連結 -->
+            <section class="md-card demo-section">
+                <h2 class="headline-small" style="margin-bottom: 24px;">應用專案</h2>
+                <p class="body-medium" style="color: var(--md-sys-color-on-surface-variant); margin-bottom: 24px;">
+                    所有專案都已統一使用 Material 3 設計系統：
+                </p>
+                <div class="demo-grid">
+                    <div class="md-card md-surface-container" style="padding: 24px; text-align: center;">
+                        <h3 class="title-medium" style="margin-bottom: 16px;">數位浮水印工具</h3>
+                        <p class="body-small"
+                            style="color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;">
+                            照片編輯和水印應用
+                        </p>
+                        <a href="WaterMark/WaterMark.html" class="md-button md-button-filled">查看專案</a>
+                    </div>
+
+                    <div class="md-card md-surface-container" style="padding: 24px; text-align: center;">
+                        <h3 class="title-medium" style="margin-bottom: 16px;">Markdown 轉 Web</h3>
+                        <p class="body-small"
+                            style="color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;">
+                            文檔轉換和預覽工具
+                        </p>
+                        <a href="mdToWeb/mdToWeb.html" class="md-button md-button-filled">查看專案</a>
+                    </div>
+
+                    <div class="md-card md-surface-container" style="padding: 24px; text-align: center;">
+                        <h3 class="title-medium" style="margin-bottom: 16px;">資料夾圖示製作工具</h3>
+                        <p class="body-small"
+                            style="color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;">
+                            自訂資料夾圖示工具
+                        </p>
+                        <a href="FolderIconMaker/FolderIconMaker.html" class="md-button md-button-filled">查看專案</a>
+                    </div>
+
+                    <div class="md-card md-surface-container" style="padding: 24px; text-align: center;">
+                        <h3 class="title-medium" style="margin-bottom: 16px;">個人頭像製作工具</h3>
+                        <p class="body-small"
+                            style="color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;">
+                            頭像裁剪和編輯工具
+                        </p>
+                        <a href="ProfileIconMaker/ProfileIconMaker.html" class="md-button md-button-filled">查看專案</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer
+            style="text-align: center; padding: 32px 0; margin-top: 48px; border-top: 1px solid var(--md-sys-color-outline-variant);">
+            <p class="body-small" style="color: var(--md-sys-color-on-surface-variant);">
+                © 2025 oldcookie. 採用 Material 3 設計系統
+            </p>
+        </footer>
+    </div>
+</body>
+
+</html>

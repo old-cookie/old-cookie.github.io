@@ -9,7 +9,7 @@
  * 
  * 技術棧:
  * - HTML5 (頁面結構)
- * - CSS3 (頁面樣式，來自 WaterMark.css)
+ * - CSS3 (頁面樣式，來自 WaterMark.css + Material 3)
  * - JavaScript (交互功能，來自 WaterMark.js)
  * - Cropper.js v1.6.2 (外部裁剪庫)
  * 
@@ -32,32 +32,79 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>照片編輯器與水印</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        rel="stylesheet">
+
     <!-- Cropper.js CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" rel="stylesheet" />
+
+    <!-- Material 3 Common Styles -->
+    <link rel="stylesheet" href="../shared/material3-common.css">
+
     <!-- 自定義 CSS -->
     <link href="WaterMark.css?v=20250406" rel="stylesheet" />
+
     <!-- 設置圖標 -->
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+    <!-- Material 3 Theme Manager -->
+    <script src="../shared/material3-theme.js"></script>
 </head>
 
 <body>
+    <div class="md-container">
+        <header style="text-align: center; margin-bottom: 32px;">
+            <h1 class="display-small" style="color: var(--md-sys-color-primary); margin-bottom: 8px;">
+                <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 12px;">image</span>
+                照片編輯器與水印
+            </h1>
+            <p class="body-medium" style="color: var(--md-sys-color-on-surface-variant);">
+                簡易的網頁照片編輯與添加水印功能
+            </p>
+        </header>
 
-    <h1>照片編輯器與水印</h1>
+        <main>
+            <div class="upload-area md-card" id="uploadArea">
+                <span class="material-symbols-outlined"
+                    style="font-size: 48px; color: var(--md-sys-color-primary); margin-bottom: 16px;">
+                    cloud_upload
+                </span>
+                <p class="body-large" style="margin-bottom: 8px;">將您的照片拖曳到此處或點擊上傳</p>
+                <p class="body-small" style="color: var(--md-sys-color-on-surface-variant);">(最多4張照片)</p>
+                <input type="file" id="fileInput" accept="image/*" multiple aria-label="選擇照片上傳">
+            </div>
 
-    <div class="upload-area" id="uploadArea">
-        <p>將您的照片拖曳到此處或點擊上傳<br>(最多4張照片)</p>
-        <input type="file" id="fileInput" accept="image/*" multiple aria-label="選擇照片上傳">
-    </div>
+            <div id="imagesContainer"></div>
 
-    <div id="imagesContainer"></div>
+            <div style="text-align: center; margin: 32px 0;">
+                <button class="md-button md-button-filled process-button" id="processBtn" title="處理圖片並添加水印">
+                    <span class="material-symbols-outlined" style="margin-right: 8px;">auto_fix_high</span>
+                    處理圖片
+                </button>
+            </div>
 
-    <button class="process-button" id="processBtn" title="處理圖片並添加水印">處理圖片</button>
-
-    <div class="preview-section" id="previewSection">
-        <h2>預覽</h2>
-        <div class="preview-container" id="previewContainer"></div>
-        <button class="download-button" id="downloadAllBtn" title="下載所有處理過的圖片">全部下載</button>
+            <div class="preview-section" id="previewSection">
+                <div class="md-card" style="padding: 24px;">
+                    <h2 class="headline-small" style="margin-bottom: 24px; color: var(--md-sys-color-primary);">
+                        <span class="material-symbols-outlined"
+                            style="vertical-align: middle; margin-right: 8px;">preview</span>
+                        預覽
+                    </h2>
+                    <div class="preview-container" id="previewContainer"></div>
+                    <div style="text-align: center; margin-top: 24px;">
+                        <button class="md-button md-button-tonal download-button" id="downloadAllBtn"
+                            title="下載所有處理過的圖片">
+                            <span class="material-symbols-outlined" style="margin-right: 8px;">download</span>
+                            全部下載
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <!-- Cropper.js JS -->

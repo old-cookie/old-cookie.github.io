@@ -14,57 +14,15 @@ class ProfileIconMaker {
         this.isDragging = false;
         this.lastMousePos = { x: 0, y: 0 };
 
-        // 深色模式狀態
-        this.isDarkMode = localStorage.getItem('darkMode') === 'true' ||
-            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
         this.init();
     }
 
     init() {
-        this.setupTheme();
         this.setupEventListeners();
         this.setupDragAndDrop();
     }
 
-    setupTheme() {
-        // 設置初始主題
-        document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
-        this.updateThemeIcon();
-
-        // 監聽系統主題變化
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-            if (!localStorage.getItem('darkMode')) {
-                this.isDarkMode = e.matches;
-                document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
-                this.updateThemeIcon();
-            }
-        });
-    }
-
-    updateThemeIcon() {
-        const themeIcon = document.querySelector('#themeToggle md-icon');
-        if (themeIcon) {
-            themeIcon.textContent = this.isDarkMode ? 'dark_mode' : 'light_mode';
-        }
-    }
-
-    toggleTheme() {
-        this.isDarkMode = !this.isDarkMode;
-        document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
-        localStorage.setItem('darkMode', this.isDarkMode.toString());
-        this.updateThemeIcon();
-
-        // 確保主題切換後按鈕文字仍然可見
-        setTimeout(() => {
-            ensureButtonTextDisplay();
-        }, 100);
-    }
-
     setupEventListeners() {
-        // 主題切換
-        document.getElementById('themeToggle').addEventListener('click', () => this.toggleTheme());
-
         // 文件上傳
         const fileInput = document.getElementById('fileInput');
         const uploadArea = document.getElementById('uploadArea');

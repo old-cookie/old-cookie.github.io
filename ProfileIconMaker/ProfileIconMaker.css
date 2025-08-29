@@ -1,127 +1,10 @@
+/* Import Material 3 Common Styles */
+@import url('../shared/material3-common.css');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-:root {
-    /* Material 3 Design Tokens - Light Mode */
-    --md-sys-color-primary: #6750a4;
-    --md-sys-color-on-primary: #ffffff;
-    --md-sys-color-primary-container: #eaddff;
-    --md-sys-color-on-primary-container: #21005d;
-    --md-sys-color-secondary: #625b71;
-    --md-sys-color-on-secondary: #ffffff;
-    --md-sys-color-secondary-container: #e8def8;
-    --md-sys-color-on-secondary-container: #1d192b;
-    --md-sys-color-surface: #fffbfe;
-    --md-sys-color-on-surface: #1c1b1f;
-    --md-sys-color-surface-variant: #e7e0ec;
-    --md-sys-color-on-surface-variant: #49454f;
-    --md-sys-color-outline: #79747e;
-    --md-sys-color-outline-variant: #cab6d6;
-    --md-sys-color-shadow: #000000;
-    --md-sys-color-scrim: #000000;
-    --md-sys-color-background: #fffbfe;
-    --md-sys-color-on-background: #1c1b1f;
-    --md-sys-color-surface-container-low: #f7f2fa;
-    --md-sys-color-surface-container: #f3edf7;
-    --md-sys-color-surface-container-high: #ece6f0;
-    --md-sys-color-tertiary: #7d5260;
-    --md-sys-color-on-tertiary: #ffffff;
-    --md-sys-color-tertiary-container: #ffd8e4;
-    --md-sys-color-on-tertiary-container: #31111d;
-    --md-sys-elevation-level0: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
-    --md-sys-elevation-level1: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-    --md-sys-elevation-level2: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-    --md-sys-elevation-level3: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
-}
-
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --md-sys-color-primary: #d0bcff;
-        --md-sys-color-on-primary: #381e72;
-        --md-sys-color-primary-container: #4f378b;
-        --md-sys-color-on-primary-container: #eaddff;
-        --md-sys-color-secondary: #ccc2dc;
-        --md-sys-color-on-secondary: #332d41;
-        --md-sys-color-secondary-container: #4a4458;
-        --md-sys-color-on-secondary-container: #e8def8;
-        --md-sys-color-surface: #100e13;
-        --md-sys-color-on-surface: #e6e0e9;
-        --md-sys-color-surface-variant: #49454f;
-        --md-sys-color-on-surface-variant: #cab6d6;
-        --md-sys-color-outline: #938f99;
-        --md-sys-color-outline-variant: #49454f;
-        --md-sys-color-background: #100e13;
-        --md-sys-color-on-background: #e6e0e9;
-        --md-sys-color-surface-container-low: #1d1b20;
-        --md-sys-color-surface-container: #211f26;
-        --md-sys-color-surface-container-high: #2b2930;
-        --md-sys-color-tertiary: #e7b9d6;
-        --md-sys-color-on-tertiary: #492532;
-        --md-sys-color-tertiary-container: #633b48;
-        --md-sys-color-on-tertiary-container: #ffd8e4;
-        --md-sys-elevation-level0: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
-        --md-sys-elevation-level1: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-        --md-sys-elevation-level2: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-        --md-sys-elevation-level3: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
-    }
-}
-
-/* Manual Dark Mode - overrides system preference when data-theme="dark" */
-[data-theme="dark"] {
-    --md-sys-color-primary: #d0bcff;
-    --md-sys-color-on-primary: #381e72;
-    --md-sys-color-primary-container: #4f378b;
-    --md-sys-color-on-primary-container: #eaddff;
-    --md-sys-color-secondary: #ccc2dc;
-    --md-sys-color-on-secondary: #332d41;
-    --md-sys-color-secondary-container: #4a4458;
-    --md-sys-color-on-secondary-container: #e8def8;
-    --md-sys-color-surface: #100e13;
-    --md-sys-color-on-surface: #e6e0e9;
-    --md-sys-color-surface-variant: #49454f;
-    --md-sys-color-on-surface-variant: #cab6d6;
-    --md-sys-color-outline: #938f99;
-    --md-sys-color-outline-variant: #49454f;
-    --md-sys-color-background: #100e13;
-    --md-sys-color-on-background: #e6e0e9;
-    --md-sys-color-surface-container-low: #1d1b20;
-    --md-sys-color-surface-container: #211f26;
-    --md-sys-color-surface-container-high: #2b2930;
-    --md-sys-color-tertiary: #e7b9d6;
-    --md-sys-color-on-tertiary: #492532;
-    --md-sys-color-tertiary-container: #633b48;
-    --md-sys-color-on-tertiary-container: #ffd8e4;
-}
-
-/* Manual Light Mode - overrides system preference when data-theme="light" */
-[data-theme="light"] {
-    --md-sys-color-primary: #6750a4;
-    --md-sys-color-on-primary: #ffffff;
-    --md-sys-color-primary-container: #eaddff;
-    --md-sys-color-on-primary-container: #21005d;
-    --md-sys-color-secondary: #625b71;
-    --md-sys-color-on-secondary: #ffffff;
-    --md-sys-color-secondary-container: #e8def8;
-    --md-sys-color-on-secondary-container: #1d192b;
-    --md-sys-color-surface: #fffbfe;
-    --md-sys-color-on-surface: #1c1b1f;
-    --md-sys-color-surface-variant: #e7e0ec;
-    --md-sys-color-on-surface-variant: #49454f;
-    --md-sys-color-outline: #79747e;
-    --md-sys-color-outline-variant: #cab6d6;
-    --md-sys-color-background: #fffbfe;
-    --md-sys-color-on-background: #1c1b1f;
-    --md-sys-color-surface-container-low: #f7f2fa;
-    --md-sys-color-surface-container: #f3edf7;
-    --md-sys-color-surface-container-high: #ece6f0;
-    --md-sys-color-tertiary: #7d5260;
-    --md-sys-color-on-tertiary: #ffffff;
-    --md-sys-color-tertiary-container: #ffd8e4;
-    --md-sys-color-on-tertiary-container: #31111d;
 }
 
 body {
@@ -130,6 +13,8 @@ body {
     color: var(--md-sys-color-on-background);
     background: var(--md-sys-color-background);
     min-height: 100vh;
+    transition: background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+        color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
 }
 
 .container {
@@ -164,10 +49,12 @@ header {
 header h1 {
     margin-bottom: 16px;
     color: var(--md-sys-color-primary);
+    font: var(--md-sys-typescale-headline-medium-font);
 }
 
 header p {
     color: var(--md-sys-color-on-surface-variant);
+    font: var(--md-sys-typescale-body-medium-font);
 }
 
 /* 上傳區域 */
@@ -176,20 +63,16 @@ header p {
 }
 
 .upload-card {
-    --md-elevated-card-container-color: var(--md-sys-color-surface-container-low);
-    --md-elevated-card-container-elevation: var(--md-sys-elevation-level1);
-    border-radius: 16px;
-    transition: all 0.3s ease;
     background: var(--md-sys-color-surface-container-low);
-    /* 完全使用 Material 3 設計，不添加額外邊框 */
+    border-radius: var(--md-sys-shape-corner-large);
+    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+    box-shadow: var(--md-sys-elevation-level1);
     border: none;
 }
 
 .upload-card:hover {
-    --md-elevated-card-container-elevation: var(--md-sys-elevation-level2);
-    --md-elevated-card-container-color: var(--md-sys-color-surface-container);
+    box-shadow: var(--md-sys-elevation-level2);
     background: var(--md-sys-color-surface-container);
-    /* 添加輕微的變換效果 */
     transform: translateY(-2px);
 }
 
@@ -197,8 +80,8 @@ header p {
     padding: 48px 24px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 14px;
+    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+    border-radius: var(--md-sys-shape-corner-large);
     background: transparent;
 }
 
@@ -401,12 +284,12 @@ header p {
 
 .format-info p {
     margin: 0;
-    color: #1565c0;
+    color: var(--md-sys-color-primary);
     font-size: 0.9rem;
 }
 
 .format-info small {
-    color: #1976d2;
+    color: var(--md-sys-color-on-primary-container);
     font-style: italic;
 }
 
@@ -510,23 +393,25 @@ header p {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: white;
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #0056b3, #004085);
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+    box-shadow: var(--md-sys-elevation-level2);
 }
 
 .btn-secondary {
-    background: #6c757d;
-    color: white;
+    background: var(--md-sys-color-secondary);
+    color: var(--md-sys-color-on-secondary);
 }
 
 .btn-secondary:hover {
-    background: #545b62;
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
     transform: translateY(-2px);
 }
 
@@ -889,7 +774,7 @@ md-outlined-button::part(button) {
     height: 20px;
     border: 3px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    border-top-color: #fff;
+    border-top-color: var(--md-sys-color-on-primary);
     animation: spin 1s ease-in-out infinite;
 }
 
@@ -911,8 +796,8 @@ md-outlined-button::part(button) {
     bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
-    background: #333;
-    color: white;
+    background: var(--md-sys-color-inverse-surface);
+    color: var(--md-sys-color-inverse-on-surface);
     padding: 8px 12px;
     border-radius: 6px;
     font-size: 0.8rem;
