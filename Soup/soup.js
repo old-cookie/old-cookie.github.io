@@ -39,84 +39,61 @@ document.addEventListener('DOMContentLoaded', function () {
     bindGlobalEventListeners();
 });
 
-// ==================== CSV 解析工具 ====================
+// ==================== XLSX 解析工具 ====================
 /**
- * 解析 CSV 文字為物件陣列
- * @param {string} csvText - CSV 格式的文字
+ * 解析 XLSX 文件為物件陣列
+ * @param {ArrayBuffer} xlsxBuffer - XLSX 格式的二進制數據
  * @returns {Array} 解析後的物件陣列
  */
-function parseCSV(csvText) {
-    const lines = csvText.split('\n').filter(line => line.trim());
-    if (lines.length === 0) return [];
-
-    // 取得表頭
-    const headers = lines[0].split(',').map(header => header.trim());
-    const rows = [];
-
-    // 解析每一行數據
-    for (let i = 1; i < lines.length; i++) {
-        const values = parseCSVLine(lines[i]);
-        if (values.length === headers.length) {
-            const row = {};
-            headers.forEach((header, index) => {
-                row[header] = values[index];
-            });
-            rows.push(row);
-        }
-    }
-
-    return rows;
-}
-
-/**
- * 解析單行 CSV，處理引號和逗號
- * @param {string} line - 單行 CSV 文字
- * @returns {Array} 解析後的值陣列
- */
-function parseCSVLine(line) {
-    const result = [];
-    let current = '';
-    let inQuotes = false;
-    let i = 0;
-
-    while (i < line.length) {
-        const char = line[i];
-
-        if (char === '"') {
-            if (inQuotes && line[i + 1] === '"') {
-                // 雙引號轉義
-                current += '"';
-                i += 2;
-            } else {
-                // 切換引號狀態
-                inQuotes = !inQuotes;
-                i++;
+function parseXLSX(xlsxBuffer) {
+    try {
+        // 使用 SheetJS 讀取 XLSX 數據
+        const workbook = XLSX.read(xlsxBuffer, { type: 'array' });
+        
+        // 取得第一個工作表
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        
+        // 將工作表轉換為 JSON 物件陣列
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { 
+            header: 1,  // 使用第一行作為標題
+            defval: ''  // 空值預設為空字串
+        });
+        
+        if (jsonData.length === 0) return [];
+        
+        // 取得表頭
+        const headers = jsonData[0];
+        const rows = [];
+        
+        // 解析每一行數據
+        for (let i = 1; i < jsonData.length; i++) {
+            const values = jsonData[i];
+            if (values.some(val => val !== '')) { // 跳過完全空白的行
+                const row = {};
+                headers.forEach((header, index) => {
+                    row[header] = values[index] || '';
+                });
+                rows.push(row);
             }
-        } else if (char === ',' && !inQuotes) {
-            // 遇到逗號且不在引號內，結束當前字段
-            result.push(current.trim());
-            current = '';
-            i++;
-        } else {
-            current += char;
-            i++;
         }
+        
+        return rows;
+    } catch (error) {
+        console.error('解析 XLSX 時發生錯誤:', error);
+        return [];
     }
-
-    // 添加最後一個字段
-    result.push(current.trim());
-    return result;
 }
 
 /**
- * 轉換 CSV 數據為海龜湯格式
- * @param {Array} csvData - CSV 解析後的數據
+ * 轉換 XLSX 數據為海龜湯格式
+ * @param {Array} xlsxData - XLSX 解析後的數據
  * @returns {Object} 海龜湯數據物件
  */
-function convertCSVToSoupData(csvData) {
+function convertXLSXToSoupData(xlsxData) {
     const soupData = {};
 
-    csvData.forEach(row => {
+    xlsxData.forEach(row => {
         const title = row['湯名'];
         if (!title) return;
 
@@ -146,8 +123,8 @@ function convertCSVToSoupData(csvData) {
         soupData[title] = {
             類型: row['類型'] || '',
             規則: rules,
-            湯面: (row['湯面'] || '').replace(/\\n/g, '\n'),
-            湯底: (row['湯底'] || '').replace(/\\n/g, '\n'),
+            湯面: row['湯面'] || '',
+            湯底: row['湯底'] || '',
             ai: isAI  // 標記是否為 AI 生成
         };
     });
@@ -158,7 +135,7 @@ function convertCSVToSoupData(csvData) {
 // ==================== 資料載入 ====================
 /**
  * 載入海龜湯資料
- * 從單一線上 CSV 文件載入所有數據（包含 AI 和非 AI 題目）
+ * 從單一線上 XLSX 文件載入所有數據（包含 AI 和非 AI 題目）
  * 支援錯誤處理和進度顯示
  */
 async function loadSoupData() {
@@ -168,31 +145,31 @@ async function loadSoupData() {
     container.innerHTML = '<md-linear-progress indeterminate></md-linear-progress>';
 
     try {
-        // 載入統一的線上 CSV 數據（包含所有題目）
-        console.log('📡 正在載入統一線上 CSV 數據...');
-        const csvResponse = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRurmLf0G6MG6bwMEt1nMKDAteXShwQCe7st4zgfbZoCZauCNzRiLOVykh-LCeoyNZLiyEpJWKunwLx/pub?gid=1825511488&single=true&output=csv');
+        // 載入統一的線上 XLSX 數據（包含所有題目）
+        console.log('📡 正在載入統一線上 XLSX 數據...');
+        const xlsxResponse = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQCe9mncrVk9RcF91bPnZIcagCJZAeKLsm2cDOQeSRi3QZYcDPs_CZJxNjOPlpjVCNCKAL7dphkV2hP/pub?output=xlsx');
 
-        if (!csvResponse.ok) {
-            throw new Error(`HTTP ${csvResponse.status}: 無法連接到 Google Sheets CSV`);
+        if (!xlsxResponse.ok) {
+            throw new Error(`HTTP ${xlsxResponse.status}: 無法連接到 Google Sheets XLSX`);
         }
 
-        const csvText = await csvResponse.text();
-        const csvData = parseCSV(csvText);
-        const soupDataFromCSV = convertCSVToSoupData(csvData);
+        const xlsxBuffer = await xlsxResponse.arrayBuffer();
+        const xlsxData = parseXLSX(xlsxBuffer);
+        const soupDataFromXLSX = convertXLSXToSoupData(xlsxData);
 
         // 分析載入的數據
-        const totalCount = Object.keys(soupDataFromCSV).length;
-        const aiCount = Object.values(soupDataFromCSV).filter(item => item.ai).length;
+        const totalCount = Object.keys(soupDataFromXLSX).length;
+        const aiCount = Object.values(soupDataFromXLSX).filter(item => item.ai).length;
         const normalCount = totalCount - aiCount;
 
         // 檢查是否有任何資料載入成功
         if (totalCount === 0) {
-            throw new Error('CSV 數據為空或格式錯誤');
+            throw new Error('XLSX 數據為空或格式錯誤');
         }
 
         // 儲存資料並檢查URL參數
-        soupData = soupDataFromCSV;
-        console.log('✅ 成功載入統一 CSV 數據:', totalCount, '個題目');
+        soupData = soupDataFromXLSX;
+        console.log('✅ 成功載入統一 XLSX 數據:', totalCount, '個題目');
         console.log('📊 其中一般題目:', normalCount, '個，AI 題目:', aiCount, '個');
 
         checkUrlParams();
