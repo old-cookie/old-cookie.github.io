@@ -266,30 +266,32 @@ function formatMarkdownText(text) {
 function formatOtherDataList(text) {
     if (!text) return '';
 
-    // 解析 Markdown 列表格式
+    // 解析文字列表，支援多種格式
     const lines = text.split('\n').filter(line => line.trim() !== '');
     let listItems = [];
 
     lines.forEach((line, index) => {
         const trimmedLine = line.trim();
-        // 檢查是否為有序列表 (1. 2. 3.) 或無序列表 (- * +)
+        
+        // 檢查是否為有序列表 (1. 2. 3.)
         const orderedMatch = trimmedLine.match(/^\d+\.\s*(.+)$/);
+        // 檢查是否為無序列表 (- * +)
         const unorderedMatch = trimmedLine.match(/^[-*+]\s*(.+)$/);
-
+        
         if (orderedMatch) {
             listItems.push({
                 type: 'ordered',
-                content: orderedMatch[1],
+                content: orderedMatch[1].trim(),
                 index: index
             });
         } else if (unorderedMatch) {
             listItems.push({
                 type: 'unordered',
-                content: unorderedMatch[1],
+                content: unorderedMatch[1].trim(),
                 index: index
             });
         } else if (trimmedLine) {
-            // 如果不是標準列表格式，直接作為項目
+            // 直接文字行，不管是否為標準列表格式
             listItems.push({
                 type: 'plain',
                 content: trimmedLine,
@@ -300,11 +302,13 @@ function formatOtherDataList(text) {
 
     if (listItems.length === 0) return '';
 
-    // 生成可點擊的列表項目
+    // 生成可點擊的列表項目，每個都有灰色覆蓋層
     const listItemsHtml = listItems.map((item, index) => {
         const itemNumber = index + 1; // 從 1 開始計數
+        const content = item.content;
+        
         return `<div class="other-data-item" data-index="${item.index}" onclick="toggleOtherDataItem(this)">
-                    <div class="other-data-content-text">${escapeHtml(item.content)}</div>
+                    <div class="other-data-content-text">${escapeHtml(content)}</div>
                     <div class="other-data-overlay" data-item-number="${itemNumber}"></div>
                 </div>`;
     }).join('');

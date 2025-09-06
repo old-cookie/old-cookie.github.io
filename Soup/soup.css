@@ -548,6 +548,43 @@ md-filled-tonal-icon-button:hover {
     box-shadow: none !important;
 }
 
+/* 深色主題下的其他資料樣式 */
+[data-theme="dark"] .other-data-item {
+    background-color: var(--md-sys-color-surface-container-low);
+    border-color: var(--md-sys-color-outline-variant);
+}
+
+[data-theme="dark"] .other-data-item:hover {
+    background-color: var(--md-sys-color-surface-container);
+    border-color: var(--md-sys-color-primary);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .other-data-overlay {
+    background: #4a4a4a;
+}
+
+[data-theme="dark"] .other-data-item:hover .other-data-overlay {
+    background: #525252;
+}
+
+[data-theme="dark"] .other-data-overlay::after {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+[data-theme="dark"] .other-data-item:hover .other-data-overlay::after {
+    background: rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .other-data-item.revealed {
+    background-color: var(--md-sys-color-surface-container-high);
+    border-color: var(--md-sys-color-primary);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+
 /* 響應式設計 */
 @media (max-width: 768px) {
     .add-soup-section {
@@ -603,6 +640,21 @@ md-filled-tonal-icon-button:hover {
         width: 100%;
         justify-content: center;
     }
+
+    /* 其他資料響應式樣式 */
+    .other-data-list {
+        gap: 1.25rem; /* 稍微減少移動端間距 */
+    }
+
+    .other-data-item {
+        padding: 1.25rem; /* 稍微減少移動端內距 */
+        min-height: 70px;
+    }
+
+    .other-data-overlay::after {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+    }
 }
 
 /* 其他資料樣式 */
@@ -614,78 +666,131 @@ md-filled-tonal-icon-button:hover {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    /* 增加項目間距 */
 }
 
 .other-data-item {
     position: relative;
     background-color: var(--md-sys-color-surface-container-low);
     border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 1.5rem;
-    /* 增加內部間距 */
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    min-height: 80px;
+}
+
+/* 其他資料樣式 - 重新組織清晰版本 */
+.other-data-content {
+    margin-top: 0.5rem;
+}
+
+.other-data-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.other-data-item {
+    position: relative;
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 12px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    min-height: 80px;
 }
 
 .other-data-item:hover {
     background-color: var(--md-sys-color-surface-container);
     border-color: var(--md-sys-color-primary);
-    transform: translateY(-1px);
-    /* 添加輕微的浮起效果 */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .other-data-item:hover .other-data-overlay {
-    background-color: #696969;
-    /* hover 時稍微變深 */
+    background: #666666;
+    transform: scale(1.02);
 }
 
+/* 文字內容基本樣式 */
 .other-data-content-text {
     color: var(--md-sys-color-on-surface);
     line-height: 1.6;
     position: relative;
     z-index: 1;
+    font-size: 1rem;
+    padding: 0;
+    margin: 0;
+    transition: all 0.3s ease;
+    user-select: none;
 }
 
+/* 覆蓋層基本樣式 */
 .other-data-overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #808080;
-    /* 使用不透明的灰色完全遮蔽文字 */
+    background: #737373;
     display: flex;
-    /* 初始狀態顯示覆蓋層 */
-    z-index: 2;
-    transition: all 0.3s ease;
-    /* 添加點擊提示 */
+    z-index: 100;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     align-items: center;
     justify-content: center;
     color: white;
     font-weight: 500;
-    border-radius: 8px;
-    /* 與父容器保持一致的圓角 */
+    border-radius: 12px;
+    margin: 0;
+    padding: 0;
 }
 
-.other-data-overlay::after {
-    content: "🔒 點擊顯示其他資料" attr(data-item-number);
-    font-size: 1rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    backdrop-filter: blur(2px);
+/* 預設狀態：隱藏文字，顯示覆蓋層 */
+.other-data-item:not(.revealed) .other-data-content-text {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+.other-data-item:not(.revealed) .other-data-overlay {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* 揭示狀態：顯示文字，隱藏覆蓋層 */
+.other-data-item.revealed .other-data-content-text {
+    opacity: 1 !important;
+    visibility: visible !important;
+    user-select: text;
 }
 
 .other-data-item.revealed .other-data-overlay {
-    display: none;
-    /* 點擊後隱藏覆蓋層 */
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: scale(0.95);
 }
 
 .other-data-item.revealed {
     background-color: var(--md-sys-color-surface-container-high);
     border-color: var(--md-sys-color-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.other-data-overlay::after {
+    content: "🔒 點擊顯示內容 #" attr(data-item-number);
+    font-size: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.75rem 1.25rem;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.other-data-item:hover .other-data-overlay::after {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
 }

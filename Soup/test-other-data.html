@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>測試其他資料功能</title>
+    <link rel="stylesheet" href="soup.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+</head>
+<body class="m3-theme">
+    <div style="max-width: 800px; margin: 2rem auto; padding: 1rem;">
+        <h1>測試其他資料功能</h1>
+        <p>以下是測試「其他資料」功能的示例。每行應該初始被灰色覆蓋，點擊後顯示內容。</p>
+        
+        <div class="content-section">
+            <h2>其他資料</h2>
+            <div class="other-data-content">
+                <div class="other-data-list">
+                    <div class="other-data-item" onclick="toggleOtherDataItem(this)">
+                        <div class="other-data-content-text">第一條其他資料內容</div>
+                        <div class="other-data-overlay" data-item-number="1"></div>
+                    </div>
+                    <div class="other-data-item" onclick="toggleOtherDataItem(this)">
+                        <div class="other-data-content-text">第二條其他資料內容，這裡有更長的文字來測試顯示效果</div>
+                        <div class="other-data-overlay" data-item-number="2"></div>
+                    </div>
+                    <div class="other-data-item" onclick="toggleOtherDataItem(this)">
+                        <div class="other-data-content-text">第三條其他資料內容</div>
+                        <div class="other-data-overlay" data-item-number="3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleOtherDataItem(element) {
+            const isRevealed = element.classList.toggle('revealed');
+            console.log('切換狀態:', isRevealed ? '顯示' : '隱藏');
+        }
+    </script>
+</body>
+</html>
