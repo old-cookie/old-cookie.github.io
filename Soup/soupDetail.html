@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>海龜湯題庫</title>
+    <title id="page-title">海龜湯詳情 - 海龜湯題庫</title>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -26,48 +26,34 @@
     <link rel="stylesheet" href="soup.css">
 
     <!-- Material 3 Theme Manager -->
-    <script src="../shared/material3-theme.js"></script>
 
     <!-- SheetJS for Excel processing -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- 詳細頁面功能 -->
+    <script src="soupDetail.js"></script>
 </head>
 
 <body class="m3-theme">
     <header>
         <md-elevation></md-elevation>
         <div class="header-content">
-            <h1>🐢 海龜湯題庫</h1>
-            <div class="header-controls">
-                <md-icon-button id="theme-toggle" aria-label="切換主題">
-                    <md-icon>light_mode</md-icon>
-                </md-icon-button>
-            </div>
+            <h1 id="detail-title">🐢 載入中...</h1>
+            <div class="header-controls"></div>
         </div>
-        <p>點擊卡片查看詳情，挑戰你的推理能力！
-        </p>
-        <div class="search-container">
-            <md-outlined-text-field id="search-input" label="搜尋海龜湯" class="search-input">
-                <md-filled-tonal-icon-button id="clear-search" slot="trailing-icon" aria-label="清除搜尋"
-                    style="display: none;">
-                    <md-icon>close</md-icon>
-                </md-filled-tonal-icon-button>
-            </md-outlined-text-field>
-            <md-filled-button id="add-soup-button" class="add-soup-button">
-                <md-icon slot="icon">add</md-icon>
-                新增海龜湯
-            </md-filled-button>
-        </div>
+        <p id="detail-description">詳細內容 - 點擊按鈕顯示答案（湯底）</p>
     </header>
+
     <main>
-        <div id="soup-container" class="soup-container">
+        <div id="soup-detail-container" class="soup-container">
             <md-linear-progress indeterminate></md-linear-progress>
         </div>
     </main>
+
     <div id="snackbar-container"></div>
 
-    <script src="soup.js"></script>
 </body>
 
 </html>

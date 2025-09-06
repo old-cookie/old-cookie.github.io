@@ -16,11 +16,18 @@ header {
     position: relative;
 }
 
-#theme-toggle {
+.header-controls {
     position: absolute;
     right: 16px;
     top: 50%;
     transform: translateY(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+#theme-toggle {
+    --md-icon-button-icon-color: var(--md-sys-color-on-surface-variant);
 }
 
 header h1 {
@@ -121,43 +128,57 @@ main {
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+/* 基本類型標籤 - 使用藍色調 */
 .chip-type {
-    background-color: var(--md-sys-color-secondary-container);
-    color: var(--md-sys-color-on-secondary-container);
+    background-color: #E3F2FD;
+    color: #0D47A1;
+    border: 1px solid #BBDEFB;
 }
 
-/* 變格和本格的特定顏色 */
+/* 本格類型 - 使用綠色調 */
 .chip-type-本格 {
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
+    background-color: #E8F5E8;
+    color: #2E7D32;
+    border: 1px solid #C8E6C9;
 }
 
+/* 變格類型 - 使用紫色調 */
 .chip-type-變格 {
-    background-color: var(--md-sys-color-tertiary-container);
-    color: var(--md-sys-color-on-tertiary-container);
+    background-color: #F3E5F5;
+    color: #7B1FA2;
+    border: 1px solid #E1BEE7;
 }
 
+/* 基本類別標籤 - 使用灰色調 */
 .chip-category {
-    background-color: var(--md-sys-color-outline-variant);
-    color: var(--md-sys-color-on-surface);
+    background-color: #F5F5F5;
+    color: #424242;
+    border: 1px solid #E0E0E0;
 }
 
-/* 海龜湯和規則怪談的不同顏色 */
+/* 海龜湯類別 - 使用橙色調 */
 .chip-category-海龜湯 {
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
+    background-color: #FFF3E0;
+    color: #E65100;
+    border: 1px solid #FFCC80;
 }
 
+/* 規則怪談類別 - 使用紅色調 */
 .chip-category-規則怪談 {
-    background-color: var(--md-sys-color-secondary-container);
-    color: var(--md-sys-color-on-secondary-container);
+    background-color: #FFEBEE;
+    color: #C62828;
+    border: 1px solid #FFCDD2;
 }
 
+/* AI 生成標籤 - 使用青色調 */
 .chip-ai {
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
+    background-color: #E0F2F1;
+    color: #00695C;
+    border: 1px solid #B2DFDB;
     cursor: pointer;
 }
 
@@ -463,19 +484,51 @@ md-filled-tonal-icon-button:hover {
 }
 
 /* Dark theme colors for chips */
-body.dark-theme .chip-category-海龜湯 {
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
+[data-theme="dark"] .chip-type {
+    background-color: #1A237E;
+    color: #E3F2FD;
+    border: 1px solid #3F51B5;
 }
 
-body.dark-theme .chip-category-規則怪談 {
-    background-color: var(--md-sys-color-secondary-container);
-    color: var(--md-sys-color-on-secondary-container);
+[data-theme="dark"] .chip-type-本格 {
+    background-color: #1B5E20;
+    color: #E8F5E8;
+    border: 1px solid #4CAF50;
 }
 
-body.dark-theme .detail-actions md-filled-tonal-button,
-body.dark-theme .detail-footer md-filled-tonal-button,
-body.dark-theme .header-left-items md-filled-tonal-button {
+[data-theme="dark"] .chip-type-變格 {
+    background-color: #4A148C;
+    color: #F3E5F5;
+    border: 1px solid #9C27B0;
+}
+
+[data-theme="dark"] .chip-category {
+    background-color: #424242;
+    color: #F5F5F5;
+    border: 1px solid #757575;
+}
+
+[data-theme="dark"] .chip-category-海龜湯 {
+    background-color: #BF360C;
+    color: #FFF3E0;
+    border: 1px solid #FF5722;
+}
+
+[data-theme="dark"] .chip-category-規則怪談 {
+    background-color: #B71C1C;
+    color: #FFEBEE;
+    border: 1px solid #F44336;
+}
+
+[data-theme="dark"] .chip-ai {
+    background-color: #004D40;
+    color: #E0F2F1;
+    border: 1px solid #00695C;
+}
+
+[data-theme="dark"] .detail-actions md-filled-tonal-button,
+[data-theme="dark"] .detail-footer md-filled-tonal-button,
+[data-theme="dark"] .header-left-items md-filled-tonal-button {
     --md-filled-tonal-button-container-color: var(--md-sys-color-secondary-container);
     --md-filled-tonal-button-label-text-color: var(--md-sys-color-on-secondary-container);
     --md-filled-tonal-button-icon-color: var(--md-sys-color-on-secondary-container);
@@ -483,14 +536,14 @@ body.dark-theme .header-left-items md-filled-tonal-button {
     box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
-body.dark-theme #theme-toggle,
-body.dark-theme #clear-search {
+[data-theme="dark"] #theme-toggle,
+[data-theme="dark"] #clear-search {
     --md-filled-tonal-icon-button-icon-color: var(--md-sys-color-on-surface);
     --md-filled-tonal-icon-button-container-color: transparent;
     border: none;
 }
 
-body.dark-theme #theme-toggle {
+[data-theme="dark"] #theme-toggle {
     background: none !important;
     box-shadow: none !important;
 }
@@ -550,4 +603,89 @@ body.dark-theme #theme-toggle {
         width: 100%;
         justify-content: center;
     }
+}
+
+/* 其他資料樣式 */
+.other-data-content {
+    margin-top: 0.5rem;
+}
+
+.other-data-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* 增加項目間距 */
+}
+
+.other-data-item {
+    position: relative;
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 8px;
+    padding: 1.5rem;
+    /* 增加內部間距 */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.other-data-item:hover {
+    background-color: var(--md-sys-color-surface-container);
+    border-color: var(--md-sys-color-primary);
+    transform: translateY(-1px);
+    /* 添加輕微的浮起效果 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.other-data-item:hover .other-data-overlay {
+    background-color: #696969;
+    /* hover 時稍微變深 */
+}
+
+.other-data-content-text {
+    color: var(--md-sys-color-on-surface);
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+}
+
+.other-data-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #808080;
+    /* 使用不透明的灰色完全遮蔽文字 */
+    display: flex;
+    /* 初始狀態顯示覆蓋層 */
+    z-index: 2;
+    transition: all 0.3s ease;
+    /* 添加點擊提示 */
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 500;
+    border-radius: 8px;
+    /* 與父容器保持一致的圓角 */
+}
+
+.other-data-overlay::after {
+    content: "🔒 點擊顯示其他資料" attr(data-item-number);
+    font-size: 1rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    backdrop-filter: blur(2px);
+}
+
+.other-data-item.revealed .other-data-overlay {
+    display: none;
+    /* 點擊後隱藏覆蓋層 */
+}
+
+.other-data-item.revealed {
+    background-color: var(--md-sys-color-surface-container-high);
+    border-color: var(--md-sys-color-primary);
 }

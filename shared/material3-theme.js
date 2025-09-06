@@ -208,6 +208,7 @@ const themeToggleStyles = `
     justify-content: center;
     width: 40px;
     height: 40px;
+    margin-left: 12px;
     transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
     user-select: none;
 }

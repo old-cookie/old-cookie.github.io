@@ -49,23 +49,23 @@ function parseXLSX(xlsxBuffer) {
     try {
         // 使用 SheetJS 讀取 XLSX 數據
         const workbook = XLSX.read(xlsxBuffer, { type: 'array' });
-        
+
         // 取得第一個工作表
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
-        
+
         // 將工作表轉換為 JSON 物件陣列
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { 
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, {
             header: 1,  // 使用第一行作為標題
             defval: ''  // 空值預設為空字串
         });
-        
+
         if (jsonData.length === 0) return [];
-        
+
         // 取得表頭
         const headers = jsonData[0];
         const rows = [];
-        
+
         // 解析每一行數據
         for (let i = 1; i < jsonData.length; i++) {
             const values = jsonData[i];
@@ -77,7 +77,7 @@ function parseXLSX(xlsxBuffer) {
                 rows.push(row);
             }
         }
-        
+
         return rows;
     } catch (error) {
         console.error('解析 XLSX 時發生錯誤:', error);
@@ -98,33 +98,34 @@ function convertXLSXToSoupData(xlsxData) {
         if (!title) return;
 
         // 忽略時間戳記和電郵地址欄位
-        // 檢查是否為 AI 生成題目（通過特定欄位或標記判斷）
-        const isAI = row['AI'] === 'TRUE' || row['AI'] === '1' || row['AI'] === 'ai' ||
-            row['AI'] === '是' || row['AI'] === 'true' || row['AI'] === 'AI' ||
-            row['AI 生成?'] === '是' || row['AI 生成?'] === 'TRUE' || row['AI 生成?'] === '1' ||
-            row['ai'] === 'TRUE' || row['ai'] === '1' ||
-            row['類型'] === 'AI' ||
-            (row['規則'] && row['規則'].includes('AI')) ||
-            (row['湯底'] && row['湯底'].includes('AI'));
+        // 檢查是否為 AI 生成題目（只檢查 'AI 生成?' 欄位是否為 '是'）
+        const isAI = row['AI 生成?'] === '是';
 
-        // 處理規則和主持人手冊合併
+        // 處理規則和主持人手冊（兩個獨立欄位）
         let rules = '';
-        if (row['規則'] && row['規則'].trim()) {
+        if (row['規則'] && typeof row['規則'] === 'string' && row['規則'].trim()) {
             rules = row['規則'].trim();
         }
-        if (row['主持人手冊'] && row['主持人手冊'].trim()) {
+        if (row['主持人手冊'] && typeof row['主持人手冊'] === 'string' && row['主持人手冊'].trim()) {
             if (rules) {
-                rules += '\n\n主持人手冊\n' + row['主持人手冊'].trim();
+                rules += '\n\n## 主持人手冊\n' + row['主持人手冊'].trim();
             } else {
-                rules = '主持人手冊\n' + row['主持人手冊'].trim();
+                rules = '## 主持人手冊\n' + row['主持人手冊'].trim();
             }
         }
 
+        // 安全處理其他資料欄位
+        const safeString = (value) => {
+            if (value === null || value === undefined) return '';
+            return String(value);
+        };
+
         soupData[title] = {
-            類型: row['類型'] || '',
+            類型: String(row['類型'] || ''),
             規則: rules,
-            湯面: row['湯面'] || '',
-            湯底: row['湯底'] || '',
+            湯面: String(row['湯面'] || ''),
+            湯底: String(row['湯底'] || ''),
+            其他資料: safeString(row['其他資料']),
             ai: isAI  // 標記是否為 AI 生成
         };
     });
@@ -201,19 +202,12 @@ async function loadSoupData() {
 function checkUrlParams() {
     const urlParams = new URLSearchParams(window.location.search);
 
-    // 檢查是否是新增頁面
-    if (urlParams.get('action') === 'add') {
-        renderAddSoupPage();
-        return;
-    }
-
     // 取得第一個參數的key作為海龜湯名稱
     const soupName = urlParams.keys().next().value;
 
-    // 如果URL有指定題目且該題目存在，則顯示詳細頁面
+    // 如果URL有指定題目且該題目存在，則導向詳細頁面
     if (soupName && soupData[soupName]) {
-        currentSoup = soupName;
-        renderDetailPage(soupName, soupData[soupName]);
+        navigateToDetail(soupName);
     } else {
         // 否則顯示題目列表
         currentSoup = null;
@@ -260,150 +254,6 @@ function renderSoupList() {
     bindCardClickEvents();
 }
 
-/**
- * 渲染海龜湯詳細頁面
- * @param {string} title - 海龜湯題目標題
- * @param {Object} data - 海龜湯資料物件
- * 顯示完整的題目內容，包含湯面、湯底、規則等
- * 支援揭曉答案功能和Markdown下載
- */
-function renderDetailPage(title, data) {
-    const container = document.getElementById('soup-container');
-    const header = document.querySelector('header h1');
-    const headerDesc = document.querySelector('header p');
-
-    // 更新頁面標題
-    header.innerHTML = `🐢 ${escapeHtml(title)}`;
-    headerDesc.innerHTML = `詳細內容 - 點擊按鈕顯示答案（湯底）`;
-
-    // 檢查是否有規則內容和是否為AI生成
-    const hasRules = data.規則 && data.規則.trim() !== '';
-    const isAI = data.ai === true;
-    const category = title.includes('規則怪談') ? '規則怪談' : '海龜湯';
-    const typeClass = getTypeChipClass(data.類型);
-    const categoryClass = getCategoryChipClass(category);
-
-    // 產生詳細頁面HTML結構
-    container.innerHTML = `
-        <div class="soup-detail-container">
-            <md-elevated-card class="detail-card">
-                <!-- 頁面頂部操作區域 -->
-                <div class="detail-header">
-                    <div class="header-left-items">
-                        <md-filled-tonal-button onclick="goBackToList()" aria-label="返回列表">
-                            <md-icon slot="icon">arrow_back</md-icon>
-                            返回
-                        </md-filled-tonal-button>
-                        
-                    </div>
-                    <div class="detail-actions">
-                        <md-filled-tonal-button onclick="downloadAsMarkdown('${escapeHtml(title)}')" aria-label="下載 Markdown">
-                            <md-icon slot="icon">download</md-icon>
-                            下載
-                        </md-filled-tonal-button>
-                    </div>
-                </div>
-
-                <!-- 題目標籤區域 -->
-                <div class="card-meta" style="justify-content: flex-start; margin-bottom: 1.5rem;">
-                    <div class="chip ${typeClass}"><md-icon>category</md-icon>${escapeHtml(data.類型)}</div>
-                    <div class="chip ${categoryClass}"><md-icon>style</md-icon>${category}</div>
-                    ${isAI ? `<div class="chip chip-ai" onclick="goToPromptPage()"><md-icon>smart_toy</md-icon>AI 生成</div>` : ''}
-                </div>
-
-                <!-- 湯面（題目）區域 -->
-                <div class="content-section">
-                    <h2><md-icon>question_mark</md-icon>湯面（題目）</h2>
-                    <div class="markdown-content">${formatMarkdownText(data.湯面)}</div>
-                </div>
-
-                <!-- 遊戲規則區域（如果不是主持人手冊） -->
-                ${hasRules && !data.規則.includes('主持人手冊') ? `
-                <div class="content-section">
-                    <h2><md-icon>gavel</md-icon>遊戲規則</h2>
-                    <div class="markdown-content">${formatMarkdownText(data.規則)}</div>
-                </div>
-                ` : ''}
-
-                <!-- 隱藏的答案區域 -->
-                <div class="soup-bottom" id="bottom-${escapeHtml(title)}">
-                    <div class="content-section">
-                        <h2><md-icon>lightbulb</md-icon>湯底（答案）</h2>
-                        <div class="markdown-content">${formatMarkdownText(data.湯底)}</div>
-                    </div>
-                    
-                    <!-- 主持人手冊（如果存在） -->
-                    ${hasRules && data.規則.includes('主持人手冊') ? `
-                    <div class="content-section">
-                        <h2><md-icon>gavel</md-icon>主持人手冊</h2>
-                        <div class="markdown-content">${formatMarkdownText(data.規則)}</div>
-                    </div>
-                    ` : ''}
-                </div>
-
-                <!-- 揭曉答案按鈕 -->
-                <div class="detail-footer">
-                    <md-filled-tonal-button class="reveal-button" data-soup="${escapeHtml(title)}">
-                        <md-icon slot="icon">visibility</md-icon>
-                        揭曉真相
-                    </md-filled-tonal-button>
-                </div>
-            </md-elevated-card>
-        </div>
-    `;
-
-    // 綁定揭曉按鈕事件
-    bindRevealButtonEvent();
-}
-
-/**
- * 渲染新增海龜湯頁面
- * 顯示 Google 表單的 iframe 供使用者填寫新題目
- */
-function renderAddSoupPage() {
-    // 更新 URL
-    const url = new URL(window.location);
-    url.searchParams.set('action', 'add');
-    window.history.pushState({}, '', url);
-
-    // 設置容器內容
-    const container = document.getElementById('soup-container');
-    container.innerHTML = `
-        <div class="add-soup-page">
-            <div class="detail-header">
-                <div class="header-left-items">
-                    <md-filled-tonal-button onclick="goBackToList()" class="back-button">
-                        <md-icon slot="icon">arrow_back</md-icon>
-                        返回列表
-                    </md-filled-tonal-button>
-                </div>
-                <h1 class="detail-title">新增海龜湯題目</h1>
-                <div class="detail-actions">
-                    <md-filled-tonal-button onclick="window.open('https://old-cookie.github.io/EnterTon/EnterTon.html', '_blank')" aria-label="開啟 EnterTon 工具">
-                        <md-icon slot="icon">text_format</md-icon>
-                        換行工具
-                    </md-filled-tonal-button>
-                </div>
-            </div>
-            <div class="add-soup-content">
-                <p class="add-soup-description">
-                    歡迎分享！填寫下方表單後加入題庫。
-                </p>
-                <div class="iframe-container">
-                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSerxSMTksN-qhB71RGPvUPhzvsRBVhhklXXlQ1yUKeD5NAlaw/viewform?embedded=true" 
-                            width="100%" 
-                            height="1600" 
-                            frameborder="0" 
-                            marginheight="0" 
-                            marginwidth="0">
-                        正在載入表單...
-                    </iframe>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
 // ==================== 導航功能 ====================
 /**
  * 返回到海龜湯列表頁面
@@ -418,14 +268,6 @@ function goBackToList() {
     // 重置當前選中狀態並渲染列表
     currentSoup = null;
     renderSoupList();
-}
-
-/**
- * 開啟AI創作指南頁面
- * 在新視窗中開啟prompt.html
- */
-function goToPromptPage() {
-    window.open('prompt.html', '_blank');
 }
 
 // ==================== HTML生成輔助函數 ====================
@@ -449,7 +291,7 @@ function createSoupItemHTML(title, data) {
                 <div class="card-meta">
                     <div class="chip ${typeClass}"><md-icon>category</md-icon>${escapeHtml(data.類型)}</div>
                     <div class="chip ${categoryClass}"><md-icon>style</md-icon>${category}</div>
-                    ${isAI ? `<div class="chip chip-ai" onclick="event.stopPropagation(); goToPromptPage()"><md-icon>smart_toy</md-icon>AI 生成</div>` : ''}
+                    ${isAI ? `<div class="chip chip-ai"><md-icon>smart_toy</md-icon>AI 生成</div>` : ''}
                 </div>
             </div>
         </md-elevated-card>
@@ -532,17 +374,11 @@ function bindCardClickEvents() {
 /**
  * 導航到海龜湯詳細頁面
  * @param {string} soupName - 海龜湯題目名稱
- * 更新URL並渲染詳細頁面
+ * 導向專門的詳細頁面
  */
 function navigateToDetail(soupName) {
-    // 更新URL以支援書籤和分享
-    const url = new URL(window.location);
-    url.search = `?${encodeURIComponent(soupName)}`;
-    window.history.pushState({}, '', url);
-
-    // 設定當前選中的題目並渲染詳細頁面
-    currentSoup = soupName;
-    renderDetailPage(soupName, soupData[soupName]);
+    // 導向詳細頁面並傳遞題目名稱作為URL參數
+    window.location.href = `soupDetail.html?${encodeURIComponent(soupName)}`;
 }
 
 // ==================== 全域事件監聽器 ====================
@@ -583,7 +419,7 @@ function bindGlobalEventListeners() {
     // ========== 新增海龜湯按鈕 ==========
     const addSoupButton = document.getElementById('add-soup-button');
     addSoupButton.addEventListener('click', function () {
-        renderAddSoupPage();
+        window.location.href = 'soupAdd.html';
     });
 
     // ========== 初始化完成 ==========
@@ -634,10 +470,11 @@ function filterSoupList(searchTerm) {
     // 在多個欄位中搜索匹配的題目
     const filteredItems = Object.entries(soupData).filter(([title, data]) =>
         title.toLowerCase().includes(searchLower) ||           // 題目名稱
-        data.湯面.toLowerCase().includes(searchLower) ||        // 湯面內容
-        data.湯底.toLowerCase().includes(searchLower) ||        // 湯底內容
-        data.類型.toLowerCase().includes(searchLower) ||        // 類型
-        (data.規則 && data.規則.toLowerCase().includes(searchLower)) // 規則（如果存在）
+        (data.湯面 && data.湯面.toLowerCase().includes(searchLower)) ||        // 湯面內容
+        (data.湯底 && data.湯底.toLowerCase().includes(searchLower)) ||        // 湯底內容
+        (data.類型 && data.類型.toLowerCase().includes(searchLower)) ||        // 類型
+        (data.規則 && typeof data.規則 === 'string' && data.規則.toLowerCase().includes(searchLower)) || // 規則（如果存在）
+        (data.其他資料 && typeof data.其他資料 === 'string' && data.其他資料.toLowerCase().includes(searchLower)) // 其他資料（如果存在）
     );
 
     // 如果沒有找到匹配結果
@@ -659,72 +496,6 @@ function filterSoupList(searchTerm) {
 
     // 重新綁定卡片點擊事件
     bindCardClickEvents();
-}
-
-// ==================== 互動功能 ====================
-/**
- * 綁定揭曉答案按鈕的事件監聽器
- * 控制答案區域的顯示/隱藏切換
- */
-function bindRevealButtonEvent() {
-    const button = document.querySelector('.reveal-button');
-    if (!button) return;
-
-    button.addEventListener('click', function () {
-        const soupTitle = this.getAttribute('data-soup');
-        const bottom = document.getElementById(`bottom-${soupTitle}`);
-
-        // 切換答案區域的顯示狀態
-        const isRevealed = bottom.classList.toggle('show');
-
-        // 根據狀態更新按鈕文字和圖示
-        this.label = isRevealed ? '隱藏真相' : '揭曉真相';
-        this.querySelector('md-icon').textContent = isRevealed ? 'visibility_off' : 'visibility';
-    });
-}
-
-// ==================== 檔案下載功能 ====================
-/**
- * 將海龜湯內容下載為Markdown文件
- * @param {string} soupTitle - 海龜湯題目標題
- * 生成包含完整內容的.md文件並觸發下載
- */
-function downloadAsMarkdown(soupTitle) {
-    const data = soupData[soupTitle];
-    if (!data) return;
-
-    // 建構Markdown內容
-    let markdownContent = `# ${soupTitle}\n\n`;
-    markdownContent += `> ${data.類型}\n\n`;
-
-    // 如果有規則內容，添加規則章節
-    if (data.規則 && data.規則.trim() !== '') {
-        markdownContent += `## ${data.規則.includes('主持人手冊') ? '主持人手冊' : '遊戲規則'}\n\n${data.規則}\n\n`;
-    }
-
-    // 添加湯面和湯底內容
-    markdownContent += `## 湯面\n\n${data.湯面}\n\n`;
-    markdownContent += `## 湯底\n\n${data.湯底}\n\n`;
-
-    // 添加標籤資訊
-    const tags = [data.ai ? 'AI' : null, soupTitle.includes('規則怪談') ? '規則怪談' : '海龜湯'].filter(Boolean);
-    if (tags.length > 0) {
-        markdownContent += `---\n\n**標籤：** ${tags.join(', ')}\n`;
-    }
-
-    // 創建並下載文件
-    const blob = new Blob([markdownContent], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${soupTitle}.md`;
-    a.click();
-
-    // 清理URL物件
-    URL.revokeObjectURL(url);
-
-    // 顯示下載成功提示
-    showSnackbar(`✅ 已開始下載：${soupTitle}.md`);
 }
 
 // ==================== UI通知功能 ====================
