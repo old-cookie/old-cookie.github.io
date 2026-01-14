@@ -273,25 +273,11 @@ function downloadAllImages() {
         return;
     }
 
-    // 使用 JSZip 打包所有切片成一個 ZIP 檔案
-    const zip = new JSZip();
-
-    // 將所有切片加入 ZIP
+    // 逐個下載所有切片圖片
     slicedImages.forEach((dataURL, index) => {
-        // 移除 data URL 的前綴 (data:image/png;base64,)
-        const base64Data = dataURL.split(',')[1];
-        zip.file(`slice-${index + 1}.png`, base64Data, { base64: true });
-    });
-
-    // 生成 ZIP 並下載
-    zip.generateAsync({ type: 'blob' }).then(function (content) {
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(content);
-        link.download = 'sliced-images.zip';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(link.href);
+        downloadImage(dataURL, `slice-${index + 1}.png`);
+        // 延遲下載，避免瀏覽器限制
+        setTimeout(() => { }, 100);
     });
 }
 
