@@ -8,10 +8,37 @@
  * 建立日期: 2026年
  */
 
+/* ==================== 根元素和色彩變量 ==================== */
+
+:root {
+    color-scheme: light dark;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f5;
+    --text-primary: #000000;
+    --text-secondary: #666666;
+    --border-color: #ddd;
+    --accent-color: #0078d4;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #1e1e1e;
+        --bg-secondary: #2d2d2d;
+        --text-primary: #ffffff;
+        --text-secondary: #b0b0b0;
+        --border-color: #444;
+        --accent-color: #60a5fa;
+    }
+}
+
 /* ==================== 基礎樣式 ==================== */
 
 * {
     box-sizing: border-box;
+}
+
+html {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 }
 
 body {
@@ -19,12 +46,19 @@ body {
     padding: 0;
     max-width: 1200px;
     margin: 0 auto;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+fluent-card {
+    --fill-color: var(--bg-secondary);
 }
 
 /* ==================== 標題 ==================== */
@@ -47,6 +81,30 @@ p {
     margin: 0;
     color: var(--text-secondary);
     font-size: 16px;
+}
+
+/* ==================== 容器和標題 ==================== */
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.header-title {
+    font-size: 32px;
+    margin-bottom: 12px;
+    color: var(--accent-color);
+}
+
+.header-subtitle {
+    font-size: 16px;
+    color: var(--text-secondary);
 }
 
 /* ==================== 上傳區域 ==================== */
@@ -78,16 +136,22 @@ p {
     display: none;
 }
 
-.upload-area h2 {
+.upload-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.upload-title {
     margin: 0 0 8px 0;
     font-size: 18px;
 }
 
-.upload-area p {
+.upload-subtitle {
     font-size: 14px;
+    margin: 0;
 }
 
-#fileInput {
+.file-input {
     display: none;
 }
 
@@ -124,6 +188,8 @@ p {
     margin: 0 auto;
     border-radius: 8px;
     -webkit-user-drag: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .cancel-button {
@@ -155,6 +221,11 @@ fluent-button {
     --accent-fill-rest: var(--accent-color);
 }
 
+.button-container {
+    text-align: center;
+    margin: 32px 0;
+}
+
 #sliceBtn {
     display: none;
     margin: 32px auto;
@@ -176,14 +247,22 @@ fluent-button {
     display: block !important;
 }
 
-.preview-section fluent-card {
+.preview-card {
     padding: 24px;
     background-color: var(--bg-secondary);
     margin-bottom: 24px;
 }
 
-.preview-section h2 {
+.preview-title {
+    margin-bottom: 24px;
+    color: var(--accent-color);
+    font-size: 20px;
     text-align: center;
+}
+
+.download-button-container {
+    text-align: center;
+    margin-top: 24px;
 }
 
 /* ==================== 預覽容器 ==================== */
@@ -216,6 +295,8 @@ fluent-button {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     -webkit-user-drag: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .preview-container img:hover {
