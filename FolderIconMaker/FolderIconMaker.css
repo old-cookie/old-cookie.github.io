@@ -111,10 +111,11 @@ md-card,
     align-items: center;
     justify-content: center;
     min-height: 120px;
-    user-select: none;
     -webkit-user-select: none;
+    -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    user-select: none;
 }
 
 .upload-area:hover {

@@ -62,10 +62,11 @@ header h1 {
     width: 2.5rem;
     height: 2.5rem;
     transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
-    user-select: none;
     -webkit-user-select: none;
+    -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    user-select: none;
 }
 
 #theme-toggle-btn:hover {
@@ -126,10 +127,11 @@ main {
     transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
     background-color: var(--md-sys-color-surface-container-highest);
     width: 100%;
-    user-select: none;
     -webkit-user-select: none;
+    -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    user-select: none;
     color: var(--md-sys-color-on-surface);
 }
 
@@ -196,10 +198,11 @@ main {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    user-select: none;
     -webkit-user-select: none;
+    -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    user-select: none;
 }
 
 .file-item span.file-name {
@@ -328,10 +331,11 @@ main {
     gap: 0.5rem;
     font: var(--md-sys-typescale-label-large-font);
     text-decoration: none;
-    user-select: none;
     -webkit-user-select: none;
+    -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    user-select: none;
 }
 
 .btn:hover {

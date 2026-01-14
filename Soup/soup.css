@@ -390,6 +390,7 @@ md-filled-tonal-icon-button,
 md-elevated-button,
 md-outlined-button {
     cursor: pointer !important;
+    -webkit-user-select: none;
     user-select: none;
 }
 
@@ -403,12 +404,14 @@ md-outlined-button:hover {
 
 /* 文字選取控制 - 只允許 JSON 內容被選取 */
 * {
+    -webkit-user-select: none;
     user-select: none;
 }
 
 /* 只允許 markdown 內容被選取 */
 .markdown-content,
 .markdown-content * {
+    -webkit-user-select: text !important;
     user-select: text !important;
 }
 
@@ -429,6 +432,7 @@ h5,
 h6,
 header,
 header * {
+    -webkit-user-select: none !important;
     user-select: none !important;
 }
 
@@ -725,6 +729,7 @@ md-filled-tonal-icon-button:hover {
     padding: 0;
     margin: 0;
     transition: all 0.3s ease;
+    -webkit-user-select: none;
     user-select: none;
 }
 
@@ -763,6 +768,7 @@ md-filled-tonal-icon-button:hover {
 .other-data-item.revealed .other-data-content-text {
     opacity: 1 !important;
     visibility: visible !important;
+    -webkit-user-select: text;
     user-select: text;
 }
 
