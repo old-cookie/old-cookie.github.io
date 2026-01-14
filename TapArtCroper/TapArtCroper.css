@@ -2,23 +2,21 @@
 
 /**
  * TapArtCroper 圖片垂直切片工具樣式表
- * 版本: 1.0.0
- * 描述: 基於 Material 3 設計系統的圖片切片應用
+ * 版本: 2.1.0
+ * 描述: 基於 Fluent UI Web Components 的圖片切片應用
  * 作者: OldCookie
  * 建立日期: 2026年
- * 
- * 此樣式表定義了網頁上所有元素的外觀，包括:
- * - Material 3 深色主題界面
- * - 上傳區域交互效果
- * - 圖片預覽樣式
- * - 切片預覽和下載區域樣式
- * - 響應式設計調整
  */
 
-@import url('../shared/material3-common.css');
+/* ==================== 基礎樣式 ==================== */
 
-/* 自定義選擇禁用 */
+* {
+    box-sizing: border-box;
+}
+
 body {
+    margin: 0;
+    padding: 0;
     max-width: 1200px;
     margin: 0 auto;
     -webkit-touch-callout: none;
@@ -29,61 +27,86 @@ body {
     user-select: none;
 }
 
+/* ==================== 標題 ==================== */
+
 h1 {
     text-align: center;
-    margin-bottom: 20px;
-    color: var(--md-sys-color-primary);
-    font: var(--md-sys-typescale-headline-medium-font);
+    margin: 0 0 20px 0;
+    color: var(--accent-color);
+    font-size: 32px;
+    font-weight: 600;
 }
 
+h2 {
+    margin: 0 0 20px 0;
+    color: var(--accent-color);
+    font-size: 20px;
+}
+
+p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+/* ==================== 上傳區域 ==================== */
+
 .upload-area {
-    border: 2px dashed var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-large);
-    padding: 30px;
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    padding: 40px 30px;
     text-align: center;
     cursor: pointer;
-    color: var(--md-sys-color-on-surface-variant);
+    color: var(--text-secondary);
     margin-bottom: 20px;
-    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
-    position: relative;
-    background-color: var(--md-sys-color-surface-container-low);
+    transition: all 0.3s ease;
+    background-color: var(--bg-secondary);
+}
+
+.upload-area:hover {
+    border-color: var(--accent-color);
+    background-color: rgba(0, 120, 212, 0.05);
+}
+
+.upload-area.dragover {
+    border-color: var(--accent-color);
+    background-color: rgba(0, 120, 212, 0.1);
+    transform: scale(1.02);
 }
 
 .upload-area.hidden {
     display: none;
 }
 
-.upload-area.dragover {
-    border-color: var(--md-sys-color-primary);
-    color: var(--md-sys-color-on-primary-container);
-    background-color: var(--md-sys-color-primary-container);
-    transform: scale(1.02);
+.upload-area h2 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
 }
 
 .upload-area p {
-    margin: 0;
-    font: var(--md-sys-typescale-body-large-font);
+    font-size: 14px;
 }
 
 #fileInput {
     display: none;
 }
 
+/* ==================== 圖片預覽 ==================== */
+
 .image-preview-container {
     margin-bottom: 30px;
-    position: relative;
-    border: 1px solid var(--md-sys-color-outline-variant);
     padding: 20px;
-    border-radius: var(--md-sys-shape-corner-large);
-    background-color: var(--md-sys-color-surface-container-low);
-    box-shadow: var(--md-sys-elevation-level2);
-    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-secondary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
     text-align: center;
 }
 
 .image-preview-container:hover {
     transform: translateY(-2px);
-    box-shadow: var(--md-sys-elevation-level3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .image-preview-wrapper {
@@ -91,7 +114,7 @@ h1 {
     margin: 0 auto;
     position: relative;
     overflow: hidden;
-    border-radius: var(--md-sys-shape-corner-medium);
+    border-radius: 8px;
 }
 
 .image-preview-wrapper img {
@@ -99,132 +122,160 @@ h1 {
     max-height: 500px;
     display: block;
     margin: 0 auto;
-    border-radius: var(--md-sys-shape-corner-medium);
+    border-radius: 8px;
     -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
 }
 
 .cancel-button {
-    background-color: var(--md-sys-color-error);
-    color: var(--md-sys-color-on-error);
+    background-color: #f44747;
+    color: white;
     border: none;
-    border-radius: var(--md-sys-shape-corner-medium);
+    border-radius: 4px;
     cursor: pointer;
     padding: 12px 24px;
-    font: var(--md-sys-typescale-label-large-font);
-    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.2s ease;
     margin-top: 16px;
 }
 
-.cancel-button.sure {
-    background-color: var(--md-sys-color-error-container);
-    color: var(--md-sys-color-on-error-container);
-}
-
 .cancel-button:hover {
-    box-shadow: var(--md-sys-elevation-level1);
+    background-color: #ff6b6b;
+    box-shadow: 0 2px 8px rgba(244, 71, 71, 0.3);
     transform: translateY(-1px);
 }
+
+.cancel-button.sure {
+    background-color: #ff6b6b;
+}
+
+/* ==================== Fluent 按鈕 ==================== */
+
+fluent-button {
+    --accent-fill-rest: var(--accent-color);
+}
+
+#sliceBtn {
+    display: none;
+    margin: 32px auto;
+}
+
+#sliceBtn[style*="display: block"],
+#sliceBtn:not([style*="display: none"]) {
+    display: block !important;
+}
+
+/* ==================== 預覽區域 ==================== */
 
 .preview-section {
     display: none;
     margin-top: 40px;
-    background-color: var(--md-sys-color-surface-container-low);
-    padding: 20px;
-    border-radius: var(--md-sys-shape-corner-large);
-    box-shadow: var(--md-sys-elevation-level2);
+}
+
+.preview-section.show {
+    display: block !important;
+}
+
+.preview-section fluent-card {
+    padding: 24px;
+    background-color: var(--bg-secondary);
+    margin-bottom: 24px;
 }
 
 .preview-section h2 {
     text-align: center;
-    margin-bottom: 20px;
-    color: var(--md-sys-color-on-surface);
-    font: var(--md-sys-typescale-title-large-font);
 }
+
+/* ==================== 預覽容器 ==================== */
 
 .preview-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: 1fr;
     gap: 20px;
     max-width: 100%;
-    margin: 0 auto;
+    margin: 0 auto 24px;
+    padding: 24px;
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.preview-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
 }
 
 .preview-container img {
     width: 100%;
     height: auto;
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-large);
-    box-shadow: var(--md-sys-elevation-level1);
-    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+    display: block;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
     -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
 }
 
 .preview-container img:hover {
-    transform: scale(1.02);
-    box-shadow: var(--md-sys-elevation-level3);
-}
-
-.preview-image-wrapper {
-    position: relative;
-    margin-bottom: 20px;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .slice-label {
     text-align: center;
     margin-top: 8px;
-    font: var(--md-sys-typescale-label-medium-font);
-    color: var(--md-sys-color-on-surface-variant);
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
 }
 
 .download-single-button {
     padding: 8px 16px;
-    background-color: var(--md-sys-color-tertiary);
-    color: var(--md-sys-color-on-tertiary);
+    background-color: var(--accent-color);
+    color: white;
     border: none;
-    border-radius: var(--md-sys-shape-corner-medium);
+    border-radius: 4px;
     cursor: pointer;
-    font: var(--md-sys-typescale-label-medium-font);
-    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
-    display: block;
-    margin: 10px auto 0;
-    width: 80%;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+    width: 100%;
     max-width: 120px;
 }
 
 .download-single-button:hover {
-    background-color: var(--md-sys-color-tertiary-container);
-    color: var(--md-sys-color-on-tertiary-container);
-    box-shadow: var(--md-sys-elevation-level1);
+    background-color: rgba(0, 120, 212, 0.9);
+    box-shadow: 0 2px 8px rgba(0, 120, 212, 0.3);
+    transform: translateY(-1px);
 }
+
+/* ==================== 按鈕 ==================== */
 
 .download-button,
 .process-button {
-    padding: 14px 24px;
-    background-color: var(--md-sys-color-tertiary);
-    color: var(--md-sys-color-on-tertiary);
+    padding: 14px 32px;
+    background-color: var(--accent-color);
+    color: white;
     border: none;
-    border-radius: var(--md-sys-shape-corner-large);
+    border-radius: 4px;
     cursor: pointer;
     margin: 20px auto;
     display: block;
-    font: var(--md-sys-typescale-label-large-font);
-    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.2s ease;
     max-width: 200px;
     width: 100%;
 }
 
 .download-button:hover,
 .process-button:hover {
-    background-color: var(--md-sys-color-tertiary-container);
-    color: var(--md-sys-color-on-tertiary-container);
+    background-color: rgba(0, 120, 212, 0.9);
+    box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
     transform: translateY(-2px);
-    box-shadow: var(--md-sys-elevation-level2);
 }
 
 .download-button:active,
@@ -234,34 +285,40 @@ h1 {
 
 .download-button:disabled,
 .process-button:disabled {
-    background-color: var(--md-sys-color-surface-variant);
-    color: var(--md-sys-color-on-surface-variant);
+    background-color: #ccc;
+    color: #999;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
 }
 
-#sliceBtn {
-    display: none;
-}
+/* ==================== 響應式設計 ==================== */
 
-/* 響應式調整 */
 @media (max-width: 768px) {
     body {
         padding: 10px;
     }
 
     h1 {
-        font: var(--md-sys-typescale-headline-small-font);
+        font-size: 24px;
         margin-bottom: 15px;
     }
 
+    h2 {
+        font-size: 18px;
+    }
+
     .upload-area {
-        padding: 20px;
+        padding: 30px 20px;
+        margin-bottom: 15px;
+    }
+
+    .upload-area h2 {
+        font-size: 16px;
     }
 
     .upload-area p {
-        font: var(--md-sys-typescale-body-medium-font);
+        font-size: 13px;
     }
 
     .image-preview-container {
@@ -280,8 +337,9 @@ h1 {
     }
 
     .preview-container {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 10px;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 15px;
     }
 
     .download-button,
@@ -294,19 +352,31 @@ h1 {
 
     .download-single-button {
         padding: 8px 12px;
-        font-size: 13px;
-        width: 90%;
-        min-height: 44px;
+        font-size: 12px;
+        min-height: 40px;
+    }
+
+    #sliceBtn {
+        margin: 24px auto;
     }
 }
 
 @media (max-width: 480px) {
     h1 {
-        font: var(--md-sys-typescale-title-large-font);
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+
+    h2 {
+        font-size: 16px;
     }
 
     .upload-area {
-        padding: 15px;
+        padding: 20px 15px;
+    }
+
+    .upload-area h2 {
+        font-size: 16px;
     }
 
     .image-preview-wrapper img {
@@ -315,15 +385,27 @@ h1 {
 
     .preview-container {
         grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 12px;
     }
 
     .download-button,
     .process-button {
         max-width: 100%;
         min-height: 48px;
+        padding: 12px 16px;
+        font-size: 14px;
     }
 
     .download-single-button {
         min-height: 40px;
+    }
+
+    .preview-section fluent-card {
+        padding: 16px;
+    }
+
+    #sliceBtn {
+        margin: 20px auto;
     }
 }

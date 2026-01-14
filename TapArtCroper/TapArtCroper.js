@@ -2,8 +2,8 @@
 
 /**
  * TapArtCroper 圖片垂直切片工具腳本
- * 版本: 1.0.0
- * 描述: 提供圖片上傳並垂直切割成 4 等份的功能
+ * 版本: 2.0.0
+ * 描述: 提供圖片上傳並垂直切割成 4 等份的功能，自動支持深色模式
  * 作者: OldCookie
  * 建立日期: 2026年
  * 
@@ -12,6 +12,7 @@
  * - 圖片垂直切割成 4 等高區塊
  * - 預覽切片結果
  * - 批量下載處理後的切片圖片
+ * - 自動偵測系統偏好設定（淺色/深色模式）
  */
 
 // 全局變量
@@ -168,7 +169,7 @@ function sliceImage() {
 
     // 更新按鈕狀態
     sliceBtn.disabled = true;
-    sliceBtn.innerHTML = '<span class="material-symbols-outlined" style="margin-right: 8px;">hourglass_empty</span>處理中...';
+    sliceBtn.innerHTML = '⏳ 處理中...';
 
     const img = new Image();
     img.src = uploadedImage;
@@ -211,14 +212,14 @@ function sliceImage() {
 
         // 恢復按鈕狀態
         sliceBtn.disabled = false;
-        sliceBtn.innerHTML = '<span class="material-symbols-outlined" style="margin-right: 8px;">content_cut</span>切片圖片';
+        sliceBtn.innerHTML = '✂️ 切片圖片';
     };
 
     img.onerror = () => {
         console.error('載入圖片時出錯。');
         alert('載入圖片時出錯。');
         sliceBtn.disabled = false;
-        sliceBtn.innerHTML = '<span class="material-symbols-outlined" style="margin-right: 8px;">content_cut</span>切片圖片';
+        sliceBtn.innerHTML = '✂️ 切片圖片';
     };
 }
 
@@ -247,7 +248,7 @@ function displayPreview() {
         previewContainer.appendChild(imgWrapper);
     });
 
-    previewSection.style.display = 'block';
+    previewSection.classList.add('show');
     // 滾動到預覽區域
     previewSection.scrollIntoView({ behavior: 'smooth' });
 }
@@ -298,7 +299,7 @@ function updateUIState() {
     } else {
         sliceBtn.style.display = 'none';
         uploadArea.classList.remove('hidden');
-        previewSection.style.display = 'none';
+        previewSection.classList.remove('show');
     }
 }
 
