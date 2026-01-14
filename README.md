@@ -2,9 +2,11 @@
 
 [WaterMark](https://old-cookie.github.io/WaterMark.html)
 
+[TapArtCroper](https://old-cookie.github.io/TapArtCroper/TapArtCroper.html)
+
 [E-portfolio](https://old-cookie.github.io/E-portfolio/E-portfolio.html)
 
-[Clock](clock.html)
+[Clock](https://old-cookie.github.io/clock.html)
 
 [Markdown to Web](https://old-cookie.github.io/mdToWeb/mdToWeb.html)
 

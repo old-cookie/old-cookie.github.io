@@ -1,0 +1,329 @@
+@charset "utf-8";
+
+/**
+ * TapArtCroper 圖片垂直切片工具樣式表
+ * 版本: 1.0.0
+ * 描述: 基於 Material 3 設計系統的圖片切片應用
+ * 作者: OldCookie
+ * 建立日期: 2026年
+ * 
+ * 此樣式表定義了網頁上所有元素的外觀，包括:
+ * - Material 3 深色主題界面
+ * - 上傳區域交互效果
+ * - 圖片預覽樣式
+ * - 切片預覽和下載區域樣式
+ * - 響應式設計調整
+ */
+
+@import url('../shared/material3-common.css');
+
+/* 自定義選擇禁用 */
+body {
+    max-width: 1200px;
+    margin: 0 auto;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--md-sys-color-primary);
+    font: var(--md-sys-typescale-headline-medium-font);
+}
+
+.upload-area {
+    border: 2px dashed var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-large);
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-bottom: 20px;
+    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+    position: relative;
+    background-color: var(--md-sys-color-surface-container-low);
+}
+
+.upload-area.hidden {
+    display: none;
+}
+
+.upload-area.dragover {
+    border-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary-container);
+    background-color: var(--md-sys-color-primary-container);
+    transform: scale(1.02);
+}
+
+.upload-area p {
+    margin: 0;
+    font: var(--md-sys-typescale-body-large-font);
+}
+
+#fileInput {
+    display: none;
+}
+
+.image-preview-container {
+    margin-bottom: 30px;
+    position: relative;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    padding: 20px;
+    border-radius: var(--md-sys-shape-corner-large);
+    background-color: var(--md-sys-color-surface-container-low);
+    box-shadow: var(--md-sys-elevation-level2);
+    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+    text-align: center;
+}
+
+.image-preview-container:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--md-sys-elevation-level3);
+}
+
+.image-preview-wrapper {
+    max-width: 100%;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--md-sys-shape-corner-medium);
+}
+
+.image-preview-wrapper img {
+    max-width: 100%;
+    max-height: 500px;
+    display: block;
+    margin: 0 auto;
+    border-radius: var(--md-sys-shape-corner-medium);
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+}
+
+.cancel-button {
+    background-color: var(--md-sys-color-error);
+    color: var(--md-sys-color-on-error);
+    border: none;
+    border-radius: var(--md-sys-shape-corner-medium);
+    cursor: pointer;
+    padding: 12px 24px;
+    font: var(--md-sys-typescale-label-large-font);
+    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    margin-top: 16px;
+}
+
+.cancel-button.sure {
+    background-color: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
+}
+
+.cancel-button:hover {
+    box-shadow: var(--md-sys-elevation-level1);
+    transform: translateY(-1px);
+}
+
+.preview-section {
+    display: none;
+    margin-top: 40px;
+    background-color: var(--md-sys-color-surface-container-low);
+    padding: 20px;
+    border-radius: var(--md-sys-shape-corner-large);
+    box-shadow: var(--md-sys-elevation-level2);
+}
+
+.preview-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--md-sys-color-on-surface);
+    font: var(--md-sys-typescale-title-large-font);
+}
+
+.preview-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.preview-container img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-large);
+    box-shadow: var(--md-sys-elevation-level1);
+    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+}
+
+.preview-container img:hover {
+    transform: scale(1.02);
+    box-shadow: var(--md-sys-elevation-level3);
+}
+
+.preview-image-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.slice-label {
+    text-align: center;
+    margin-top: 8px;
+    font: var(--md-sys-typescale-label-medium-font);
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.download-single-button {
+    padding: 8px 16px;
+    background-color: var(--md-sys-color-tertiary);
+    color: var(--md-sys-color-on-tertiary);
+    border: none;
+    border-radius: var(--md-sys-shape-corner-medium);
+    cursor: pointer;
+    font: var(--md-sys-typescale-label-medium-font);
+    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    display: block;
+    margin: 10px auto 0;
+    width: 80%;
+    max-width: 120px;
+}
+
+.download-single-button:hover {
+    background-color: var(--md-sys-color-tertiary-container);
+    color: var(--md-sys-color-on-tertiary-container);
+    box-shadow: var(--md-sys-elevation-level1);
+}
+
+.download-button,
+.process-button {
+    padding: 14px 24px;
+    background-color: var(--md-sys-color-tertiary);
+    color: var(--md-sys-color-on-tertiary);
+    border: none;
+    border-radius: var(--md-sys-shape-corner-large);
+    cursor: pointer;
+    margin: 20px auto;
+    display: block;
+    font: var(--md-sys-typescale-label-large-font);
+    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    max-width: 200px;
+    width: 100%;
+}
+
+.download-button:hover,
+.process-button:hover {
+    background-color: var(--md-sys-color-tertiary-container);
+    color: var(--md-sys-color-on-tertiary-container);
+    transform: translateY(-2px);
+    box-shadow: var(--md-sys-elevation-level2);
+}
+
+.download-button:active,
+.process-button:active {
+    transform: translateY(0);
+}
+
+.download-button:disabled,
+.process-button:disabled {
+    background-color: var(--md-sys-color-surface-variant);
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+#sliceBtn {
+    display: none;
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font: var(--md-sys-typescale-headline-small-font);
+        margin-bottom: 15px;
+    }
+
+    .upload-area {
+        padding: 20px;
+    }
+
+    .upload-area p {
+        font: var(--md-sys-typescale-body-medium-font);
+    }
+
+    .image-preview-container {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .image-preview-wrapper img {
+        max-height: 400px;
+    }
+
+    .cancel-button {
+        font-size: 14px;
+        padding: 10px 20px;
+        min-height: 44px;
+    }
+
+    .preview-container {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+    }
+
+    .download-button,
+    .process-button {
+        padding: 12px 20px;
+        font-size: 15px;
+        margin: 15px auto;
+        min-height: 44px;
+    }
+
+    .download-single-button {
+        padding: 8px 12px;
+        font-size: 13px;
+        width: 90%;
+        min-height: 44px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font: var(--md-sys-typescale-title-large-font);
+    }
+
+    .upload-area {
+        padding: 15px;
+    }
+
+    .image-preview-wrapper img {
+        max-height: 300px;
+    }
+
+    .preview-container {
+        grid-template-columns: 1fr;
+    }
+
+    .download-button,
+    .process-button {
+        max-width: 100%;
+        min-height: 48px;
+    }
+
+    .download-single-button {
+        min-height: 40px;
+    }
+}
