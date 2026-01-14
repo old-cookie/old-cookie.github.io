@@ -2,7 +2,7 @@
 
 [WaterMark](https://old-cookie.github.io/WaterMark.html)
 
-[TapArtCroper](https://old-cookie.github.io/TapArtCroper/TapArtCroper.html)
+[Tap Art Croper](https://old-cookie.github.io/TapArtCroper/TapArtCroper.html)
 
 [E-portfolio](https://old-cookie.github.io/E-portfolio/E-portfolio.html)
 
