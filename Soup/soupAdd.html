@@ -1,100 +1,59 @@
-<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="zh-HK">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>新增海龜湯題目 - 海龜湯題庫</title>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css" />
+    <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
+    <link rel="stylesheet" href="soup.css" />
+  </head>
 
-    <script type="importmap">
-        {
-            "imports": {
-                "@material/web/": "https://esm.run/@material/web/"
-            }
-        }
-    </script>
-    <script type="module">
-        import '@material/web/all.js';
-        import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
-        document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
-    </script>
-    <link rel="stylesheet" href="soup.css">
+  <body class="oat-theme">
+    <div class="container">
+      <header class="page-header">
+        <section class="card" aria-label="新增海龜湯頁首">
+          <h1 id="add-page-title">新增海龜湯題目</h1>
+          <p id="add-page-subtitle">填寫表單後即可提交新題目。</p>
+        </section>
+      </header>
 
-    <!-- Material 3 Theme Manager -->
-    <script src="../shared/material3-theme.js"></script>
-</head>
+      <main>
+        <section class="add-soup-page" aria-label="新增海龜湯內容">
+          <menu class="buttons">
+            <button onclick="goBackToList()" type="button">返回列表</button>
+          </menu>
 
-<body class="m3-theme">
-    <header>
-        <md-elevation></md-elevation>
-        <div class="header-content">
-            <h1>🐢 新增海龜湯題目</h1>
-            <div class="header-controls"></div>
-        </div>
-    </header>
-
-    <main>
-        <div class="add-soup-page">
-            <div class="detail-header">
-                <div class="header-left-items">
-                    <md-filled-tonal-button onclick="goBackToList()" class="back-button">
-                        <md-icon slot="icon">arrow_back</md-icon>
-                        返回列表
-                    </md-filled-tonal-button>
-                </div>
-            </div>
-
-            <div class="add-soup-content">
-
-                <div class="iframe-container">
-                    <iframe
-                        src="https://docs.google.com/forms/d/e/1FAIpQLSerxSMTksN-qhB71RGPvUPhzvsRBVhhklXXlQ1yUKeD5NAlaw/viewform?embedded=true"
-                        width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0">
-                        正在載入表單...
-                    </iframe>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <div id="snackbar-container"></div>
+          <article class="card iframe-card">
+            <iframe
+              src="https://docs.google.com/forms/d/e/1FAIpQLSerxSMTksN-qhB71RGPvUPhzvsRBVhhklXXlQ1yUKeD5NAlaw/viewform?embedded=true"
+              width="100%"
+              height="100%"
+              frameborder="0"
+              marginheight="0"
+              marginwidth="0"
+              title="新增海龜湯 Google 表單"
+            >
+              正在載入表單...
+            </iframe>
+          </article>
+        </section>
+      </main>
+    </div>
 
     <script>
-        /**
-         * 返回到海龜湯列表頁面
-         */
-        function goBackToList() {
-            window.location.href = 'soup.html';
-        }
+      /**
+       * Navigate back to the soup list page.
+       */
+      function goBackToList() {
+        window.location.href = "soup.html";
+      }
 
-        /**
-         * 顯示Snackbar通知訊息
-         * @param {string} message - 要顯示的訊息內容
-         */
-        function showSnackbar(message) {
-            const container = document.getElementById('snackbar-container');
-            const snackbar = document.createElement('md-snackbar');
-
-            snackbar.labelText = message;
-            snackbar.open = true;
-
-            container.appendChild(snackbar);
-
-            snackbar.addEventListener('closed', () => {
-                container.removeChild(snackbar);
-            });
-        }
-
-        // 初始化
-        document.addEventListener('DOMContentLoaded', function () {
-            console.log('新增海龜湯頁面初始化完成');
-        });
+      // Initialize page-level behavior
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("新增海龜湯頁面初始化完成");
+      });
     </script>
-</body>
-
+  </body>
 </html>

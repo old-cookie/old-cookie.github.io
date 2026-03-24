@@ -1,124 +1,45 @@
-<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="zh-HK">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>oldcookie's Portfolio</title>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css" />
+    <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
+  </head>
 
-    <!-- Material 3 Common Styles -->
-    <link rel="stylesheet" href="shared/material3-common.css">
+  <body>
+    <div class="container">
+      <header>
+        <h1>專案作品集</h1>
+      </header>
 
-    <!-- Material Web Components -->
-    <script type="importmap">
-        {
-            "imports": {
-                "@material/web/": "https://esm.run/@material/web/"
-            }
-        }
-    </script>
-    <script type="module">
-        import '@material/web/all.js';
-        import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
-        document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
-    </script>
+      <main class="row">
+        <section class="col col-6">
+          <article class="card">
+            <h3>數位浮水印工具</h3>
+            <p>線上文件保護解決方案，支持多種檔案格式的浮水印添加與管理。</p>
+            <menu class="buttons">
+              <a href="WaterMark/WaterMark.html" title="前往數位浮水印工具"
+                >立即體驗</a
+              >
+            </menu>
+          </article>
+        </section>
 
-    <!-- Material 3 Theme Manager -->
-    <script src="shared/material3-theme.js"></script>
-
-    <!-- Optimized Portfolio Styles -->
-    <link rel="stylesheet" href="shared/portfolio-styles.css">
-</head>
-
-<body>
-    <div class="md-container">
-        <header class="header">
-            <div class="header-controls">
-                <md-icon-button id="theme-toggle" title="切換深色模式">
-                    <md-icon>dark_mode</md-icon>
-                </md-icon-button>
-            </div>
-            <h1 class="display-large">
-                專案作品集
-            </h1>
-            <p class="body-large">
-                探索我的創作與技術實踐
+        <section class="col col-6">
+          <article class="card">
+            <h3>海龜湯題庫</h3>
+            <p>
+              互動式推理謎題平台，收錄豐富的海龜湯題目，挑戰你的邏輯思維與推理能力。
             </p>
-        </header>
-
-        <main class="projects-grid">
-            <a href="WaterMark/WaterMark.html" class="md-card project-card" title="前往數位浮水印工具">
-                <span class="material-symbols-outlined project-icon">image</span>
-                <h2 class="headline-small project-title">數位浮水印工具</h2>
-                <p class="body-medium project-description">線上文件保護解決方案，支持多種檔案格式的浮水印添加與管理。</p>
-                <span class="project-link">
-                    立即體驗
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </span>
-            </a>
-            <a href="TapArtCroper/TapArtCroper.html" class="md-card project-card" title="前往圖片垂直切片工具">
-                <span class="material-symbols-outlined project-icon">grid_on</span>
-                <h2 class="headline-small project-title">TapArtCroper</h2>
-                <p class="body-medium project-description">圖片垂直切片工具，將單張圖片切割成 4 等份，適用於社交媒體長圖分享。</p>
-                <span class="project-link">
-                    立即體驗
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </span>
-            </a>
-            <a href="FolderIconMaker/FolderIconMaker.html" class="md-card project-card" title="前往資料夾圖示製作工具">
-                <span class="material-symbols-outlined project-icon">folder</span>
-                <h2 class="headline-small project-title">資料夾圖示製作工具</h2>
-                <p class="body-medium project-description">自訂資料夾圖示的線上工具，支持照片上傳、縮放調整與顏色選擇。</p>
-                <span class="project-link">
-                    立即體驗
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </span>
-            </a>
-            <a href="mdToWeb/mdToWeb.html" class="md-card project-card" title="前往 Markdown 轉 Web 工具">
-                <span class="material-symbols-outlined project-icon">description</span>
-                <h2 class="headline-small project-title">Markdown 轉 Web</h2>
-                <p class="body-medium project-description">輕鬆將 Markdown 文件轉換為網頁格式，支援程式碼高亮與圖文排版。</p>
-                <span class="project-link">
-                    立即體驗
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </span>
-            </a>
-            <a href="ProfileIconMaker/ProfileIconMaker.html" class="md-card project-card" title="前往個人頭像製作工具">
-                <span class="material-symbols-outlined project-icon">account_circle</span>
-                <h2 class="headline-small project-title">個人頭像製作工具</h2>
-                <p class="body-medium project-description">頭像製作工具，支援照片上傳、尺寸調整，創建完美的正方形頭像圖片。</p>
-                <span class="project-link">
-                    立即體驗
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </span>
-            </a>
-            <a href="Soup/soup.html" class="md-card project-card" title="前往海龜湯題庫">
-                <span class="material-symbols-outlined project-icon">quiz</span>
-                <h2 class="headline-small project-title">🐢 海龜湯題庫</h2>
-                <p class="body-medium project-description">互動式推理謎題平台，收錄豐富的海龜湯題目，挑戰你的邏輯思維與推理能力。</p>
-                <span class="project-link">
-                    立即挑戰
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </span>
-            </a>
-            <a href="EnterTon/EnterTon.html" class="md-card project-card" title="前往 EnterTo\n 轉換工具">
-                <span class="material-symbols-outlined project-icon">keyboard_return</span>
-                <h2 class="headline-small project-title">Enter To \n</h2>
-                <p class="body-medium project-description">文字換行符號轉換工具，將多行文字轉換為含有 \n 符號的單行文字。</p>
-                <span class="project-link">
-                    立即體驗
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </span>
-            </a>
-        </main>
-
+            <menu class="buttons">
+              <a href="Soup/soup.html" title="前往海龜湯題庫">立即挑戰</a>
+            </menu>
+          </article>
+        </section>
+      </main>
     </div>
-</body>
-
+  </body>
 </html>

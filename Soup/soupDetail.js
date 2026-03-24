@@ -1,417 +1,383 @@
-// ==================== 全域變數 ====================
+// ==================== Global State ====================
 let soupData = null;
 let currentSoup = null;
 
-// ==================== 初始化 ====================
-document.addEventListener('DOMContentLoaded', function () {
-    // 檢查並配置Markdown解析器
-    if (typeof marked !== 'undefined') {
-        marked.setOptions({
-            breaks: true,
-            gfm: true,
-            sanitize: false
-        });
-    }
+function renderDetailSkeletonCard() {
+  return `
+    <article class="card skeleton" role="status" aria-label="載入中">
+      <div role="status" class="skeleton line"></div>
+      <div role="status" class="skeleton line"></div>
+      <div role="status" class="skeleton line"></div>
+      <div role="status" class="skeleton line"></div>
+    </article>
+  `;
+}
 
-    // 從URL參數獲取題目名稱並載入
-    loadSoupFromUrl();
+// ==================== Initialization ====================
+document.addEventListener("DOMContentLoaded", function () {
+  // Configure Markdown parser when available
+  if (typeof marked !== "undefined") {
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+      sanitize: false,
+    });
+  }
+
+  // Resolve title from URL and load data
+  loadSoupFromUrl();
 });
 
-// ==================== XLSX 解析工具 ====================
+// ==================== XLSX Parsing ====================
 function parseXLSX(xlsxBuffer) {
-    try {
-        const workbook = XLSX.read(xlsxBuffer, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, {
-            header: 1,
-            defval: ''
+  try {
+    const workbook = XLSX.read(xlsxBuffer, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+      header: 1,
+      defval: "",
+    });
+
+    if (jsonData.length === 0) return [];
+
+    const headers = jsonData[0];
+    const rows = [];
+
+    for (let i = 1; i < jsonData.length; i++) {
+      const values = jsonData[i];
+      if (values.some((val) => val !== "")) {
+        const row = {};
+        headers.forEach((header, index) => {
+          row[header] = values[index] || "";
         });
-
-        if (jsonData.length === 0) return [];
-
-        const headers = jsonData[0];
-        const rows = [];
-
-        for (let i = 1; i < jsonData.length; i++) {
-            const values = jsonData[i];
-            if (values.some(val => val !== '')) {
-                const row = {};
-                headers.forEach((header, index) => {
-                    row[header] = values[index] || '';
-                });
-                rows.push(row);
-            }
-        }
-
-        return rows;
-    } catch (error) {
-        console.error('解析 XLSX 時發生錯誤:', error);
-        return [];
+        rows.push(row);
+      }
     }
+
+    return rows;
+  } catch (error) {
+    console.error("解析 XLSX 時發生錯誤:", error);
+    return [];
+  }
 }
 
 function convertXLSXToSoupData(xlsxData) {
-    const soupData = {};
+  const soupData = {};
 
-    xlsxData.forEach(row => {
-        const title = row['湯名'];
-        if (!title) return;
+  xlsxData.forEach((row) => {
+    const title = row["湯名"];
+    if (!title) return;
 
-        const isAI = row['AI 生成?'] === '是';
+    const isAI = row["AI 生成?"] === "是";
 
-        // 確保所有值都是字符串，並且處理可能的 null/undefined
-        const safeString = (value) => {
-            if (value === null || value === undefined) return '';
-            return String(value);
-        };
-
-        soupData[title] = {
-            類型: safeString(row['類型']),
-            規則: safeString(row['規則']),
-            主持人手冊: safeString(row['主持人手冊']),
-            湯面: safeString(row['湯面']),
-            湯底: safeString(row['湯底']),
-            其他資料: safeString(row['其他資料']),
-            ai: isAI
-        };
-    });
-
-    return soupData;
-}
-
-// ==================== 資料載入 ====================
-async function loadSoupFromUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const soupName = urlParams.keys().next().value;
-
-    if (!soupName) {
-        showError('未指定題目名稱');
-        return;
-    }
-
-    currentSoup = decodeURIComponent(soupName);
-
-    try {
-        const xlsxResponse = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQCe9mncrVk9RcF91bPnZIcagCJZAeKLsm2cDOQeSRi3QZYcDPs_CZJxNjOPlpjVCNCKAL7dphkV2hP/pub?output=xlsx');
-
-        if (!xlsxResponse.ok) {
-            throw new Error(`HTTP ${xlsxResponse.status}: 無法連接到 Google Sheets XLSX`);
-        }
-
-        const xlsxBuffer = await xlsxResponse.arrayBuffer();
-        const xlsxData = parseXLSX(xlsxBuffer);
-        soupData = convertXLSXToSoupData(xlsxData);
-
-        if (soupData[currentSoup]) {
-            renderDetailPage(currentSoup, soupData[currentSoup]);
-        } else {
-            showError('找不到指定的題目');
-        }
-
-    } catch (error) {
-        console.error('載入資料時發生錯誤:', error);
-        showError('載入資料時發生錯誤: ' + error.message);
-    }
-}
-
-// ==================== 頁面渲染 ====================
-function renderDetailPage(title, data) {
-    const container = document.getElementById('soup-detail-container');
-    const header = document.getElementById('detail-title');
-    const headerDesc = document.getElementById('detail-description');
-    const pageTitle = document.getElementById('page-title');
-
-    // 更新頁面標題
-    header.innerHTML = `🐢 ${escapeHtml(title)}`;
-    headerDesc.innerHTML = `詳細內容 - 點擊按鈕顯示答案（湯底）`;
-    pageTitle.textContent = `${title} - 海龜湯題庫`;
-
-    // 檢查是否有規則內容和主持人手冊內容，以及是否為AI生成
-    const safeCheck = (value) => {
-        return value && typeof value === 'string' && value.trim() !== '';
+    // Normalize all values as strings and handle null/undefined safely
+    const safeString = (value) => {
+      if (value === null || value === undefined) return "";
+      return String(value);
     };
 
-    const hasRules = safeCheck(data.規則);
-    const hasManual = safeCheck(data.主持人手冊);
-    const hasOtherData = safeCheck(data.其他資料);
-    const isAI = data.ai === true;
-    const category = title.includes('規則怪談') ? '規則怪談' : '海龜湯';
-    const typeClass = getTypeChipClass(data.類型);
-    const categoryClass = getCategoryChipClass(category);
+    soupData[title] = {
+      類型: safeString(row["類型"]),
+      規則: safeString(row["規則"]),
+      主持人手冊: safeString(row["主持人手冊"]),
+      湯面: safeString(row["湯面"]),
+      湯底: safeString(row["湯底"]),
+      其他資料: safeString(row["其他資料"]),
+      ai: isAI,
+    };
+  });
 
-    // 產生詳細頁面HTML結構
-    container.innerHTML = `
-        <div class="soup-detail-container">
-            <md-elevated-card class="detail-card">
-                <!-- 頁面頂部操作區域 -->
-                <div class="detail-header" style="margin-bottom: 1.5rem;">
-                    <div class="header-left-items">
-                        <button class="md-button md-button-outlined" onclick="goBackToList()" aria-label="返回列表">
-                            <md-icon>arrow_back</md-icon>
-                            返回
-                        </button>
-                    </div>
-                    <div class="detail-actions">
-                        <button class="md-button md-button-outlined" onclick="downloadAsMarkdown('${escapeHtml(title)}')" aria-label="下載 Markdown">
-                            <md-icon>download</md-icon>
-                            下載
-                        </button>
-                    </div>
-                </div>
+  return soupData;
+}
 
-                <!-- 題目標籤區域 -->
-                <div class="card-meta" style="justify-content: flex-start; margin-bottom: 1.5rem;">
-                    <div class="chip ${typeClass}"><md-icon>category</md-icon>${escapeHtml(data.類型)}</div>
-                    <div class="chip ${categoryClass}"><md-icon>style</md-icon>${category}</div>
-                    ${isAI ? `<div class="chip chip-ai" onclick="goToPromptPage()"><md-icon>smart_toy</md-icon>AI 生成</div>` : ''}
-                </div>
+// ==================== Data Loading ====================
+async function loadSoupFromUrl() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const soupName = urlParams.keys().next().value;
+  const container = document.getElementById("soup-detail-container");
 
-                <!-- 湯面（題目）區域 -->
-                <div class="content-section">
-                    <h2><md-icon>question_mark</md-icon>湯面（題目）</h2>
-                    <div class="markdown-content">${formatMarkdownText(data.湯面)}</div>
-                </div>
+  if (container) {
+    container.innerHTML = renderDetailSkeletonCard();
+  }
 
-                <!-- 遊戲規則區域 -->
-                ${hasRules ? `
-                <div class="content-section">
-                    <h2><md-icon>gavel</md-icon>遊戲規則</h2>
-                    <div class="markdown-content">${formatMarkdownText(data.規則)}</div>
-                </div>
-                ` : ''}
+  if (!soupName) {
+    showError("未指定題目名稱");
+    return;
+  }
 
-                <!-- 其他資料區域 -->
-                ${hasOtherData ? `
-                <div class="content-section">
-                    <h2><md-icon>info</md-icon>其他資料</h2>
-                    <div class="other-data-content">${formatOtherDataList(data.其他資料)}</div>
-                </div>
-                ` : ''}
+  currentSoup = decodeURIComponent(soupName);
 
-                <!-- 隱藏的答案區域 -->
-                <div class="soup-bottom" id="bottom-${escapeHtml(title)}">
-                    <div class="content-section">
-                        <h2><md-icon>lightbulb</md-icon>湯底（答案）</h2>
-                        <div class="markdown-content">${formatMarkdownText(data.湯底)}</div>
-                    </div>
-                    
-                    <!-- 主持人手冊（如果存在） -->
-                    ${hasManual ? `
-                    <div class="content-section">
-                        <h2><md-icon>gavel</md-icon>主持人手冊</h2>
-                        <div class="markdown-content">${formatMarkdownText(data.主持人手冊)}</div>
-                    </div>
-                    ` : ''}
-                </div>
+  try {
+    const xlsxResponse = await fetch(
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQCe9mncrVk9RcF91bPnZIcagCJZAeKLsm2cDOQeSRi3QZYcDPs_CZJxNjOPlpjVCNCKAL7dphkV2hP/pub?output=xlsx",
+    );
 
-                <!-- 揭曉答案按鈕 -->
-                <div class="detail-footer">
-                    <button class="md-button md-button-outlined reveal-button" data-soup="${escapeHtml(title)}">
-                        <md-icon>visibility</md-icon>
-                        揭曉真相
-                    </button>
-                </div>
-            </md-elevated-card>
+    if (!xlsxResponse.ok) {
+      throw new Error(
+        `HTTP ${xlsxResponse.status}: 無法連接到 Google Sheets XLSX`,
+      );
+    }
+
+    const xlsxBuffer = await xlsxResponse.arrayBuffer();
+    const xlsxData = parseXLSX(xlsxBuffer);
+    soupData = convertXLSXToSoupData(xlsxData);
+
+    if (soupData[currentSoup]) {
+      renderDetailPage(currentSoup, soupData[currentSoup]);
+    } else {
+      showError("找不到指定的題目");
+    }
+  } catch (error) {
+    console.error("載入資料時發生錯誤:", error);
+    showError("載入資料時發生錯誤: " + error.message);
+  }
+}
+
+// ==================== Page Rendering ====================
+function renderDetailPage(title, data) {
+  const container = document.getElementById("soup-detail-container");
+  const header = document.getElementById("detail-title");
+  const headerDesc = document.getElementById("detail-description");
+
+  // Update page header
+  header.innerHTML = `${escapeHtml(title)}`;
+  headerDesc.innerHTML = `詳細內容 - 點擊按鈕顯示答案（湯底）`;
+  document.title = `${title} - 海龜湯題庫`;
+
+  // Check optional content blocks and AI flag
+  const safeCheck = (value) => {
+    return value && typeof value === "string" && value.trim() !== "";
+  };
+
+  const hasRules = safeCheck(data.規則);
+  const hasManual = safeCheck(data.主持人手冊);
+  const hasOtherData = safeCheck(data.其他資料);
+  const isAI = data.ai === true;
+  const category = title.includes("規則怪談") ? "規則怪談" : "海龜湯";
+  const type = escapeHtml(data.類型 || "未分類");
+  const typeClass = type.includes("本格")
+    ? "badge success"
+    : type.includes("變格")
+      ? "badge secondary"
+      : "badge";
+  const categoryClass =
+    category === "規則怪談" ? "badge danger" : "badge outline";
+
+  // Build detail page HTML
+  container.innerHTML = `
+      <section class="card">
+        <menu class="buttons detail-actions">
+          <button onclick="goBackToList()" aria-label="返回列表" type="button">返回</button>
+          <button onclick="downloadAsMarkdown('${escapeHtml(title)}')" aria-label="下載 Markdown" type="button">下載</button>
+        </menu>
+
+        <p class="meta-badges" aria-label="題目標籤">
+          <span class="${typeClass}">${type}</span>
+          <span class="${categoryClass}">${category}</span>
+          ${isAI ? '<span class="badge warning">AI 生成</span>' : ""}
+        </p>
+
+        <div class="content-section">
+          <h2>湯面（題目）</h2>
+          <div class="markdown-content">${formatMarkdownText(data.湯面)}</div>
         </div>
-    `;
 
-    // 綁定揭曉按鈕事件
-    bindRevealButtonEvent();
+        ${
+          hasRules
+            ? `
+        <div class="content-section">
+          <h2>遊戲規則</h2>
+          <div class="markdown-content">${formatMarkdownText(data.規則)}</div>
+        </div>
+        `
+            : ""
+        }
+
+        ${
+          hasOtherData
+            ? `
+        <div class="content-section">
+          <h2>ℹ️ 其他資料</h2>
+          <div class="other-data-content">${formatOtherDataList(data.其他資料)}</div>
+        </div>
+        `
+            : ""
+        }
+
+        <details>
+          <summary>揭曉真相</summary>
+          <div class="detail-reveal">
+          <div class="content-section">
+            <h2>湯底（答案）</h2>
+            <div class="markdown-content">${formatMarkdownText(data.湯底)}</div>
+          </div>
+
+          ${
+            hasManual
+              ? `
+          <div class="content-section">
+            <h2>主持人手冊</h2>
+            <div class="markdown-content">${formatMarkdownText(data.主持人手冊)}</div>
+          </div>
+          `
+              : ""
+          }
+          </div>
+        </details>
+      </section>
+    `;
 }
 
 function showError(message) {
-    const container = document.getElementById('soup-detail-container');
-    container.innerHTML = `
+  const container = document.getElementById("soup-detail-container");
+  container.innerHTML = `
         <div class="empty-state">
-            <md-icon>error</md-icon>
-            <h2>😅 發生錯誤</h2>
+            <h2>發生錯誤</h2>
             <p>${escapeHtml(message)}</p>
-            <button class="md-button md-button-outlined" onclick="goBackToList()" style="margin-top: 1rem;">
-                <md-icon>arrow_back</md-icon>
-                返回列表
-            </button>
+            <menu class="buttons" style="justify-content:center; margin-top:1rem;">
+              <button onclick="goBackToList()" type="button">返回列表</button>
+            </menu>
         </div>
     `;
 }
 
-// ==================== 輔助函數 ====================
-function getTypeChipClass(type) {
-    if (type.includes('變格')) {
-        return 'chip-type-變格';
-    } else if (type.includes('本格')) {
-        return 'chip-type-本格';
-    }
-    return 'chip-type';
-}
-
-function getCategoryChipClass(category) {
-    const categoryMap = {
-        '海龜湯': 'chip-category-海龜湯',
-        '規則怪談': 'chip-category-規則怪談'
-    };
-    return categoryMap[category] || 'chip-category';
-}
-
 function formatMarkdownText(text) {
-    if (!text) return '';
+  if (!text) return "";
 
-    if (typeof marked !== 'undefined') {
-        return marked.parse(text);
-    }
+  if (typeof marked !== "undefined") {
+    return marked.parse(text);
+  }
 
-    return escapeHtml(text).replace(/\n/g, '<br>');
+  return escapeHtml(text).replace(/\n/g, "<br>");
 }
 
 function formatOtherDataList(text) {
-    if (!text) return '';
+  if (!text) return "";
 
-    // 解析文字列表，支援多種格式
-    const lines = text.split('\n').filter(line => line.trim() !== '');
-    let listItems = [];
+  // Parse free-form lines into list items
+  const lines = text.split("\n").filter((line) => line.trim() !== "");
+  let listItems = [];
 
-    lines.forEach((line, index) => {
-        const trimmedLine = line.trim();
-        
-        // 檢查是否為有序列表 (1. 2. 3.)
-        const orderedMatch = trimmedLine.match(/^\d+\.\s*(.+)$/);
-        // 檢查是否為無序列表 (- * +)
-        const unorderedMatch = trimmedLine.match(/^[-*+]\s*(.+)$/);
-        
-        if (orderedMatch) {
-            listItems.push({
-                type: 'ordered',
-                content: orderedMatch[1].trim(),
-                index: index
-            });
-        } else if (unorderedMatch) {
-            listItems.push({
-                type: 'unordered',
-                content: unorderedMatch[1].trim(),
-                index: index
-            });
-        } else if (trimmedLine) {
-            // 直接文字行，不管是否為標準列表格式
-            listItems.push({
-                type: 'plain',
-                content: trimmedLine,
-                index: index
-            });
-        }
-    });
+  lines.forEach((line, index) => {
+    const trimmedLine = line.trim();
 
-    if (listItems.length === 0) return '';
+    // Ordered list line (1. 2. 3.)
+    const orderedMatch = trimmedLine.match(/^\d+\.\s*(.+)$/);
+    // Unordered list line (- * +)
+    const unorderedMatch = trimmedLine.match(/^[-*+]\s*(.+)$/);
 
-    // 生成可點擊的列表項目，每個都有灰色覆蓋層
-    const listItemsHtml = listItems.map((item, index) => {
-        const itemNumber = index + 1; // 從 1 開始計數
-        const content = item.content;
-        
-        return `<div class="other-data-item" data-index="${item.index}" onclick="toggleOtherDataItem(this)">
-                    <div class="other-data-content-text">${escapeHtml(content)}</div>
-                    <div class="other-data-overlay" data-item-number="${itemNumber}"></div>
-                </div>`;
-    }).join('');
+    if (orderedMatch) {
+      listItems.push({
+        type: "ordered",
+        content: orderedMatch[1].trim(),
+        index: index,
+      });
+    } else if (unorderedMatch) {
+      listItems.push({
+        type: "unordered",
+        content: unorderedMatch[1].trim(),
+        index: index,
+      });
+    } else if (trimmedLine) {
+      // Plain text fallback line
+      listItems.push({
+        type: "plain",
+        content: trimmedLine,
+        index: index,
+      });
+    }
+  });
 
-    return `<div class="other-data-list">${listItemsHtml}</div>`;
+  if (listItems.length === 0) return "";
+
+  // Render native details list items
+  const listItemsHtml = listItems
+    .map((item, index) => {
+      const itemNumber = index + 1; // 1-based index
+      const content = item.content;
+
+      return `<details class="other-data-item" data-index="${item.index}">
+                  <summary>其他資料 #${itemNumber}</summary>
+                  <div class="other-data-content-text">${escapeHtml(content)}</div>
+              </details>`;
+    })
+    .join("");
+
+  return `<div class="other-data-list">${listItemsHtml}</div>`;
 }
 
 function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
 }
 
-// ==================== 事件處理 ====================
-function bindRevealButtonEvent() {
-    const button = document.querySelector('.reveal-button');
-    if (!button) return;
-
-    button.addEventListener('click', function () {
-        const soupTitle = this.getAttribute('data-soup');
-        const bottom = document.getElementById(`bottom-${soupTitle}`);
-
-        const isRevealed = bottom.classList.toggle('show');
-
-        this.innerHTML = isRevealed ? '<md-icon>visibility_off</md-icon>隱藏真相' : '<md-icon>visibility</md-icon>揭曉真相';
-    });
-}
-
-function toggleOtherDataItem(element) {
-    const isRevealed = element.classList.toggle('revealed');
-    // 使用 CSS 類別來控制顯示/隱藏，而不是直接操作 style
-    // 這樣可以確保所有 CSS 屬性都正確應用
-}
-
-// ==================== 導航功能 ====================
+// ==================== Navigation ====================
 function goBackToList() {
-    window.location.href = 'soup.html';
+  window.location.href = "soup.html";
 }
 
-function goToPromptPage() {
-    window.open('prompt.html', '_blank');
-}
-
-// ==================== 下載功能 ====================
+// ==================== Export ====================
 function downloadAsMarkdown(soupTitle) {
-    const data = soupData[soupTitle];
-    if (!data) return;
+  const data = soupData[soupTitle];
+  if (!data) return;
 
-    // 安全檢查函數
-    const safeCheck = (value) => {
-        return value && typeof value === 'string' && value.trim() !== '';
-    };
+  // Safe non-empty string check
+  const safeCheck = (value) => {
+    return value && typeof value === "string" && value.trim() !== "";
+  };
 
-    let markdownContent = `# ${soupTitle}\n\n`;
-    markdownContent += `> ${data.類型}\n\n`;
+  let markdownContent = `# ${soupTitle}\n\n`;
+  markdownContent += `> ${data.類型}\n\n`;
 
-    // 添加規則（如果存在）
-    if (safeCheck(data.規則)) {
-        markdownContent += `## 遊戲規則\n\n${data.規則}\n\n`;
-    }
+  // Add rules block when present
+  if (safeCheck(data.規則)) {
+    markdownContent += `## 遊戲規則\n\n${data.規則}\n\n`;
+  }
 
-    // 添加其他資料（如果存在）
-    if (safeCheck(data.其他資料)) {
-        markdownContent += `## 其他資料\n\n${data.其他資料}\n\n`;
-    }
+  // Add additional notes block when present
+  if (safeCheck(data.其他資料)) {
+    markdownContent += `## 其他資料\n\n${data.其他資料}\n\n`;
+  }
 
-    // 添加湯面和湯底內容
-    markdownContent += `## 湯面\n\n${data.湯面}\n\n`;
-    markdownContent += `## 湯底\n\n${data.湯底}\n\n`;
+  // Add puzzle and solution blocks
+  markdownContent += `## 湯面\n\n${data.湯面}\n\n`;
+  markdownContent += `## 湯底\n\n${data.湯底}\n\n`;
 
-    // 添加主持人手冊（如果存在）
-    if (safeCheck(data.主持人手冊)) {
-        markdownContent += `## 主持人手冊\n\n${data.主持人手冊}\n\n`;
-    }
+  // Add host manual block when present
+  if (safeCheck(data.主持人手冊)) {
+    markdownContent += `## 主持人手冊\n\n${data.主持人手冊}\n\n`;
+  }
 
-    // 添加標籤資訊
-    const tags = [data.ai ? 'AI' : null, soupTitle.includes('規則怪談') ? '規則怪談' : '海龜湯'].filter(Boolean);
-    if (tags.length > 0) {
-        markdownContent += `---\n\n**標籤：** ${tags.join(', ')}\n`;
-    }
+  // Add tag metadata
+  const tags = [
+    data.ai ? "AI" : null,
+    soupTitle.includes("規則怪談") ? "規則怪談" : "海龜湯",
+  ].filter(Boolean);
+  if (tags.length > 0) {
+    markdownContent += `---\n\n**Tags:** ${tags.join(", ")}\n`;
+  }
 
-    const blob = new Blob([markdownContent], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${soupTitle}.md`;
-    a.click();
+  const blob = new Blob([markdownContent], {
+    type: "text/markdown;charset=utf-8",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${soupTitle}.md`;
+  a.click();
 
-    URL.revokeObjectURL(url);
-    showSnackbar(`✅ 已開始下載：${soupTitle}.md`);
+  URL.revokeObjectURL(url);
+  showSnackbar(`已開始下載：${soupTitle}.md`);
 }
 
-// ==================== UI通知功能 ====================
+// ==================== UI Notifications ====================
 function showSnackbar(message) {
-    const container = document.getElementById('snackbar-container');
-    const snackbar = document.createElement('md-snackbar');
+  if (typeof ot !== "undefined" && typeof ot.toast === "function") {
+    ot.toast(message);
+    return;
+  }
 
-    snackbar.labelText = message;
-    snackbar.open = true;
-
-    container.appendChild(snackbar);
-
-    snackbar.addEventListener('closed', () => {
-        container.removeChild(snackbar);
-    });
+  window.alert(message);
 }

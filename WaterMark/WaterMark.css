@@ -1,379 +1,176 @@
-@charset "utf-8";
-
-/**
- * WaterMark 照片編輯器樣式表
- * 版本: 4.0.0 - Material 3 重制版
- * 描述: 基於 Material 3 設計系統的照片編輯和水印應用
- * 作者: OldCookie
- * 建立日期: 2025年
- * 
- * 此樣式表定義了網頁上所有元素的外觀，包括:
- * - Material 3 深色主題界面
- * - 上傳區域交互效果
- * - 裁剪工具控件樣式
- * - 預覽和下載區域樣式
- * - 響應式設計調整
- */
-
-@import url('../shared/material3-common.css');
-
-/* 自定義選擇禁用 */
-body {
-    max-width: 1200px;
-    margin: 0 auto;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+.watermark-page {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: 1.5rem 1rem 2.5rem;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: var(--md-sys-color-primary);
-    font: var(--md-sys-typescale-headline-medium-font);
+.watermark-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.watermark-header h1 {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.25rem;
 }
 
 .upload-area {
-    border: 2px dashed var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-large);
-    padding: 30px;
-    text-align: center;
-    cursor: pointer;
-    color: var(--md-sys-color-on-surface-variant);
-    margin-bottom: 20px;
-    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
-    position: relative;
-    background-color: var(--md-sys-color-surface-container-low);
+  border: 2px dashed var(--border);
+  text-align: center;
+  cursor: pointer;
 }
 
 .upload-area.hidden {
-    display: none;
+  display: none;
 }
 
 .upload-area.dragover {
-    border-color: var(--md-sys-color-primary);
-    color: var(--md-sys-color-on-primary-container);
-    background-color: var(--md-sys-color-primary-container);
-    transform: scale(1.02);
-}
-
-.upload-area p {
-    margin: 0;
-    font: var(--md-sys-typescale-body-large-font);
+  border-color: var(--primary);
 }
 
 #fileInput {
-    display: none;
+  display: none;
+}
+
+#processBtn[hidden],
+#previewSection[hidden] {
+  display: none !important;
+}
+
+.images-stack {
+  display: grid;
+  gap: 1rem;
 }
 
 .image-container {
-    margin-bottom: 30px;
-    position: relative;
-    border: 1px solid var(--md-sys-color-outline-variant);
-    padding: 10px;
-    border-radius: var(--md-sys-shape-corner-large);
-    background-color: var(--md-sys-color-surface-container-low);
-    box-shadow: var(--md-sys-elevation-level2);
-    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+  display: flex;
+  flex-direction: column;
+  min-height: 800px;
 }
 
-.image-container:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--md-sys-elevation-level3);
+.image-container > article.card.image-cropper {
+  max-height: 800px;
+  min-height: 450px;
+  height: clamp(450px, 70vh, 800px);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--radius);
+  position: relative;
 }
 
-.cancel-button {
-    background-color: var(--md-sys-color-error);
-    color: var(--md-sys-color-on-error);
-    border: none;
-    border-radius: var(--md-sys-shape-corner-medium);
-    cursor: pointer;
-    padding: 12px 0;
-    font: var(--md-sys-typescale-label-large-font);
-    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
-    width: 100%;
-    margin-bottom: 10px;
+.image-container > article.card.image-cropper img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  width: auto;
+  object-fit: contain;
+  margin: 0 auto;
 }
 
-.cancel-button.sure {
-    background-color: var(--md-sys-color-error-container);
-    color: var(--md-sys-color-on-error-container);
+.image-container > article.card.image-cropper .cropper-container {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
 }
 
-.cancel-button:hover {
-    box-shadow: var(--md-sys-elevation-level1);
-    transform: translateY(-1px);
+.image-container > article.card.image-cropper .cropper-wrap-box,
+.image-container > article.card.image-cropper .cropper-canvas,
+.image-container > article.card.image-cropper .cropper-drag-box,
+.image-container > article.card.image-cropper .cropper-crop-box,
+.image-container > article.card.image-cropper .cropper-view-box {
+  overflow: hidden;
 }
 
-.cropper-wrapper {
-    max-width: 100%;
-    max-height: 400px;
-    margin-bottom: 10px;
-    position: relative;
-    overflow: hidden;
-    border-radius: var(--md-sys-shape-corner-medium);
+.image-container > article.card.image-cropper .cropper-container img {
+  max-width: none !important;
 }
 
-.cropper-wrapper img {
-    max-width: 100%;
-    display: block;
-    margin: 0 auto;
-    border-radius: var(--md-sys-shape-corner-medium);
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
+.preview-item img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: var(--radius);
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 .controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 12px;
+  margin-top: 0.75rem;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
 }
 
-.aspect-btn {
-    padding: 10px 16px;
-    background-color: var(--md-sys-color-primary);
-    color: var(--md-sys-color-on-primary);
-    border: none;
-    border-radius: var(--md-sys-shape-corner-medium);
-    cursor: pointer;
-    font: var(--md-sys-typescale-label-large-font);
-    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
-    flex: 1 1 30%;
-    max-width: 100px;
-    text-align: center;
+.controls li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.aspect-btn.active {
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
-    transform: scale(1.05);
-    box-shadow: var(--md-sys-elevation-level2);
+.controls button {
+  min-width: 4.5rem;
 }
 
-.aspect-btn:hover {
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
-    box-shadow: var(--md-sys-elevation-level1);
+.action-row {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+  padding: 0;
+  list-style: none;
 }
 
 .preview-section {
-    display: none;
-    margin-top: 40px;
-    background-color: var(--md-sys-color-surface-container-low);
-    padding: 20px;
-    border-radius: var(--md-sys-shape-corner-large);
-    box-shadow: var(--md-sys-elevation-level2);
+  margin-top: 1.5rem;
 }
 
 .preview-section h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: var(--md-sys-color-on-surface);
-    font: var(--md-sys-typescale-title-large-font);
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
-.preview-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
-    max-width: 100%;
-    margin: 0 auto;
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
 }
 
-.preview-container img {
-    width: 100%;
-    height: auto;
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-large);
-    box-shadow: var(--md-sys-elevation-level1);
-    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
+.preview-item {
+  display: grid;
+  gap: 0.5rem;
 }
 
-.preview-container img:hover {
-    transform: scale(1.02);
-    box-shadow: var(--md-sys-elevation-level3);
+.preview-item menu {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.preview-image-wrapper {
-    position: relative;
-    margin-bottom: 20px;
-}
-
-.download-single-button {
-    padding: 8px 16px;
-    background-color: var(--md-sys-color-tertiary);
-    color: var(--md-sys-color-on-tertiary);
-    border: none;
-    border-radius: var(--md-sys-shape-corner-medium);
-    cursor: pointer;
-    font: var(--md-sys-typescale-label-medium-font);
-    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
-    display: block;
-    margin: 10px auto 0;
-    width: 80%;
-    max-width: 120px;
-}
-
-.download-single-button:hover {
-    background-color: var(--md-sys-color-tertiary-container);
-    color: var(--md-sys-color-on-tertiary-container);
-    box-shadow: var(--md-sys-elevation-level1);
-}
-
-.download-button,
-.process-button {
-    padding: 14px 24px;
-    background-color: var(--md-sys-color-tertiary);
-    color: var(--md-sys-color-on-tertiary);
-    border: none;
-    border-radius: var(--md-sys-shape-corner-large);
-    cursor: pointer;
-    margin: 20px auto;
-    display: block;
-    font: var(--md-sys-typescale-label-large-font);
-    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
-    max-width: 200px;
-    width: 100%;
-}
-
-.download-button:hover,
-.process-button:hover {
-    background-color: var(--md-sys-color-tertiary-container);
-    color: var(--md-sys-color-on-tertiary-container);
-    transform: translateY(-2px);
-    box-shadow: var(--md-sys-elevation-level2);
-}
-
-.download-button:active,
-.process-button:active {
-    transform: translateY(0);
-}
-
-.download-button:disabled,
-.process-button:disabled {
-    background-color: var(--md-sys-color-surface-variant);
-    color: var(--md-sys-color-on-surface-variant);
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-#processBtn {
-    display: none;
-}
-
-/* 響應式調整 */
 @media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
+  .watermark-page {
+    padding: 1rem 0.75rem 2rem;
+  }
 
-    h1 {
-        font: var(--md-sys-typescale-headline-small-font);
-        margin-bottom: 15px;
-    }
+  .image-container > article.card.image-cropper {
+    max-height: 500px;
+    min-height: 300px;
+    height: clamp(300px, 60vh, 500px);
+  }
 
-    .upload-area {
-        padding: 20px;
-    }
-
-    .upload-area p {
-        font: var(--md-sys-typescale-body-medium-font);
-    }
-
-    .image-container {
-        padding: 8px;
-        margin-bottom: 20px;
-    }
-
-    .controls {
-        flex-direction: row;
-        justify-content: space-between;
-        margin-top: 8px;
-    }
-
-    .aspect-btn {
-        flex: 1;
-        padding: 10px 5px;
-        font-size: 14px;
-        max-width: 30%;
-        min-height: 44px;
-        /* 觸控友好 */
-    }
-
-    .cropper-wrapper {
-        max-height: 300px;
-    }
-
-    .cancel-button {
-        font-size: 14px;
-        padding: 10px 0;
-        min-height: 44px;
-    }
-
-    .preview-container {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 10px;
-    }
-
-    .download-button,
-    .process-button {
-        padding: 12px 20px;
-        font-size: 15px;
-        margin: 15px auto;
-        min-height: 44px;
-    }
-
-    .download-single-button {
-        padding: 8px 12px;
-        font-size: 13px;
-        width: 90%;
-        min-height: 44px;
-    }
-}
-
-@media (max-width: 480px) {
-    h1 {
-        font: var(--md-sys-typescale-title-large-font);
-    }
-
-    .upload-area {
-        padding: 15px;
-    }
-
-    .cropper-wrapper {
-        max-height: 250px;
-    }
-
-    .aspect-btn {
-        padding: 8px 5px;
-        font-size: 13px;
-        min-height: 40px;
-    }
-
-    .preview-container {
-        grid-template-columns: 1fr;
-    }
-
-    .download-button,
-    .process-button {
-        max-width: 100%;
-        min-height: 48px;
-    }
-
-    .download-single-button {
-        min-height: 40px;
-    }
+  .preview-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
 }
