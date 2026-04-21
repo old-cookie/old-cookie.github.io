@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LYWSD02 Clock sync</title>
+  <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css" />
+  <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
+  <link rel="stylesheet" href="LYWSD02ClockSync.css" />
+  <script src="LYWSD02ClockSync.js" defer></script>
+</head>
+
+<body class="oat-theme">
+  <main class="container clock-sync-page">
+    <header class="card page-header">
+      <h1>LYWSD02 Clock sync</h1>
+      <p>
+        Xiaomi Mijia BT4.0 Wireless Smart Electric Digital Clock <br>
+        Indoor &amp; Outdoor Hygrometer Thermometer
+      </p>
+      <img class="device-image" src="assets/Xiaomi%20Mijia%20BT4.0%20Wireless%20Smart%20Electric%20Digital%20Clock.webp"
+        alt="Xiaomi Mijia BT4.0 Wireless Smart Electric Digital Clock" />
+    </header>
+    <section class="card" aria-label="Time sync">
+      <h2>Time sync</h2>
+      <form class="sync-form" onsubmit="updateTime(); return false;">
+        <output id="currentTime" class="current-time" aria-live="polite"></output>
+        <menu class="buttons action-row">
+          <button id="updateTimeButton" type="submit">Update time</button>
+        </menu>
+      </form>
+    </section>
+    <p class="helper-text">
+      Enable <strong>Experimental Web Platform features</strong> in your browser to allow the clock to sync time. <br>
+      <a href="chrome://flags/#enable-experimental-web-platform-features/">Chrome</a>
+      <a href="edge://flags/#enable-experimental-web-platform-features">Edge</a>
+      <a href="opera://flags/#enable-experimental-web-platform-features">Opera</a>
+    </p>
+  </main>
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+body {
+    margin: 0;
+}
+
+.clock-sync-page {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem 0;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.page-header p,
+.helper-text {
+    margin: 0;
+}
+
+.sync-form {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.current-time {
+    display: block;
+    min-height: 1.5rem;
+}
+
+.device-image {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.action-row {
+    margin: 0;
+    align-items: center;
+}
