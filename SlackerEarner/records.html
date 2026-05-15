@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Slacker Earner Records</title>
+    <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css">
+    <link rel="stylesheet" href="SlackerEarner.css">
+    <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
+</head>
+
+<body>
+    <header class="app-header">
+        <h1>Slacker Earner</h1>
+        <div class="controls">
+            <button id="back-home" data-variant="secondary" type="button">Home</button>
+            <button id="open-settings" data-variant="secondary" type="button">Settings</button>
+        </div>
+    </header>
+
+    <main class="app-grid records-page">
+        <section class="card">
+            <h2 data-i18n="records">Records</h2>
+            <div class="records-meta">
+                <div><strong data-i18n="total">Total</strong>: <span id="records-total">0</span></div>
+                <div><strong data-i18n="hours">Hours</strong>: <span id="records-hours">0h</span></div>
+            </div>
+            <div class="table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-i18n="type">Type</th>
+                            <th data-i18n="date">Date</th>
+                            <th data-i18n="start">Start</th>
+                            <th data-i18n="end">End</th>
+                            <th data-i18n="duration">Duration</th>
+                            <th data-i18n="delete">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody id="records"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="records.js"></script>
+</body>
+
+</html>

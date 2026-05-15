@@ -1,0 +1,19 @@
+{
+    "$schema": "https://agentskills.io/schemas/agent-skills-discovery-v0.2.0.json",
+    "skills": [
+        {
+            "name": "robots.txt",
+            "type": "discovery-resource",
+            "description": "Crawl rules and sitemap reference for the public site.",
+            "url": "https://old-cookie.github.io/robots.txt",
+            "sha256": "0C7E8222FA17A811D2D3BBFDC7BBD25F960835FA9AEE06DEF2E1223E5F4F25B3"
+        },
+        {
+            "name": "sitemap.xml",
+            "type": "discovery-resource",
+            "description": "Canonical public URL list for the site.",
+            "url": "https://old-cookie.github.io/sitemap.xml",
+            "sha256": "3F572D3044C58D6F7E0B956150F34F7CEF2BBFCBCE33601264CDFCA36CA7756D"
+        }
+    ]
+}

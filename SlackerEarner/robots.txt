@@ -1,0 +1,47 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /tmp/
+Disallow: /drafts/
+Disallow: /slacker-state.json
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /tmp/
+Disallow: /drafts/
+Disallow: /slacker-state.json
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /tmp/
+Disallow: /drafts/
+Disallow: /slacker-state.json
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /tmp/
+Disallow: /drafts/
+Disallow: /slacker-state.json
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /tmp/
+Disallow: /drafts/
+Disallow: /slacker-state.json
+
+Sitemap: https://old-cookie.github.io/sitemap.xml
+Content-Signal: ai-train=no, search=yes, ai-input=no

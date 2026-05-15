@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Slacker Earner Settings</title>
+    <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css">
+    <link rel="stylesheet" href="SlackerEarner.css">
+    <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
+</head>
+
+<body>
+    <header class="app-header">
+        <h1>Slacker Earner</h1>
+        <div class="controls">
+            <button id="back-home" data-variant="secondary" type="button">Home</button>
+            <button id="open-records" data-variant="secondary" type="button">Records</button>
+        </div>
+    </header>
+
+    <main class="app-grid">
+        <section class="card settings">
+            <h2 data-i18n="settings">Settings</h2>
+            <div class="settings-actions">
+                <label class="field" for="lang-select">
+                    <span data-i18n="language">Language</span>
+                    <select id="lang-select">
+                        <option value="en_US">English</option>
+                        <option value="zh_HK">繁體中文</option>
+                    </select>
+                </label>
+                <menu class="buttons settings-buttons">
+                    <button id="export-json" data-variant="secondary" type="button">Export JSON</button>
+                    <button id="import-json" data-variant="secondary" type="button">Import JSON</button>
+                    <button id="export-csv" data-variant="secondary" type="button">Export CSV</button>
+                    <input id="import-csv" type="file" accept="text/csv" style="display:none">
+                </menu>
+            </div>
+        </section>
+    </main>
+
+    <dialog id="import-modal" aria-labelledby="import-modal-title">
+        <form method="dialog">
+            <h3 id="import-modal-title">Import</h3>
+            <div id="import-modal-body">
+                <div id="import-errors" style="color:#900"></div>
+                <div class="import-options">
+                    <label><input type="radio" name="import-mode" value="merge" checked> Merge with existing
+                        data</label>
+                    <label><input type="radio" name="import-mode" value="overwrite"> Overwrite existing data</label>
+                </div>
+            </div>
+            <menu class="modal-actions" style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
+                <button id="import-confirm" data-variant="primary">Confirm</button>
+                <button id="import-cancel">Cancel</button>
+            </menu>
+        </form>
+    </dialog>
+
+    <script src="settings.js"></script>
+</body>
+
+</html>
