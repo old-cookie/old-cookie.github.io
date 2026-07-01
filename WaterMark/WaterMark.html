@@ -1,103 +1,47 @@
 ﻿<!doctype html>
-<!--
-/**
- * WaterMark 照片編輯器與水印應用
- * 版本: 3.1.0
- * 描述: 提供簡易的網頁照片編輯與添加水印功能
- * 作者: OldCookie
- * 建立日期: 2025年
- * 
- * 技術棧:
- * - HTML5 (頁面結構)
- * - CSS3 (頁面樣式，來自 WaterMark.css + Oat UI)
- * - JavaScript (交互功能，來自 WaterMark.js)
- * - Cropper.js v2.x (外部裁剪庫)
- * 
- * 使用說明:
- * 1. 上傳最多4張照片
- * 2. 對每張照片進行裁剪設置
- * 3. 使用"處理圖片"按鈕添加水印
- * 4. 預覽並下載處理後的圖片
- */
--->
 <html lang="zh-HK">
-  <head>
-    <meta charset="utf-8" />
-    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
-    <meta name="description" content="水印" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="apple-mobile-web-app-title" content="水印" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <title>照片編輯器與水印</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css" />
-    <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>照片編輯器與水印</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+  <link rel="stylesheet" href="WaterMark.css" />
+</head>
 
-    <!-- Cropper.js CSS -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css"
-    />
+<body>
+  <main class="container">
 
-    <!-- 自定義 CSS -->
-    <link href="WaterMark.css" rel="stylesheet" />
-  </head>
+    <hgroup>
+      <h1>照片編輯器與水印</h1>
+      <p>簡易的網頁照片編輯與添加水印功能</p>
+    </hgroup>
 
-  <body>
-    <main class="container watermark-page">
-      <header class="watermark-header">
-        <h1>照片編輯器與水印</h1>
-        <p>簡易的網頁照片編輯與添加水印功能</p>
-      </header>
+    <article class="upload-area" id="uploadArea">
+      <header>上傳照片</header>
+      <input type="file" id="fileInput" accept="image/*">
+    </article>
 
-      <section
-        class="card upload-area"
-        id="uploadArea"
-        role="button"
-        tabindex="0"
-        aria-controls="fileInput"
-        aria-label="將照片拖曳到此處或點擊上傳"
-        aria-describedby="uploadHelperText"
-      >
-        <p>將您的照片拖曳到此處或點擊上傳</p>
-        <small id="uploadHelperText">(最多 4 張照片)</small>
-        <input
-          type="file"
-          id="fileInput"
-          accept="image/*"
-          multiple
-          aria-label="選擇照片上傳"
-        />
-      </section>
+    <section id="imagesContainer"></section>
 
-      <section
-        id="imagesContainer"
-        class="images-stack"
-        aria-live="polite"
-      ></section>
+    <button id="processBtn" hidden>處理圖片</button>
 
-      <menu class="buttons action-row" aria-label="圖片處理操作">
-        <button id="processBtn" title="處理圖片並添加水印" hidden>
-          處理圖片
-        </button>
-      </menu>
+    <article id="previewSection" hidden>
+      <header>預覽</header>
+      <div class="grid" id="previewContainer"></div>
+      <footer>
+        <button id="downloadAllBtn">全部下載</button>
+      </footer>
+    </article>
 
-      <section class="card preview-section" id="previewSection" hidden>
-        <h2>預覽</h2>
-        <div class="preview-grid" id="previewContainer"></div>
-        <menu class="buttons action-row" aria-label="下載操作">
-          <button id="downloadAllBtn" title="下載所有處理過的圖片">
-            全部下載
-          </button>
-        </menu>
-      </section>
-    </main>
+  </main>
 
-    <!-- Cropper.js JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
-    <!-- 自定義 JS -->
-    <script src="WaterMark.js"></script>
-  </body>
+  <script src="State.js"></script>
+  <script src="File.js"></script>
+  <script src="https://unpkg.com/cropperjs"></script>
+  <script src="Cropper.js"></script>
+  <script src="UI.js"></script>
+  <script src="WaterMark.js"></script>
+</body>
+
 </html>

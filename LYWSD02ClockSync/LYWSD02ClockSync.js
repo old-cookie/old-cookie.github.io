@@ -82,41 +82,65 @@ function getCharecteristics(service, characteristic) {
         });
 }
 function notify(message) {
-    let text = String(message);
-    let options;
-
-    // Map known message patterns to Oat toast variants.
-    if (/error/i.test(text)) {
-        options = { variant: 'danger' };
-    } else if (text === 'Time updated.') {
-        options = { variant: 'success' };
-    }
+    let text = message instanceof Error ? message.message : String(message);
+    let progress = document.getElementById('syncProgress');
+    let status = document.getElementById('syncStatus');
 
     console.log(text);
 
-    if (typeof ot !== 'undefined' && typeof ot.toast === 'function') {
-        ot.toast(text, '', options);
+    if (status) {
+        status.textContent = text;
+        if (/error/i.test(text) || message instanceof Error) {
+            status.setAttribute('role', 'alert');
+        } else {
+            status.removeAttribute('role');
+        }
+    }
+
+    if (!progress) {
         return;
     }
-    window.alert(text);
+
+    if (/Connecting\.\.\./.test(text)) {
+        progress.value = 25;
+    } else if (/Getting primary service\.\.\./.test(text)) {
+        progress.value = 50;
+    } else if (/Getting characteristic\.\.\./.test(text)) {
+        progress.value = 75;
+    } else if (/Writting time value\.\.\./.test(text)) {
+        progress.value = 90;
+    } else if (text === 'Time updated.') {
+        progress.value = 100;
+    } else if (/error/i.test(text) || message instanceof Error) {
+        progress.value = 100;
+    }
 }
 function setSyncBusy(isBusy) {
     let button = document.getElementById('updateTimeButton');
+    let progress = document.getElementById('syncProgress');
+    let status = document.getElementById('syncStatus');
     if (!button) {
         return;
     }
-    // Use Oat's button spinner state while BLE sync is running.
     if (isBusy) {
         button.disabled = true;
         button.setAttribute('aria-busy', 'true');
-        button.setAttribute('data-spinner', 'small');
-        button.textContent = 'Loading';
+        if (progress) {
+            progress.hidden = false;
+            progress.value = 10;
+        }
+        if (status) {
+            status.textContent = 'Updating time...';
+            status.removeAttribute('role');
+        }
         return;
     }
     button.disabled = false;
     button.removeAttribute('aria-busy');
-    button.removeAttribute('data-spinner');
-    button.textContent = 'Update time';
+    if (progress) {
+        progress.hidden = true;
+        progress.value = 0;
+    }
 }
 function getCurrentTime() {
     // The device stores zone as whole hours and local seconds separately.

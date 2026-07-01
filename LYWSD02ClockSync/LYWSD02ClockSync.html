@@ -2,41 +2,77 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LYWSD02 Clock sync</title>
-  <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css" />
-  <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
-  <link rel="stylesheet" href="LYWSD02ClockSync.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="LYWSD02ClockSync.css">
   <script src="LYWSD02ClockSync.js" defer></script>
 </head>
 
-<body class="oat-theme">
-  <main class="container clock-sync-page">
-    <header class="card page-header">
-      <h1>LYWSD02 Clock sync</h1>
-      <p>
-        Xiaomi Mijia BT4.0 Wireless Smart Electric Digital Clock <br>
-        Indoor &amp; Outdoor Hygrometer Thermometer
-      </p>
+<body>
+  <main class="container">
+
+    <nav>
+      <ul>
+        <li><strong>oldcookie</strong></li>
+      </ul>
+      <ul>
+
+        <li><a href="../index.html">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <header>
+      <hgroup>
+        <h1>LYWSD02 Clock sync</h1>
+        <p>
+          Xiaomi Mijia BT4.0 Wireless Smart Electric Digital Clock <br>
+          Indoor &amp; Outdoor Hygrometer Thermometer
+        </p>
+      </hgroup>
+    </header>
+
+
+
+
+    <figure class="device-figure">
       <img class="device-image" src="assets/Xiaomi%20Mijia%20BT4.0%20Wireless%20Smart%20Electric%20Digital%20Clock.webp"
         alt="Xiaomi Mijia BT4.0 Wireless Smart Electric Digital Clock" />
-    </header>
-    <section class="card" aria-label="Time sync">
-      <h2>Time sync</h2>
+    </figure>
+
+
+
+
+
+
+
+
+
+
+    <section aria-labelledby="time-sync-heading">
+      <h2 id="time-sync-heading">Time sync</h2>
       <form class="sync-form" onsubmit="updateTime(); return false;">
         <output id="currentTime" class="current-time" aria-live="polite"></output>
-        <menu class="buttons action-row">
-          <button id="updateTimeButton" type="submit">Update time</button>
-        </menu>
+        <progress id="syncProgress" value="0" max="100" hidden>Updating</progress>
+        <p id="syncStatus" class="sync-status" aria-live="polite"></p>
+        <button id="updateTimeButton" type="submit">Update time</button>
       </form>
     </section>
-    <p class="helper-text">
-      Enable <strong>Experimental Web Platform features</strong> in your browser to allow the clock to sync time. <br>
-      <a href="chrome://flags/#enable-experimental-web-platform-features/">Chrome</a>
-      <a href="edge://flags/#enable-experimental-web-platform-features">Edge</a>
-      <a href="opera://flags/#enable-experimental-web-platform-features">Opera</a>
-    </p>
+
+
+
+    <footer>
+      <p class="helper-text">
+        Enable <strong>Experimental Web Platform features</strong> in your browser to allow the clock to sync time. <br>
+        <a href="chrome://flags/#enable-experimental-web-platform-features">Chrome</a>
+        <a href="edge://flags/#enable-experimental-web-platform-features">Edge</a>
+        <a href="opera://flags/#enable-experimental-web-platform-features">Opera</a>
+      </p>
+    </footer>
+
+
   </main>
 </body>
 
