@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-HK">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Avatar Preview</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+    <link rel="stylesheet" href="AvatarPreview.css" />
+</head>
+
+<body>
+    <main class="container avatar-app">
+        <hgroup>
+            <h1>個人頭像裁切器</h1>
+        </hgroup>
+
+        <section class="grid app-grid">
+            <article class="panel">
+                <article class="upload-area" id="uploadArea">
+                    <input type="file" id="fileInput" accept="image/*" multiple>
+                </article>
+
+                <div class="status-row" aria-live="polite">
+                    <span id="fileStatus">尚未上傳照片。</span>
+                    <button type="button" class="secondary" id="clearBtn" hidden>重新選擇</button>
+                </div>
+
+                <div class="crop-shell" id="cropShell" hidden>
+                    <div class="crop-frame">
+                        <div class="cropper-host" id="cropperHost"></div>
+                        <div class="circle-overlay" aria-hidden="true"></div>
+                    </div>
+                </div>
+
+                <footer class="action-row">
+                    <button type="button" id="downloadBtn" hidden disabled>下載 PNG</button>
+                </footer>
+            </article>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/cropperjs"></script>
+    <script src="AvatarPreview.js"></script>
+</body>
+
+</html>

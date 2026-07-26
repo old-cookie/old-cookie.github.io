@@ -1,0 +1,81 @@
+.avatar-app {
+    padding-block: 1.5rem 2.5rem;
+}
+
+.eyebrow,
+.upload-subtitle,
+.status-row {
+    color: var(--pico-muted-color);
+}
+
+.upload-card {
+    display: grid;
+    gap: .25rem;
+    justify-items: center;
+    padding: 1.5rem;
+    border: 1px dashed var(--pico-muted-border-color);
+    border-radius: var(--pico-border-radius);
+    cursor: pointer;
+    text-align: center;
+}
+
+.upload-card input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.status-row,
+.action-row {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.crop-shell {
+    margin-top: 1rem;
+}
+
+.crop-frame {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--pico-border-radius);
+}
+
+.cropper-host {
+    position: absolute;
+    inset: 0;
+}
+
+.cropper-host cropper-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.circle-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(40, 75, 99, 0.9);
+    box-shadow: 0 0 0 9999px rgba(255, 255, 255, 0.22);
+    pointer-events: none;
+}
+
+@media (max-width: 639px) {
+    .avatar-app {
+        padding-block: 1rem 2rem;
+    }
+
+    .status-row,
+    .action-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
