@@ -45,7 +45,7 @@ function handleFiles(files) {
       const imageContainer = UI_createImageCard(file.name, event.target.result);
       imagesContainer.appendChild(imageContainer);
 
-      const imgEl      = imageContainer.querySelector("img");
+      const imgEl = imageContainer.querySelector("img");
       const imgWrapper = imageContainer.querySelector(".image-cropper");
       const ratioButtons = Array.from(imageContainer.querySelectorAll(".controls button"));
 
@@ -59,7 +59,7 @@ function handleFiles(files) {
 /* ── 單張下載 ── */
 function downloadImage(dataURL, filename) {
   const link = document.createElement("a");
-  link.href     = dataURL;
+  link.href = dataURL;
   link.download = filename;
   document.body.appendChild(link);
   link.click();

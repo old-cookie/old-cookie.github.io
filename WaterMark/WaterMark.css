@@ -1,5 +1,8 @@
 .image-cropper {
-    height: clamp(28rem, 60vh, 44rem);
+    width: min(100%, calc(50vh * var(--cropper-aspect-ratio, 1)));
+    height: 50vh;
+    aspect-ratio: var(--cropper-aspect-ratio, 1);
+    margin-inline: auto;
 }
 
 .image-cropper cropper-canvas {
@@ -28,4 +31,3 @@
     justify-content: space-between;
     gap: 0.75rem;
 }
-

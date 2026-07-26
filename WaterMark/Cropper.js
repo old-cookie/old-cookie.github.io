@@ -63,28 +63,33 @@ function keepImageInsideCanvas(cropper) {
 
 function fitImageToContainer(cropper) {
     if (!cropper) return;
-    keepImageInsideCanvas(cropper);
     const selection = cropper.getCropperSelection?.();
     if (selection && typeof selection.$render === "function") selection.$render();
 }
 
-/* ── 比例設定 ── */
-function setCropperAspectRatio(cropper, ratio) {
-    const selection = cropper.getCropperSelection?.();
-    if (selection) selection.aspectRatio = ratio;
+function centerCropperImageOnce(cropper) {
+    if (!cropper) return;
+    keepImageInsideCanvas(cropper);
 }
 
-function syncSelectionToAspectRatio(cropper, ratio) {
-    const selection = cropper.getCropperSelection?.();
+function getImageAspectRatio(cropper) {
     const imageBounds = getCropperImageBounds(cropper);
-    if (!selection || !imageBounds || typeof selection.$change !== "function") return;
-
-    const nextRect = getSelectionRectForAspectRatio(imageBounds, ratio);
-    if (!nextRect) return;
-
-    selection.$change(nextRect.x, nextRect.y, nextRect.width, nextRect.height, ratio);
+    if (!imageBounds || !imageBounds.height) return NaN;
+    return imageBounds.width / imageBounds.height;
 }
 
+function setCropperFrameRatio(imgWrapper, ratio) {
+    if (!imgWrapper) return;
+    imgWrapper.style.setProperty("--cropper-aspect-ratio", String(ratio));
+}
+
+function setActiveRatioButton(ratioButtons, ratioValue) {
+    ratioButtons.forEach((button) => button.removeAttribute("aria-current"));
+    const target = ratioValue === 4 / 5 ? ratioButtons[1] : ratioButtons[0];
+    target?.setAttribute("aria-current", "true");
+}
+
+/* ── 比例設定 ── */
 /* ── 邊界限制 ── */
 function limitSelectionToCanvas(event) {
     if (suppressSelectionBoundaryCheck) return;
@@ -136,12 +141,20 @@ function initResizeObserver() {
     });
 }
 
-window.addEventListener("resize", () => {
-    cropperInstances.forEach((cropper) => {
-        refreshCropperLayout(cropper);
-        setTimeout(() => fitImageToContainer(cropper), 0);
+let cropperLayoutSyncFrame = null;
+
+function syncCropperLayoutOnViewportChange() {
+    if (cropperLayoutSyncFrame !== null) return;
+    cropperLayoutSyncFrame = requestAnimationFrame(() => {
+        cropperLayoutSyncFrame = null;
+        cropperInstances.forEach((cropper) => {
+            refreshCropperLayout(cropper);
+            fitImageToContainer(cropper);
+        });
     });
-});
+}
+
+window.addEventListener("resize", syncCropperLayoutOnViewportChange);
 
 /* ── 公開：初始化單一裁切器 ── */
 function Cropper_init(imgEl, imgWrapper, ratioButtons, imageContainer) {
@@ -159,22 +172,10 @@ function Cropper_init(imgEl, imgWrapper, ratioButtons, imageContainer) {
             container: imgWrapper,
             template: `
 <cropper-canvas background>
-  <cropper-image skewable translatable></cropper-image>
+    <cropper-image rotatable scalable skewable translatable></cropper-image>
   <cropper-shade hidden></cropper-shade>
-  <cropper-handle action="select" plain></cropper-handle>
-  <cropper-selection initial-coverage="0.5" movable resizable>
-    <cropper-grid role="grid" bordered covered></cropper-grid>
-    <cropper-crosshair centered></cropper-crosshair>
-    <cropper-handle action="move" theme-color="rgba(255,255,255,0.35)"></cropper-handle>
-    <cropper-handle action="n-resize"></cropper-handle>
-    <cropper-handle action="e-resize"></cropper-handle>
-    <cropper-handle action="s-resize"></cropper-handle>
-    <cropper-handle action="w-resize"></cropper-handle>
-    <cropper-handle action="ne-resize"></cropper-handle>
-    <cropper-handle action="nw-resize"></cropper-handle>
-    <cropper-handle action="se-resize"></cropper-handle>
-    <cropper-handle action="sw-resize"></cropper-handle>
-  </cropper-selection>
+        <cropper-handle action="move" plain theme-color="rgba(0,0,0,0.35)"></cropper-handle>
+    <cropper-selection initial-coverage="1" style="pointer-events: none;"></cropper-selection>
 </cropper-canvas>`,
         });
     } catch (error) {
@@ -186,20 +187,24 @@ function Cropper_init(imgEl, imgWrapper, ratioButtons, imageContainer) {
 
     const cropperImage = cropper.getCropperImage?.();
     const cropperSelection = cropper.getCropperSelection?.();
-
-    if (cropperSelection) {
-        cropperSelection.initialAspectRatio = 16 / 9;
-        cropperSelection.aspectRatio = 16 / 9;
-        cropperSelection.addEventListener("change", limitSelectionToCanvas);
-    }
+    let defaultFrameRatio = 16 / 9;
+    setCropperFrameRatio(imgWrapper, defaultFrameRatio);
 
     if (cropperImage && typeof cropperImage.$ready === "function") {
         cropperImage.$ready().then(() => {
+            const imageRatio = getImageAspectRatio(cropper);
+            const defaultFrameRatio = imageRatio > 0 && imageRatio < 1 ? 4 / 5 : 16 / 9;
+            setCropperFrameRatio(imgWrapper, defaultFrameRatio);
+            centerCropperImageOnce(cropper);
             fitImageToContainer(cropper);
             cropperSelection?.$render?.();
+            setActiveRatioButton(ratioButtons, defaultFrameRatio);
         });
     } else {
-        requestAnimationFrame(() => fitImageToContainer(cropper));
+        requestAnimationFrame(() => {
+            centerCropperImageOnce(cropper);
+            fitImageToContainer(cropper);
+        });
     }
 
     cropperInstances.push(cropper);
@@ -209,24 +214,17 @@ function Cropper_init(imgEl, imgWrapper, ratioButtons, imageContainer) {
     resizeObserver.observe(imgWrapper);
 
     // 比例按鈕事件
-    const [btnFree, btn169, btn45] = ratioButtons;
-    btn169.classList.add("active");
+    const [btn169, btn45] = ratioButtons;
+    setActiveRatioButton(ratioButtons, defaultFrameRatio);
 
     ratioButtons.forEach((button) => {
         button.addEventListener("click", () => {
             ratioButtons.forEach((b) => b.removeAttribute("aria-current"));
             button.setAttribute("aria-current", "true");
-
-            const ratio = button.dataset.ratio;
-            if (ratio === "free") {
-                setCropperAspectRatio(cropper, NaN);
-            } else if (ratio === "16:9") {
-                setCropperAspectRatio(cropper, 16 / 9);
-            } else {
-                setCropperAspectRatio(cropper, 4 / 5);
-            }
-
-            syncSelectionToAspectRatio(cropper, ratio === "free" ? NaN : Number.parseFloat(ratio));
+            const ratio = button.dataset.ratio === "4:5" ? 4 / 5 : 16 / 9;
+            setCropperFrameRatio(imgWrapper, ratio);
+            setActiveRatioButton(ratioButtons, ratio);
+            centerCropperImageOnce(cropper);
             setTimeout(() => fitImageToContainer(cropper), 0);
         });
     });

@@ -44,8 +44,7 @@ function UI_createImageCard(filename, imageSrc) {
     controls.setAttribute("aria-label", "裁剪比例");
 
     const ratios = [
-        { label: "自由", ratio: "free", ariaLabel: "自由比例裁剪", current: false },
-        { label: "16:9", ratio: "16:9", ariaLabel: "16:9 比例裁剪", current: true },
+        { label: "16:9", ratio: "16:9", ariaLabel: "16:9 比例裁剪", current: false },
         { label: "4:5", ratio: "4:5", ariaLabel: "4:5 比例裁剪", current: false },
     ];
 

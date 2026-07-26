@@ -14,20 +14,20 @@ function getEditedImageFilename(originalFilename, index) {
 /* ── 浮水印存在確認 ── */
 function checkWatermarkExists() {
   return new Promise((resolve) => {
-    const img   = new Image();
-    img.onload  = () => resolve(true);
+    const img = new Image();
+    img.onload = () => resolve(true);
     img.onerror = () => resolve(false);
-    img.src     = "assets/Cherryneko_Watermark_WithNameXUsername.svg";
+    img.src = "assets/Cherryneko_Watermark_WithNameXUsername.svg";
   });
 }
 
 /* ── 文字備援浮水印 ── */
 function addTextWatermark(ctx, canvas) {
   const text = "© WaterMark";
-  ctx.font          = `bold ${canvas.width / 30}px Arial`;
-  ctx.fillStyle     = "rgba(255, 255, 255, 0.7)";
-  ctx.textAlign     = "right";
-  ctx.textBaseline  = "bottom";
+  ctx.font = `bold ${canvas.width / 30}px Arial`;
+  ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+  ctx.textAlign = "right";
+  ctx.textBaseline = "bottom";
   ctx.fillText(text, canvas.width - 10, canvas.height - 10);
 }
 
@@ -39,15 +39,15 @@ async function compositeImage(cropper, originalFilename, index) {
   const imageData = canvas.toDataURL("image/png");
 
   return new Promise((resolve, reject) => {
-    const img   = new Image();
-    img.src     = imageData;
+    const img = new Image();
+    img.src = imageData;
     img.onerror = () => reject(new Error("處理圖像時出錯。"));
 
     img.onload = async () => {
-      const finalCanvas        = document.createElement("canvas");
-      finalCanvas.width        = img.width;
-      finalCanvas.height       = img.height;
-      const ctx                = finalCanvas.getContext("2d");
+      const finalCanvas = document.createElement("canvas");
+      finalCanvas.width = img.width;
+      finalCanvas.height = img.height;
+      const ctx = finalCanvas.getContext("2d");
       ctx.drawImage(img, 0, 0);
 
       const watermarkExists = await checkWatermarkExists();
@@ -55,13 +55,13 @@ async function compositeImage(cropper, originalFilename, index) {
       if (watermarkExists) {
         const watermark = new Image();
         watermark.setAttribute("crossOrigin", "Anonymous");
-        watermark.src     = "assets/Cherryneko_Watermark_WithNameXUsername.svg";
+        watermark.src = "assets/Cherryneko_Watermark_WithNameXUsername.svg";
         watermark.onerror = () => {
           addTextWatermark(ctx, finalCanvas);
           resolve({ dataURL: finalCanvas.toDataURL("image/png"), filename: getEditedImageFilename(originalFilename, index) });
         };
         watermark.onload = () => {
-          const wmWidth  = finalCanvas.width / 5;
+          const wmWidth = finalCanvas.width / 5;
           const wmHeight = (watermark.height / watermark.width) * wmWidth;
           ctx.drawImage(watermark, finalCanvas.width - wmWidth - 10, finalCanvas.height - wmHeight - 10, wmWidth, wmHeight);
           resolve({ dataURL: finalCanvas.toDataURL("image/png"), filename: getEditedImageFilename(originalFilename, index) });
@@ -77,7 +77,7 @@ async function compositeImage(cropper, originalFilename, index) {
 /* ── 主流程：處理所有圖片 ── */
 async function processImages() {
   editedImages = [];
-  processBtn.disabled  = true;
+  processBtn.disabled = true;
   processBtn.textContent = "處理中...";
 
   const imageContainers = Array.from(imagesContainer.querySelectorAll(".image-container"));
@@ -96,7 +96,7 @@ async function processImages() {
     editedImages = results.filter(Boolean);
     UI_displayPreview();
   } finally {
-    processBtn.disabled   = false;
+    processBtn.disabled = false;
     processBtn.textContent = "處理圖片";
   }
 }
