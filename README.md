@@ -8,3 +8,4 @@ This repository hosts multiple static web tools and demos published on GitHub Pa
 - [Sea Turtle Soup Library](https://old-cookie.github.io/Soup/soup.html)
 - [LYWSD02 Clock Sync](https://old-cookie.github.io/LYWSD02ClockSync/LYWSD02ClockSync.html)
 - [Slacker Earner](https://old-cookie.github.io/SlackerEarner/SlackerEarner.html)
+- [Avatar Preview](https://old-cookie.github.io/AvatarPreview/AvatarPreview.html)
