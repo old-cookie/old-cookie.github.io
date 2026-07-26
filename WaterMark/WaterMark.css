@@ -1,7 +1,7 @@
 .image-cropper {
     width: min(100%, calc(50vh * var(--cropper-aspect-ratio, 1)));
-    height: 50vh;
     aspect-ratio: var(--cropper-aspect-ratio, 1);
+    height: auto;
     margin-inline: auto;
 }
 
@@ -9,6 +9,10 @@
     display: block;
     width: 100%;
     height: 100%;
+}
+
+.image-cropper cropper-shade {
+    display: none !important;
 }
 
 .image-container-header {
