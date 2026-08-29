@@ -1,24 +1,5 @@
-// File.js — 上傳、拖放、檔案驗證、輸入清空、單張與全部下載
+// File.js — 檔案驗證、載入與下載
 // 依賴：State.js（需先載入）
-
-/* ── 上傳區 drag-and-drop ── */
-uploadArea.addEventListener("dragover", (e) => {
-  e.preventDefault();
-  if (uploadArea.classList.contains("hidden")) return;
-  uploadArea.classList.add("dragover");
-});
-
-uploadArea.addEventListener("dragleave", (e) => {
-  e.preventDefault();
-  uploadArea.classList.remove("dragover");
-});
-
-uploadArea.addEventListener("drop", (e) => {
-  e.preventDefault();
-  if (uploadArea.classList.contains("hidden")) return;
-  uploadArea.classList.remove("dragover");
-  handleFiles(e.dataTransfer.files);
-});
 
 fileInput.addEventListener("change", (e) => {
   handleFiles(e.target.files);
@@ -27,32 +8,34 @@ fileInput.addEventListener("change", (e) => {
 
 /* ── 檔案驗證與載入 ── */
 function handleFiles(files) {
+  const fileList = Array.from(files);
   const existingCount = imagesContainer.querySelectorAll(".image-container").length;
-  if (existingCount + files.length > 4) {
-    alert("您最多可以上傳4張照片。");
+  if (existingCount + fileList.length > 10) {
+    alert("您最多可以上傳10張照片。");
     return;
   }
 
-  Array.from(files).forEach((file) => {
+  const validFiles = fileList.filter((file) => {
     if (!file.type.startsWith("image/")) {
       alert(`"${file.name}" 不是有效的圖片檔案。`);
-      return;
+      return false;
     }
+    return true;
+  });
 
+  if (validFiles.length === 0) return;
+
+  Promise.all(validFiles.map((file) => new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = (event) => {
-      // 將圖片資料交給 UI.js 建立卡片，並由 Cropper.js 初始化裁切器
       const imageContainer = UI_createImageCard(file.name, event.target.result);
       imagesContainer.appendChild(imageContainer);
-
-      const imgEl = imageContainer.querySelector("img");
-      const imgWrapper = imageContainer.querySelector(".image-cropper");
-      const ratioButtons = Array.from(imageContainer.querySelectorAll(".controls button"));
-
-      Cropper_init(imgEl, imgWrapper, ratioButtons, imageContainer);
-      UI_updateProcessButton();
+      resolve();
     };
     reader.readAsDataURL(file);
+  }))).then(() => {
+    UI_updateProcessButton();
+    processImages();
   });
 }
 
@@ -79,31 +62,4 @@ function downloadAllImages() {
   });
 }
 
-/* ── 取消／移除照片 ── */
-function resetCancelButtons() {
-  document.querySelectorAll(".cancel-button.sure").forEach((btn) => {
-    btn.textContent = "取消";
-    btn.classList.remove("sure");
-  });
-  document.removeEventListener("click", resetCancelButtons);
-}
 
-function removePhoto(imageContainer, cropper) {
-  if (typeof cropper.destroy === "function") cropper.destroy();
-
-  const idx = cropperInstances.indexOf(cropper);
-  if (idx > -1) cropperInstances.splice(idx, 1);
-
-  const wrapper = [...cropperMap.entries()].find(([, c]) => c === cropper)?.[0];
-  if (wrapper) {
-    resizeObserver?.unobserve(wrapper);
-    cropperMap.delete(wrapper);
-  }
-
-  imageContainer.remove();
-  UI_updateProcessButton();
-
-  if (imagesContainer.querySelectorAll(".image-container").length < 4) {
-    uploadArea.classList.remove("hidden");
-  }
-}

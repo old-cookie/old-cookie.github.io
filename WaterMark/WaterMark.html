@@ -1,26 +1,25 @@
-﻿ <!doctype html>
+﻿<!doctype html>
 <html lang="zh-HK">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>照片編輯器與水印</title>
+  <title>照片水印工具</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
   <link rel="stylesheet" href="WaterMark.css" />
 </head>
 
 <body>
-  <main class="container">
+  <main class="container-fluid">
 
     <hgroup>
-      <h1>照片編輯器與水印</h1>
+      <h1>照片水印工具</h1>
       <nav aria-label="breadcrumb">
         <ul>
           <li><a href="../index.html">Home</a></li>
           <li>WaterMark</li>
         </ul>
       </nav>
-      <p>簡易的網頁照片編輯與添加水印功能</p>
     </hgroup>
 
     <article class="upload-area" id="uploadArea">
@@ -29,8 +28,6 @@
     </article>
 
     <section id="imagesContainer"></section>
-
-    <button id="processBtn" hidden>處理圖片</button>
 
     <article id="previewSection" hidden>
       <header>預覽</header>
@@ -44,8 +41,6 @@
 
   <script src="State.js"></script>
   <script src="File.js"></script>
-  <script src="https://unpkg.com/cropperjs"></script>
-  <script src="Cropper.js"></script>
   <script src="UI.js"></script>
   <script src="WaterMark.js"></script>
 </body>

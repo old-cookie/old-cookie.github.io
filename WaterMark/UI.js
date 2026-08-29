@@ -7,7 +7,6 @@ function UI_createImageCard(filename, imageSrc) {
     imageContainer.classList.add("image-container");
     imageContainer.dataset.filename = filename;
 
-    // Header
     const imageHeader = document.createElement("header");
     imageHeader.classList.add("image-container-header");
 
@@ -15,19 +14,11 @@ function UI_createImageCard(filename, imageSrc) {
     imageTitle.classList.add("image-container-title");
     imageTitle.textContent = filename;
 
-    const cancelBtn = document.createElement("button");
-    cancelBtn.classList.add("cancel-button");
-    cancelBtn.type = "button";
-    cancelBtn.textContent = "取消";
-    cancelBtn.setAttribute("aria-label", "取消此照片");
-
     imageHeader.appendChild(imageTitle);
-    imageHeader.appendChild(cancelBtn);
     imageContainer.appendChild(imageHeader);
 
-    // Cropper wrapper
-    const imgWrapper = document.createElement("article");
-    imgWrapper.classList.add("image-cropper");
+    const imgWrapper = document.createElement("div");
+    imgWrapper.classList.add("image-preview");
 
     const img = document.createElement("img");
     img.src = imageSrc;
@@ -37,35 +28,12 @@ function UI_createImageCard(filename, imageSrc) {
     imgWrapper.appendChild(img);
     imageContainer.appendChild(imgWrapper);
 
-    // Ratio controls
-    const controls = document.createElement("div");
-    controls.classList.add("controls");
-    controls.setAttribute("role", "group");
-    controls.setAttribute("aria-label", "裁剪比例");
-
-    const ratios = [
-        { label: "16:9", ratio: "16:9", ariaLabel: "16:9 比例裁剪", current: false },
-        { label: "4:5", ratio: "4:5", ariaLabel: "4:5 比例裁剪", current: false },
-    ];
-
-    ratios.forEach(({ label, ratio, ariaLabel, current }) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.textContent = label;
-        btn.dataset.ratio = ratio;
-        btn.setAttribute("aria-label", ariaLabel);
-        if (current) btn.setAttribute("aria-current", "true");
-        controls.appendChild(btn);
-    });
-
-    imageContainer.appendChild(controls);
     return imageContainer;
 }
 
-/* ── 處理按鈕可見性 ── */
+/* ── 上傳狀態與預覽控制 ── */
 function UI_updateProcessButton() {
     const total = imagesContainer.querySelectorAll(".image-container").length;
-    processBtn.hidden = total === 0;
     if (total === 0) previewSection.hidden = true;
 
     if (total >= 4) {
@@ -73,6 +41,11 @@ function UI_updateProcessButton() {
     } else {
         uploadArea.classList.remove("hidden");
     }
+}
+
+/* ── 只在處理完成後才顯示預覽 ── */
+function UI_showPreviewOnlyAfterProcess() {
+    previewSection.hidden = true;
 }
 
 /* ── 預覽渲染 ── */
@@ -93,7 +66,7 @@ function UI_displayPreview() {
 
         const img = document.createElement("img");
         img.src = image.dataURL;
-        img.alt = `編輯後的照片 ${index + 1}`;
+        img.alt = `已加浮水印的照片 ${index + 1}`;
         img.draggable = false;
 
         const downloadBtn = document.createElement("button");
