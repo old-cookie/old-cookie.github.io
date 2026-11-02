@@ -40,25 +40,7 @@ function updateTime() {
             setSyncBusy(false);
         });
 }
-function updateUnit() {
-    let unitValue = parseInt(document.querySelector('input[name="unit"]:checked').value);
-    let charPromise = getCharecteristics(TIME_SERVICE, UNIT);
-    let readPromise = charPromise.then(c => c.readValue());
-    Promise.all([charPromise, readPromise])
-        .then(function ([characteristic, value]) {
-            let oldValue = value.getUint8(0);
-            notify('Writting unit value (' + oldValue + ' -> ' + unitValue + ')...')
-
-            let buffer = new ArrayBuffer(1);
-            new DataView(buffer).setUint8(0, unitValue);
-
-            return characteristic.writeValue(buffer);
-        }).then(function () {
-            notify('Unit updated');
-        }).catch(function (error) {
-            notify(error);
-        });
-}
+// (updateUnit removed — dead code, not wired to any HTML button)
 function getCharecteristics(service, characteristic) {
     if (!('bluetooth' in navigator)) {
         throw 'Bluetooth API not supported.';
@@ -143,11 +125,21 @@ function setSyncBusy(isBusy) {
     }
 }
 function getCurrentTime() {
-    // The device stores zone as whole hours and local seconds separately.
-    let offsetMinutes = -new Date().getTimezoneOffset();
-    let zone = Math.trunc(offsetMinutes / 60);
-    let extraOffsetSeconds = (offsetMinutes % 60) * 60;
-    let dateTime = parseInt(Date.now() / 1000) + extraOffsetSeconds;
+    // Use Intl for accurate timezone offset including DST
+    const localeOpts = {};
+    const now = new Date().toLocaleString([], {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    });
+    const date = new Date(now.replace(/[\/]/g, "-"));
+    const utc = date.getTime() + date.getTimezoneOffset() * 60000;
+    const adjustedDate = new Date(utc + 3600000 * (-new Date().getTimezoneOffset() / 60));
+    let zone = Math.trunc(-new Date().getTimezoneOffset() / 60);
+    let extraOffsetSeconds = ((-new Date().getTimezoneOffset() % 60) + 60) % 60 * 60;
+    let dateTime = Math.floor(adjustedDate.getTime() / 1000) + extraOffsetSeconds;
     let buffer = new ArrayBuffer(5);
     new DataView(buffer).setUint32(0, dateTime, true /* littleEndian */);
     new DataView(buffer).setUint8(4, zone);

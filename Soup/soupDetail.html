@@ -5,38 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>海龜湯詳情 - 海龜湯題庫</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css" />
-    <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@anyblades/blades@3/css/blades.min.css" crossorigin="anonymous" />
     <link rel="stylesheet" href="soup.css" />
 
     <!-- SheetJS for Excel processing -->
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" crossorigin="anonymous"></script>
+    <script src="xlsx.js" crossorigin="anonymous"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" crossorigin="anonymous"></script>
 
     <!-- Detail page script -->
     <script src="soupDetail.js"></script>
   </head>
 
-  <body class="oat-theme">
-    <div class="container">
-      <header class="page-header">
-        <section class="card" aria-label="海龜湯詳情頁首">
-          <h1 id="detail-title">載入中...</h1>
-          <p id="detail-description">詳細內容 - 點擊按鈕顯示答案（湯底）</p>
-        </section>
-      </header>
+  <body>
+    <header class="container">
+      <article aria-label="海龜湯詳情頁首">
+        <h1 id="detail-title">載入中...</h1>
+        <p id="detail-description">詳細內容 - 點擊按鈕顯示答案（湯底）</p>
+      </article>
+    </header>
 
-      <main aria-live="polite">
-        <section id="soup-detail-container" aria-label="海龜湯詳情內容">
-          <article class="card skeleton" role="status" aria-label="載入中">
-            <div role="status" class="skeleton line"></div>
-            <div role="status" class="skeleton line"></div>
-            <div role="status" class="skeleton line"></div>
-            <div role="status" class="skeleton line"></div>
-          </article>
-        </section>
-      </main>
-    </div>
+    <main class="container" aria-live="polite">
+      <section id="soup-detail-container" aria-label="海龜湯詳情內容">
+        <article class="skeleton-card" role="status" aria-label="載入中">
+          <div role="status" class="skeleton line"></div>
+          <div role="status" class="skeleton line"></div>
+          <div role="status" class="skeleton line"></div>
+          <div role="status" class="skeleton line"></div>
+        </article>
+      </section>
+    </main>
   </body>
 </html>

@@ -7,20 +7,44 @@
   <meta name="color-scheme" content="light dark">
   <title>oldcookie's Portfolio</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@anyblades/blades@3/css/blades.min.css" crossorigin="anonymous">
+  <style>
+    /* Blades' .grid sizes columns by child count; cards need a readable min width. */
+    .project-grid {
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+    }
+
+    /* Fill each cell so the footer can be pushed to the bottom. */
+    .project-grid > div {
+      display: flex;
+    }
+
+    .project-grid article {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin-bottom: 0;
+    }
+
+    /* Descriptions vary in length; keep every button on the same line. */
+    .project-grid article footer {
+      margin-top: auto;
+    }
+
+    .project-grid article footer a {
+      width: 100%;
+    }
+  </style>
 
 </head>
 
 <body>
   <main class="container">
     <h1>專案作品集</h1>
-    <nav aria-label="breadcrumb">
-      <ul>
-        <li>Home</li>
-      </ul>
-    </nav>
+    <p>一些自己寫的小工具，點進去就能用。</p>
 
-    <div class="grid">
+    <!-- Project cards: this list is authoritative; keep paths and casing exact. -->
+    <div class="grid project-grid">
       <div>
         <article>
           <header>Avatar 預覽器</header>
@@ -61,28 +85,6 @@
           <footer>
             <a href="LYWSD02ClockSync/LYWSD02ClockSync.html" role="button" title="LYWSD02 時鐘同步工具"
               data-tooltip="https://old-cookie.github.io/LYWSD02ClockSync/LYWSD02ClockSync.html">立即同步</a>
-          </footer>
-        </article>
-      </div>
-
-      <div>
-        <article>
-          <header>蛇王計數器</header>
-          簡易記帳與收支管理工具，提供記錄、設定與資料檢視功能。
-          <footer>
-            <a href="SlackerEarner/SlackerEarner.html" role="button" title="SlackerEarner"
-              data-tooltip="https://old-cookie.github.io/SlackerEarner/SlackerEarner.html">立即使用</a>
-          </footer>
-        </article>
-      </div>
-
-      <div>
-        <article>
-          <header>Screen Clean Helper</header>
-          進入全黑純淨螢幕模式，任何鍵盤、滑鼠或觸控輸入都會立即退出。
-          <footer>
-            <a href="ScreenCleanHelper/ScreenCleanHelper.html" role="button" title="Screen Clean Helper"
-              data-tooltip="https://old-cookie.github.io/ScreenCleanHelper/ScreenCleanHelper.html">立即使用</a>
           </footer>
         </article>
       </div>

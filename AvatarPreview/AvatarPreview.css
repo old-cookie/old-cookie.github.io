@@ -8,6 +8,7 @@
     color: var(--pico-muted-color);
 }
 
+/* Upload-drop styling; matches `.upload-card` markup in AvatarPreview.html (see AGENTS.md). */
 .upload-card {
     display: grid;
     gap: .25rem;
@@ -20,11 +21,8 @@
 }
 
 .upload-card input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-    pointer-events: none;
+    width: 100%;
+    cursor: pointer;
 }
 
 .status-row,

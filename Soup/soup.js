@@ -1,7 +1,7 @@
 /**
  * Sea Turtle Soup library app - main JavaScript file.
  * Provides listing, search, detail navigation, and export support.
- * Built with Oat UI and Markdown rendering support.
+ * Built with Blades CSS and Markdown rendering support.
  */
 
 // ==================== Global State ====================
@@ -10,6 +10,15 @@
  * Shape: { "Title": { puzzle, solution, type, rules, ai } }
  */
 let soupData = {};
+let cachedSoupData = null; // shortcut: simple module-level cache for XLSX fetch
+
+function debounce(fn, wait) {
+  let t;
+  return function (...args) {
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(this, args), wait);
+  };
+}
 
 /**
  * Currently selected soup title.
@@ -17,11 +26,14 @@ let soupData = {};
  */
 let currentSoup = null;
 
-function renderListSkeletonCards(count = 6) {
+/** Google Sheets URL for all puzzle data */
+const SOUP_DATA_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQCe9mncrVk9RcF91bPnZIcagCJZAeKLsm2cDOQeSRi3QZYcDPs_CZJxNjOPlpjVCNCKAL7dphkV2hP/pub?output=xlsx";
+
+function renderListSkeletonCards(count = 3) {
   return Array.from({ length: count })
     .map(
       () => `
-        <article class="card col col-4 skeleton" role="status" aria-label="載入中">
+        <article class="skeleton-card" role="status" aria-label="載入中">
           <div role="status" class="skeleton line"></div>
           <div role="status" class="skeleton line"></div>
         </article>
@@ -41,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
     marked.setOptions({
       breaks: true, // Preserve line breaks
       gfm: true, // Enable GitHub Flavored Markdown
-      sanitize: false, // Keep raw HTML from trusted content
+      sanitize: true, // XSS guard: strip HTML from trusted content
     });
   }
 
@@ -52,104 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
   bindGlobalEventListeners();
 });
 
-// ==================== XLSX Parsing ====================
-/**
- * Parse an XLSX file into object rows.
- * @param {ArrayBuffer} xlsxBuffer - XLSX binary content.
- * @returns {Array} Parsed row objects.
- */
-function parseXLSX(xlsxBuffer) {
-  try {
-    // Read XLSX data with SheetJS
-    const workbook = XLSX.read(xlsxBuffer, { type: "array" });
-
-    // Use the first sheet
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-
-    // Convert sheet to row arrays
-    const jsonData = XLSX.utils.sheet_to_json(worksheet, {
-      header: 1, // Use first row as header
-      defval: "", // Default empty cells to empty string
-    });
-
-    if (jsonData.length === 0) return [];
-
-    // Read header row
-    const headers = jsonData[0];
-    const rows = [];
-
-    // Parse each data row
-    for (let i = 1; i < jsonData.length; i++) {
-      const values = jsonData[i];
-      if (values.some((val) => val !== "")) {
-        // Skip fully empty rows
-        const row = {};
-        headers.forEach((header, index) => {
-          row[header] = values[index] || "";
-        });
-        rows.push(row);
-      }
-    }
-
-    return rows;
-  } catch (error) {
-    console.error("解析 XLSX 時發生錯誤:", error);
-    return [];
-  }
-}
-
-/**
- * Convert XLSX rows into the soup data object.
- * @param {Array} xlsxData - Parsed XLSX rows.
- * @returns {Object} Soup data map.
- */
-function convertXLSXToSoupData(xlsxData) {
-  const soupData = {};
-
-  xlsxData.forEach((row) => {
-    const title = row["湯名"];
-    if (!title) return;
-
-    // Only treat row as AI-generated when the flag is explicitly set to yes
-    const isAI = row["AI 生成?"] === "是";
-
-    // Merge rules and host manual from separate columns
-    let rules = "";
-    if (row["規則"] && typeof row["規則"] === "string" && row["規則"].trim()) {
-      rules = row["規則"].trim();
-    }
-    if (
-      row["主持人手冊"] &&
-      typeof row["主持人手冊"] === "string" &&
-      row["主持人手冊"].trim()
-    ) {
-      if (rules) {
-        rules += "\n\n## 主持人手冊\n" + row["主持人手冊"].trim();
-      } else {
-        rules = "## 主持人手冊\n" + row["主持人手冊"].trim();
-      }
-    }
-
-    // Safe string conversion helper
-    const safeString = (value) => {
-      if (value === null || value === undefined) return "";
-      return String(value);
-    };
-
-    soupData[title] = {
-      類型: String(row["類型"] || ""),
-      規則: rules,
-      湯面: String(row["湯面"] || ""),
-      湯底: String(row["湯底"] || ""),
-      其他資料: safeString(row["其他資料"]),
-      ai: isAI, // Whether this row is AI-generated
-    };
-  });
-
-  return soupData;
-}
-
 // ==================== Data Loading ====================
 /**
  * Load soup data from a single online XLSX source.
@@ -157,6 +71,14 @@ function convertXLSXToSoupData(xlsxData) {
  * Handles loading state and errors.
  */
 async function loadSoupData() {
+  if (cachedSoupData) {
+    soupData = cachedSoupData;
+    checkUrlParams();
+    const container = document.getElementById("soup-container");
+    if (container && soupData) renderSoupList();
+    console.log("已使用快取資料，題目數:", Object.keys(soupData).length);
+    return;
+  }
   const container = document.getElementById("soup-container");
 
   // Show loading skeleton cards
@@ -165,10 +87,7 @@ async function loadSoupData() {
   try {
     // Fetch unified XLSX source (all puzzles)
     console.log("正在載入統一線上 XLSX 數據...");
-    const xlsxResponse = await fetch(
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQCe9mncrVk9RcF91bPnZIcagCJZAeKLsm2cDOQeSRi3QZYcDPs_CZJxNjOPlpjVCNCKAL7dphkV2hP/pub?output=xlsx",
-    );
-
+    const xlsxResponse = await fetch(SOUP_DATA_URL);
     if (!xlsxResponse.ok) {
       throw new Error(
         `HTTP ${xlsxResponse.status}: 無法連接到 Google Sheets XLSX`,
@@ -193,6 +112,7 @@ async function loadSoupData() {
 
     // Store data and resolve route state
     soupData = soupDataFromXLSX;
+    cachedSoupData = soupDataFromXLSX;
     console.log("成功載入統一 XLSX 數據:", totalCount, "個題目");
     console.log("其中一般題目:", normalCount, "個，AI 題目:", aiCount, "個");
 
@@ -206,8 +126,8 @@ async function loadSoupData() {
                 <h2>載入資料時發生錯誤</h2>
                 <p>無法連接到線上資料源，請檢查網路連線。</p>
                 <p>錯誤詳情: ${error.message}</p>
-                <button class="back-button" onclick="loadSoupData()" style="margin-top: 1rem;" type="button">
-                    <span class="icon" aria-hidden="true">↻</span>
+                <button onclick="loadSoupData()" style="margin-top: 1rem;" type="button">
+                    <span aria-hidden="true">↻</span>
                     重新載入
                 </button>
             </div>
@@ -311,7 +231,7 @@ function createSoupItemHTML(title, data) {
     category === "規則怪談" ? "badge danger" : "badge outline";
 
   return `
-        <article class="soup-item-card card col col-4" data-soup="${escapeHtml(title)}">
+        <article class="soup-item-card" data-soup="${escapeHtml(title)}">
             <h3>${escapeHtml(title)}</h3>
             <p class="meta-badges" aria-label="題目標籤">
               <span class="${typeClass}">${type}</span>
@@ -340,10 +260,10 @@ function formatMarkdownText(text) {
   return escapeHtml(text).replace(/\n/g, "<br>");
 }
 
+// ==================== Event Binding ====================
 /**
- * Escape HTML to reduce XSS risk.
- * @param {string} text - Input text.
- * @returns {string} Escaped HTML string.
+ * Bind click events for soup cards.
+ * Each card opens its detail page.
  */
 function escapeHtml(text) {
   const div = document.createElement("div");
@@ -351,11 +271,6 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-// ==================== Event Binding ====================
-/**
- * Bind click events for soup cards.
- * Each card opens its detail page.
- */
 function bindCardClickEvents() {
   document.querySelectorAll(".soup-item-card").forEach((card) => {
     card.addEventListener("click", function () {
@@ -383,7 +298,6 @@ function bindGlobalEventListeners() {
   // ========== Search ==========
   const searchForm = document.getElementById("search-form");
   const searchInput = document.getElementById("search-input");
-  const clearButton = document.getElementById("clear-search");
 
   if (searchForm) {
     searchForm.addEventListener("submit", function (event) {
@@ -391,34 +305,20 @@ function bindGlobalEventListeners() {
     });
   }
 
-  // Listen for search input changes
-  searchInput.addEventListener("input", function () {
-    const searchTerm = this.value.trim();
-    // Toggle clear button visibility
-    if (clearButton) {
-      clearButton.style.display = searchTerm ? "flex" : "none";
-    }
-
+  // Listen for search input changes (debounced to reduce O(n) filtering on every keystroke)
+  const debouncedFilter = debounce((searchTerm) => {
     if (!searchTerm) {
-      // If empty, restore current page state
       if (currentSoup) goBackToList();
       else renderSoupList();
     } else {
-      // Filter list by keyword
       filterSoupList(searchTerm);
     }
-  });
+  }, 200);
 
-  // Clear-search button behavior
-  if (clearButton) {
-    clearButton.addEventListener("click", function () {
-      searchInput.value = "";
-      this.style.display = "none";
-      // Restore content based on current state
-      if (currentSoup) goBackToList();
-      else renderSoupList();
-    });
-  }
+  searchInput.addEventListener("input", function () {
+    const searchTerm = this.value.trim();
+    debouncedFilter(searchTerm);
+  });
 
   // ========== Add Soup Button ==========
   const addSoupButton = document.getElementById("add-soup-button");
@@ -515,10 +415,5 @@ function filterSoupList(searchTerm) {
  * @param {string} message - Message content.
  */
 function showSnackbar(message) {
-  if (typeof ot !== "undefined" && typeof ot.toast === "function") {
-    ot.toast(message);
-    return;
-  }
-
   window.alert(message);
 }

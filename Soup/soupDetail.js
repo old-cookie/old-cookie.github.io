@@ -1,10 +1,13 @@
 // ==================== Global State ====================
+/** Google Sheets URL for all puzzle data */
+const SOUP_DATA_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQCe9mncrVk9RcF91bPnZIcagCJZAeKLsm2cDOQeSRi3QZYcDPs_CZJxNjOPlpjVCNCKAL7dphkV2hP/pub?output=xlsx";
+
 let soupData = null;
 let currentSoup = null;
 
 function renderDetailSkeletonCard() {
   return `
-    <article class="card skeleton" role="status" aria-label="載入中">
+    <article class="skeleton-card" role="status" aria-label="載入中">
       <div role="status" class="skeleton line"></div>
       <div role="status" class="skeleton line"></div>
       <div role="status" class="skeleton line"></div>
@@ -20,76 +23,13 @@ document.addEventListener("DOMContentLoaded", function () {
     marked.setOptions({
       breaks: true,
       gfm: true,
-      sanitize: false,
+      sanitize: true,
     });
   }
 
   // Resolve title from URL and load data
   loadSoupFromUrl();
 });
-
-// ==================== XLSX Parsing ====================
-function parseXLSX(xlsxBuffer) {
-  try {
-    const workbook = XLSX.read(xlsxBuffer, { type: "array" });
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const jsonData = XLSX.utils.sheet_to_json(worksheet, {
-      header: 1,
-      defval: "",
-    });
-
-    if (jsonData.length === 0) return [];
-
-    const headers = jsonData[0];
-    const rows = [];
-
-    for (let i = 1; i < jsonData.length; i++) {
-      const values = jsonData[i];
-      if (values.some((val) => val !== "")) {
-        const row = {};
-        headers.forEach((header, index) => {
-          row[header] = values[index] || "";
-        });
-        rows.push(row);
-      }
-    }
-
-    return rows;
-  } catch (error) {
-    console.error("解析 XLSX 時發生錯誤:", error);
-    return [];
-  }
-}
-
-function convertXLSXToSoupData(xlsxData) {
-  const soupData = {};
-
-  xlsxData.forEach((row) => {
-    const title = row["湯名"];
-    if (!title) return;
-
-    const isAI = row["AI 生成?"] === "是";
-
-    // Normalize all values as strings and handle null/undefined safely
-    const safeString = (value) => {
-      if (value === null || value === undefined) return "";
-      return String(value);
-    };
-
-    soupData[title] = {
-      類型: safeString(row["類型"]),
-      規則: safeString(row["規則"]),
-      主持人手冊: safeString(row["主持人手冊"]),
-      湯面: safeString(row["湯面"]),
-      湯底: safeString(row["湯底"]),
-      其他資料: safeString(row["其他資料"]),
-      ai: isAI,
-    };
-  });
-
-  return soupData;
-}
 
 // ==================== Data Loading ====================
 async function loadSoupFromUrl() {
@@ -106,13 +46,10 @@ async function loadSoupFromUrl() {
     return;
   }
 
-  currentSoup = decodeURIComponent(soupName);
+  currentSoup = soupName; // URLSearchParams already decoded; do not double-decode
 
   try {
-    const xlsxResponse = await fetch(
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQCe9mncrVk9RcF91bPnZIcagCJZAeKLsm2cDOQeSRi3QZYcDPs_CZJxNjOPlpjVCNCKAL7dphkV2hP/pub?output=xlsx",
-    );
-
+    const xlsxResponse = await fetch(SOUP_DATA_URL);
     if (!xlsxResponse.ok) {
       throw new Error(
         `HTTP ${xlsxResponse.status}: 無法連接到 Google Sheets XLSX`,
@@ -166,11 +103,11 @@ function renderDetailPage(title, data) {
 
   // Build detail page HTML
   container.innerHTML = `
-      <section class="card">
-        <menu class="buttons detail-actions">
+      <article>
+        <div>
           <button onclick="goBackToList()" aria-label="返回列表" type="button">返回</button>
           <button onclick="downloadAsMarkdown('${escapeHtml(title)}')" aria-label="下載 Markdown" type="button">下載</button>
-        </menu>
+        </div>
 
         <p class="meta-badges" aria-label="題目標籤">
           <span class="${typeClass}">${type}</span>
@@ -205,9 +142,14 @@ function renderDetailPage(title, data) {
             : ""
         }
 
-        <details>
-          <summary>揭曉真相</summary>
-          <div class="detail-reveal">
+        <button
+          class="reveal-button"
+          type="button"
+          aria-expanded="false"
+          aria-controls="detail-reveal"
+          onclick="toggleReveal(this)"
+        >揭曉真相</button>
+        <div class="detail-reveal" id="detail-reveal" hidden>
           <div class="content-section">
             <h2>湯底（答案）</h2>
             <div class="markdown-content">${formatMarkdownText(data.湯底)}</div>
@@ -224,9 +166,15 @@ function renderDetailPage(title, data) {
               : ""
           }
           </div>
-        </details>
-      </section>
+      </article>
     `;
+}
+
+function toggleReveal(button) {
+  const expanded = button.getAttribute("aria-expanded") === "true";
+  button.setAttribute("aria-expanded", String(!expanded));
+  button.textContent = expanded ? "揭曉真相" : "收起真相";
+  document.getElementById(button.getAttribute("aria-controls")).hidden = expanded;
 }
 
 function showError(message) {
@@ -235,9 +183,9 @@ function showError(message) {
         <div class="empty-state">
             <h2>發生錯誤</h2>
             <p>${escapeHtml(message)}</p>
-            <menu class="buttons" style="justify-content:center; margin-top:1rem;">
+            <div style="margin-top:1rem;">
               <button onclick="goBackToList()" type="button">返回列表</button>
-            </menu>
+            </div>
         </div>
     `;
 }
@@ -307,6 +255,7 @@ function formatOtherDataList(text) {
   return `<div class="other-data-list">${listItemsHtml}</div>`;
 }
 
+/** One shared HTML-escape helper for both Soup files (used by soupDetail.js; soup.js uses its own copy). */
 function escapeHtml(text) {
   const div = document.createElement("div");
   div.textContent = text;
@@ -374,10 +323,5 @@ function downloadAsMarkdown(soupTitle) {
 
 // ==================== UI Notifications ====================
 function showSnackbar(message) {
-  if (typeof ot !== "undefined" && typeof ot.toast === "function") {
-    ot.toast(message);
-    return;
-  }
-
   window.alert(message);
 }

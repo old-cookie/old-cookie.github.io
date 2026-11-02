@@ -1,6 +1,6 @@
 ﻿# Sea Turtle Soup Library
 
-A web-based Sea Turtle Soup puzzle library built with Oat UI.
+A web-based Sea Turtle Soup puzzle library built with Blades CSS.
 
 ## Quick Start
 
@@ -19,5 +19,5 @@ Puzzle data is synced from Google Sheets.
 
 ## Credits
 
-- [Oat UI](https://github.com/knadh/oat) - Lightweight semantic UI component library
+- [Blades CSS](https://blades.dev/css/) - Minimal semantic CSS framework
 - [marked.js](https://marked.js.org/) - Markdown parser

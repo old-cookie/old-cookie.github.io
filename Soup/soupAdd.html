@@ -5,42 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>新增海龜湯題目 - 海龜湯題庫</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css" />
-    <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@anyblades/blades@3/css/blades.min.css" />
     <link rel="stylesheet" href="soup.css" />
   </head>
 
-  <body class="oat-theme">
-    <div class="container">
-      <header class="page-header">
-        <section class="card" aria-label="新增海龜湯頁首">
-          <h1 id="add-page-title">新增海龜湯題目</h1>
-          <p id="add-page-subtitle">填寫表單後即可提交新題目。</p>
-        </section>
-      </header>
+  <body>
+    <header class="container">
+      <article aria-label="新增海龜湯頁首">
+        <h1 id="add-page-title">新增海龜湯題目</h1>
+        <p id="add-page-subtitle">填寫表單後即可提交新題目。</p>
+      </article>
+    </header>
 
-      <main>
-        <section class="add-soup-page" aria-label="新增海龜湯內容">
-          <menu class="buttons">
-            <button onclick="goBackToList()" type="button">返回列表</button>
-          </menu>
+    <main class="container">
+      <section aria-label="新增海龜湯內容">
+        <div>
+          <button onclick="goBackToList()" type="button">返回列表</button>
+        </div>
 
-          <article class="card iframe-card">
-            <iframe
-              src="https://docs.google.com/forms/d/e/1FAIpQLSerxSMTksN-qhB71RGPvUPhzvsRBVhhklXXlQ1yUKeD5NAlaw/viewform?embedded=true"
-              width="100%"
-              height="100%"
-              frameborder="0"
-              marginheight="0"
-              marginwidth="0"
-              title="新增海龜湯 Google 表單"
-            >
-              正在載入表單...
-            </iframe>
-          </article>
-        </section>
-      </main>
-    </div>
+        <article class="iframe-card">
+          <iframe
+            src="https://docs.google.com/forms/d/e/1FAIpQLSerxSMTksN-qhB71RGPvUPhzvsRBVhhklXXlQ1yUKeD5NAlaw/viewform?embedded=true"
+            width="100%"
+            height="100%"
+            frameborder="0"
+            marginheight="0"
+            marginwidth="0"
+            title="新增海龜湯 Google 表單"
+          >
+            正在載入表單...
+          </iframe>
+        </article>
+      </section>
+    </main>
 
     <script>
       /**

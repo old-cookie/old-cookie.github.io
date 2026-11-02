@@ -12,7 +12,7 @@ function UI_createImageCard(filename, imageSrc) {
 
     const imageTitle = document.createElement("span");
     imageTitle.classList.add("image-container-title");
-    imageTitle.textContent = filename;
+    imageTitle.textContent = filename.replace(/\.[^/.]+$/, "");
 
     imageHeader.appendChild(imageTitle);
     imageContainer.appendChild(imageHeader);
@@ -36,7 +36,7 @@ function UI_updateProcessButton() {
     const total = imagesContainer.querySelectorAll(".image-container").length;
     if (total === 0) previewSection.hidden = true;
 
-    if (total >= 4) {
+    if (total >= 10) {
         uploadArea.classList.add("hidden");
     } else {
         uploadArea.classList.remove("hidden");
@@ -61,7 +61,7 @@ function UI_displayPreview() {
 
         const imageTitle = document.createElement("span");
         imageTitle.className = "preview-item-title";
-        imageTitle.textContent = image.filename;
+        imageTitle.textContent = image.originalFilename || image.filename;
         imageHeader.appendChild(imageTitle);
 
         const img = document.createElement("img");

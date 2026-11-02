@@ -1,5 +1,6 @@
 // File.js — 檔案驗證、載入與下載
 // 依賴：State.js（需先載入）
+if (typeof uploadArea === "undefined") throw new Error("State.js must load before File.js");
 
 fileInput.addEventListener("change", (e) => {
   handleFiles(e.target.files);

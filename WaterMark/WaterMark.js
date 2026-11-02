@@ -10,51 +10,77 @@ function getWatermarkedImageFilename(originalFilename, index) {
   return `watermarked_image_${index + 1}.png`;
 }
 
-/* ── 浮水印存在確認 ── */
+/* ── 浮水印快取（僅載入一次）── */
+let _wmImage = null;
+function getWatermarkImage() {
+  if (!_wmImage) {
+    _wmImage = new Image();
+    _wmImage.setAttribute("crossOrigin", "Anonymous");
+    _wmImage.src = "assets/Cherryneko_Watermark_WithNameXUsername.svg";
+  }
+  return _wmImage;
+}
 function checkWatermarkExists() {
   return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve(true);
-    img.onerror = () => resolve(false);
-    img.src = "assets/Cherryneko_Watermark_WithNameXUsername.svg";
+    const wm = getWatermarkImage();
+    if (wm.complete && wm.naturalWidth > 0) return resolve(true);
+    wm.onload = () => resolve(true);
+    wm.onerror = () => resolve(false);
   });
 }
 
+function addTextWatermark(ctx, canvas) {
+  // Fallback: draw a simple text watermark when the SVG fails to load.
+  ctx.save();
+  ctx.font = "bold 24px sans-serif";
+  ctx.fillStyle = "rgba(128, 128, 128, 0.5)";
+  ctx.textAlign = "right";
+  ctx.textBaseline = "bottom";
+  ctx.fillText("SAMPLE", canvas.width - 10, canvas.height - 10);
+  ctx.restore();
+}
+
 /* ── 合成單張圖片（直接加入浮水印）── */
+function drawWatermark(wm, ctx, finalCanvas) {
+  const wmWidth = finalCanvas.width / 5;
+  const wmHeight = (wm.height / wm.width) * wmWidth;
+  ctx.drawImage(wm, finalCanvas.width - wmWidth - 10, finalCanvas.height - wmHeight - 10, wmWidth, wmHeight);
+}
 async function compositeImage(imageDataURL, originalFilename, index) {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.src = imageDataURL;
     img.onerror = () => reject(new Error("處理圖像時出錯。"));
 
-    img.onload = async () => {
+    img.onload = () => {
       const finalCanvas = document.createElement("canvas");
       finalCanvas.width = img.width;
       finalCanvas.height = img.height;
       const ctx = finalCanvas.getContext("2d");
       ctx.drawImage(img, 0, 0);
 
-      const watermarkExists = await checkWatermarkExists();
-
-      if (watermarkExists) {
-        const watermark = new Image();
-        watermark.setAttribute("crossOrigin", "Anonymous");
-        watermark.src = "assets/Cherryneko_Watermark_WithNameXUsername.svg";
-        watermark.onerror = () => {
-          addTextWatermark(ctx, finalCanvas);
-          resolve({ dataURL: finalCanvas.toDataURL("image/png"), filename: getWatermarkedImageFilename(originalFilename, index) });
-        };
-        watermark.onload = () => {
-          const wmWidth = finalCanvas.width / 5;
-          const wmHeight = (watermark.height / watermark.width) * wmWidth;
-          ctx.drawImage(watermark, finalCanvas.width - wmWidth - 10, finalCanvas.height - wmHeight - 10, wmWidth, wmHeight);
-          resolve({ dataURL: finalCanvas.toDataURL("image/png"), filename: getWatermarkedImageFilename(originalFilename, index) });
-        };
-      } else {
+      const wm = getWatermarkImage();
+      if (wm.complete && wm.naturalWidth > 0) {
+        drawWatermark(wm, ctx, finalCanvas);
+        resolve({ dataURL: finalCanvas.toDataURL("image/png"), filename: getWatermarkedImageFilename(originalFilename, index), originalFilename });
+      } else if (wm.complete && wm.naturalWidth === 0) {
+        // Watermark already failed to load earlier; use text fallback immediately.
         addTextWatermark(ctx, finalCanvas);
-        resolve({ dataURL: finalCanvas.toDataURL("image/png"), filename: getWatermarkedImageFilename(originalFilename, index) });
+        resolve({ dataURL: finalCanvas.toDataURL("image/png"), filename: getWatermarkedImageFilename(originalFilename, index), originalFilename });
+      } else {
+        const onWmLoad = () => {
+          drawWatermark(wm, ctx, finalCanvas);
+          resolve({ dataURL: finalCanvas.toDataURL("image/png"), filename: getWatermarkedImageFilename(originalFilename, index), originalFilename });
+        };
+        const onWmError = () => {
+          addTextWatermark(ctx, finalCanvas);
+          resolve({ dataURL: finalCanvas.toDataURL("image/png"), filename: getWatermarkedImageFilename(originalFilename, index), originalFilename });
+        };
+        wm.addEventListener("load", onWmLoad, { once: true });
+        wm.addEventListener("error", onWmError, { once: true });
       }
     };
+
+    img.src = imageDataURL;
   });
 }
 

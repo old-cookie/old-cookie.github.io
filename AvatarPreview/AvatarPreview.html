@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
     <title>Avatar Preview</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@anyblades/blades@3/css/blades.min.css" crossorigin="anonymous" />
     <link rel="stylesheet" href="AvatarPreview.css" />
 </head>
 
@@ -24,8 +24,8 @@
 
         <section class="grid app-grid">
             <article class="panel">
-                <article class="upload-area" id="uploadArea">
-                    <input type="file" id="fileInput" accept="image/*" multiple>
+                <article class="upload-card" id="uploadArea">
+                    <input type="file" id="fileInput" accept="image/*">
                 </article>
 
                 <div class="status-row" aria-live="polite">
@@ -47,7 +47,7 @@
         </section>
     </main>
 
-    <script src="https://unpkg.com/cropperjs"></script>
+    <script src="https://unpkg.com/cropperjs@2.0.0/dist/cropper.min.js" crossorigin="anonymous"></script>
     <script src="AvatarPreview.js"></script>
 </body>
 

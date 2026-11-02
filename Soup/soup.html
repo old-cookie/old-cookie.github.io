@@ -5,65 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>海龜湯題庫</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css" />
-    <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@anyblades/blades@3/css/blades.min.css" crossorigin="anonymous" />
     <link rel="stylesheet" href="soup.css" />
 
     <!-- SheetJS for Excel processing -->
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" crossorigin="anonymous"></script>
+    <script src="xlsx.js" crossorigin="anonymous"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" crossorigin="anonymous"></script>
   </head>
 
-  <body class="oat-theme">
-    <div class="container">
-      <header class="page-header">
-        <section class="card" aria-label="海龜湯題庫控制區">
-          <h1 id="page-title">海龜湯題庫</h1>
-          <p id="page-subtitle">點擊卡片查看詳情</p>
+  <body>
+    <header class="container">
+      <article aria-label="海龜湯題庫控制區">
+        <h1 id="page-title">海龜湯題庫</h1>
+        <p id="page-subtitle">點擊卡片查看詳情</p>
 
-          <form class="search-form" id="search-form" role="search" novalidate>
-            <input
-              id="search-input"
-              type="search"
-              placeholder="搜尋海龜湯"
-              aria-label="搜尋海龜湯"
-              autocomplete="off"
-            />
-            <button id="add-soup-button" type="button">+ 新增海龜湯</button>
-          </form>
-        </section>
-      </header>
+        <form id="search-form" role="search" novalidate>
+          <input
+            id="search-input"
+            type="search"
+            placeholder="搜尋海龜湯"
+            aria-label="搜尋海龜湯"
+            autocomplete="off"
+          />
+          <button id="add-soup-button" type="button">+ 新增海龜湯</button>
+        </form>
+      </article>
+    </header>
 
-      <main aria-live="polite">
-        <section id="soup-container" class="row" aria-label="海龜湯列表">
-          <article
-            class="card col col-4 skeleton"
-            role="status"
-            aria-label="載入中"
-          >
-            <div role="status" class="skeleton line"></div>
-            <div role="status" class="skeleton line"></div>
-          </article>
-          <article
-            class="card col col-4 skeleton"
-            role="status"
-            aria-label="載入中"
-          >
-            <div role="status" class="skeleton line"></div>
-            <div role="status" class="skeleton line"></div>
-          </article>
-          <article
-            class="card col col-4 skeleton"
-            role="status"
-            aria-label="載入中"
-          >
-            <div role="status" class="skeleton line"></div>
-            <div role="status" class="skeleton line"></div>
-          </article>
-        </section>
-      </main>
-    </div>
+    <main class="container" aria-live="polite">
+      <section id="soup-container" class="soup-grid" aria-label="海龜湯列表">
+  
+      </section>
+    </main>
     <script src="soup.js"></script>
   </body>
 </html>
