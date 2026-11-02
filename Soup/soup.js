@@ -4,6 +4,18 @@
  * Built with Blades CSS and Markdown rendering support.
  */
 
+// ==================== Text Helpers ====================
+/**
+ * Escape HTML to prevent XSS.
+ * @param {string} text - Input text.
+ * @returns {string} Escaped HTML string.
+ */
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 // ==================== Global State ====================
 /**
  * Stores all soup puzzle data.
