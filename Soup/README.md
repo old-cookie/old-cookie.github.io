@@ -6,7 +6,7 @@ A web-based Sea Turtle Soup puzzle library built with Blades CSS.
 
 Open the live site on GitHub Pages:
 
-- [https://old-cookie.github.io/Soup/](https://old-cookie.github.io/Soup/)
+- [https://old-cookie.github.io/Soup/soup.html](https://old-cookie.github.io/Soup/soup.html)
 
 ## Add New Puzzles
 
