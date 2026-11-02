@@ -10,7 +10,7 @@
  * Shape: { "Title": { puzzle, solution, type, rules, ai } }
  */
 let soupData = {};
-let cachedSoupData = null; // shortcut: simple module-level cache for XLSX fetch
+let cachedSoupData = null; // shortcut: <ceiling: 5 min TTL, clear on data source change>; <upgrade: add multiple sources w/ invalidation>
 
 function debounce(fn, wait) {
   let t;
@@ -265,12 +265,6 @@ function formatMarkdownText(text) {
  * Bind click events for soup cards.
  * Each card opens its detail page.
  */
-function escapeHtml(text) {
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
-}
-
 function bindCardClickEvents() {
   document.querySelectorAll(".soup-item-card").forEach((card) => {
     card.addEventListener("click", function () {

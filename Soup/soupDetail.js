@@ -37,6 +37,18 @@ async function loadSoupFromUrl() {
   const soupName = urlParams.keys().next().value;
   const container = document.getElementById("soup-detail-container");
 
+  // shortcut: <ceiling: expires on next full page load>; <upgrade: multi-detail-page / auth changes>
+  try {
+    const cached = sessionStorage.getItem("soupCache");
+    if (cached) {
+      soupData = JSON.parse(cached);
+      if (soupData && soupData[currentSoup || soupName]) {
+        renderDetailPage(soupName, soupData[soupName || soupData]);
+        return;
+      }
+    }
+  } catch (_) { /* ignore corrupt cache */ }
+
   if (container) {
     container.innerHTML = renderDetailSkeletonCard();
   }
@@ -255,12 +267,7 @@ function formatOtherDataList(text) {
   return `<div class="other-data-list">${listItemsHtml}</div>`;
 }
 
-/** One shared HTML-escape helper for both Soup files (used by soupDetail.js; soup.js uses its own copy). */
-function escapeHtml(text) {
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
-}
+/** Shared HTML-escape helper loaded from escapeHtml.js */
 
 // ==================== Navigation ====================
 function goBackToList() {

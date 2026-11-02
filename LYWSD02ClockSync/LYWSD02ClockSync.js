@@ -1,6 +1,6 @@
 const TIME_SERVICE = 'ebe0ccb0-7a0a-4b0c-8a1a-6ff2997da3a6';
 const TIME = 'ebe0ccb7-7a0a-4b0c-8a1a-6ff2997da3a6';
-const UNIT = 'ebe0ccbe-7a0a-4b0c-8a1a-6ff2997da3a6';
+
 
 // Refresh the on-page clock every second.
 startCurrentTimeClock();
